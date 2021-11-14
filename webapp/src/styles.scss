@@ -1,0 +1,55 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Lato:wght@300&family=Montserrat&family=Open+Sans&family=Orbitron:wght@500&family=Roboto:wght@300&family=Rubik:wght@300&family=Share+Tech+Mono&family=Ubuntu:wght@300&display=swap');
+
+// Set your brand colors
+$green: #0DBF8A;
+$dark-grey: #1a1a1a;
+$lighter-grey: #a1a1a1;
+$light-grey: #d7d7d7;
+$light-red: #FF6B6B;
+$light-blue: #59A5D8;
+$purple: #251351;
+$white: #ffffff;
+
+// Update Bulma's global variables
+$family-sans-serif: "Nunito", sans-serif;
+//$grey-dark: $dark-grey;
+$grey-light: $light-grey;
+$primary: $green;
+$link: $light-grey;
+/* $widescreen-enabled: false;
+$fullhd-enabled: false; */
+
+$font-logo: 'Orbitron', 'Ariel';
+$font-standard: 'Share Tech Mono', 'sans-serif';
+
+$family-primary: $font-standard;
+$background: $dark-grey;
+$body-background-color: $dark-grey;
+$body-color: $light-grey;
+$strong-color: $light-grey;
+$label-color: $light-grey;
+$input-background-color: $light-grey;
+$title-color: $primary;
+
+.navbar-menu.show {
+    display: block;
+    position: absolute;
+    width: 100%;
+}
+
+.navbar-brand {
+    .navbar-item {
+        font-family: $font-logo
+    }
+}
+
+body {
+    font-family: $font-standard
+}
+
+.field.is-grouped>.control {
+    width: 100%;
+}
+
+@import "~bulma/bulma";
