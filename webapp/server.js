@@ -76,6 +76,10 @@ app.post('/refresh/pihole', (req, res) => {
     runRefreshScript('../python/refresh_pihole.py', res, 'Pi-Hole refreshed successfully.');
 });
 
+app.post('/refresh/septa', (req, res) => {
+    runRefreshScript('../python/refresh_septa.py', res, 'Septa refreshed successfully.');
+});
+
 app.post('/refresh/weather', (req, res) => {
     runRefreshScript('../python/refresh_weather.py', res, 'Weather refreshed successfully.');
 });

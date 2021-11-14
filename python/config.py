@@ -60,3 +60,20 @@ dictionary = {
     'api_key': os.environ.get(WORDNIK_ENV_VAR),
     'env_var': WORDNIK_ENV_VAR
 }
+
+# Septa status
+
+septa = {
+    'enabled': True,
+    'num': 2,
+    'routes': [
+        {
+            'route': '33',    # Bus route
+            'stop': '2828'    # Stop ID - 20th & Green    
+        },
+        {
+            'route': '48',
+            'stop': '2863'    # 23rd & Green
+        }
+    ]
+}

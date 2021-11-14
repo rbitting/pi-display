@@ -23,6 +23,7 @@
         "semi-style": ["error", "last"],
         "semi": ["error", "always"],
         "quote-props": 0,
-        "prefer-template": 2
+        "prefer-template": 2,
+        "react/prop-types": [0]
     }
 }

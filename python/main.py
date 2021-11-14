@@ -1,4 +1,4 @@
-from config import weather, crypto, pihole, network, news, dictionary
+from config import weather, crypto, pihole, network, news, dictionary, septa
 from crypto import print_crypto_prices
 from dictionary import print_word_of_the_day
 from pihole import print_pihole_data
@@ -6,6 +6,7 @@ from network import print_network_speed, print_network_name
 from news import print_news_headlines
 from util import print_current_date, get_current_date_time
 from weather import print_weather
+from septa import print_next_bus
 
 print_network_name()
 
@@ -31,6 +32,10 @@ if (news['enabled']):
 
 if (dictionary['enabled']):
     print_word_of_the_day()
+    print('\n')
+
+if (septa['enabled']):
+    print_next_bus()
     print('\n')
 
 print_current_date()

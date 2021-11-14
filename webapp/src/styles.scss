@@ -67,4 +67,8 @@ button {
     line-height: 1;
 }
 
+button img {
+    max-height: 26px;
+}
+
 @import "~bulma/bulma";
