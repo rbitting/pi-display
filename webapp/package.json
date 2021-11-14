@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "eslint src --fix && webpack-dev-server --mode=development --open --hot",
-    "build": "eslint src --fix && webpack --mode=production"
+    "build": "eslint src --fix && webpack --mode=production",
+    "server": "npm run build && node server.js"
   },
   "author": "",
   "license": "ISC",

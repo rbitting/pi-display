@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     output: {
@@ -29,24 +28,27 @@ module.exports = {
                     'css-loader',
                     'sass-loader'
                 ]
+            },
+            {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: 'asset/resource'
             }
         ]
     },
     plugins: [
         new HtmlWebPackPlugin({
             template: './src/index.html',
-            minify: false
+            minify: false,
+            inject: 'body'
         }),
-        /* new MiniCssExtractPlugin({
-            filename: './css/style.css'
-        }), */
         new CopyPlugin({
             patterns: [
-              { from: "node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css", to: "vendor/fa/css/fontawesome.min.css" },
-              { from: "node_modules/@fortawesome/fontawesome-free/css/regular.min.css", to: "vendor/fa/css/regular.min.css" },
-              { from: "node_modules/@fortawesome/fontawesome-free/css/solid.min.css", to: "vendor/fa/css/solid.min.css" },
-              { from: "node_modules/@fortawesome/fontawesome-free/css/all.min.css", to: "vendor/fa/css/all.min.css" },
-              { from: "node_modules/@fortawesome/fontawesome-free/webfonts", to: "vendor/fa/webfonts/" },
+                { from: 'node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css', to: 'vendor/fa/css/fontawesome.min.css' },
+                { from: 'node_modules/@fortawesome/fontawesome-free/css/regular.min.css', to: 'vendor/fa/css/regular.min.css' },
+                { from: 'node_modules/@fortawesome/fontawesome-free/css/solid.min.css', to: 'vendor/fa/css/solid.min.css' },
+                { from: 'node_modules/@fortawesome/fontawesome-free/css/all.min.css', to: 'vendor/fa/css/all.min.css' },
+                { from: 'node_modules/@fortawesome/fontawesome-free/css/brands.min.css', to: 'vendor/fa/css/brands.min.css' },
+                { from: 'node_modules/@fortawesome/fontawesome-free/webfonts', to: 'vendor/fa/webfonts/' }
             ]
         })
     ],

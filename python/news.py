@@ -1,4 +1,4 @@
-from modules.util import fetch
+from util import fetch
 from config import news
 
 def print_nytimes_headlines():
@@ -6,6 +6,7 @@ def print_nytimes_headlines():
     error = results.get('fault')
     if (error):
         print(error['detail']['errorcode'] + ' ' + error['faultstring'])
+        exit(2)
     else:
         print('/assets/icons/news.png')
         num = min([results['num_results'], news['num']])
@@ -17,12 +18,14 @@ def get_nytimes_data():
         return fetch('https://api.nytimes.com/svc/topstories/v2/home.json?api-key=' + api_key)
     else:
         print('New York Times API key (' + news.get('env_var').get('nytimes') + ') is not defined in environment variables.')
+        exit(1)
 
 def print_newsapi_headlines(source):
     results = get_newsapi_headlines(source)
     if (results):
         if (results['status'] == 'error'):
             print(results['code'] + ' ' + results['message'])
+            exit(2)
         elif (results.get('totalResults') == 0):
             print('No news results returned for "' + source + '". Source should be "nytimes" or any source ID from Newsapi (https://newsapi.org/docs/endpoints/sources).')
         elif (results['status'] == 'ok'):
@@ -35,6 +38,7 @@ def get_newsapi_headlines(source):
         return fetch('https://newsapi.org/v2/top-headlines?sources=' + source + '&apiKey=' + api_key)
     else:
         print('Newsapi.org API key (' + news.get('env_var').get('newsapi') + ') is not defined in environment variables.')
+        exit(1)
         return
 
 def print_headlines(articles, num):

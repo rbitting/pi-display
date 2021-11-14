@@ -1,6 +1,6 @@
-from modules.util import fetch_with_headers_params
+from util import fetch_with_headers_params
 from config import crypto
-from modules.dict import currency_symbols
+from dict import currency_symbols
 
 def print_crypto_prices():
     results = get_crypto_prices()
@@ -8,6 +8,7 @@ def print_crypto_prices():
         error_code = results.get('status').get('error_code')
         if (error_code):
             print(str(error_code) + ' ' + results.get('status').get('error_message'))
+            exit(2)
         else:
             currency = crypto.get('currency')
             for token in crypto.get('tokens'):
@@ -41,4 +42,5 @@ def get_crypto_prices():
         return fetch_with_headers_params('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest', headers, params)
     else:
         print('CoinMarketCap API key (' + crypto.get('env_var') + ') is not defined in environment variables.')
+        exit(1)
         return

@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from './Header';
+import Nav from './Nav';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Main from './Main';
+import HomePage from './HomePage';
 import Log from './Log';
 import { Container } from 'react-bulma-components';
 import SendMessageForm from './SendMessageForm';
@@ -9,11 +9,11 @@ import SendMessageForm from './SendMessageForm';
 const Dashboard = () => {
     return (
         <Router>
-            <Header />
+            <Nav />
             <div className="pl-3 pr-3">
                 <Container breakpoint="desktop">
                     <Routes>
-                        <Route exact path='/' element={<Main />}/>
+                        <Route exact path='/' element={<HomePage />}/>
                         <Route exact path='/send-message' element={<SendMessageForm />}/>
                         <Route path='/*' element={<Log />}/>
                     </Routes>

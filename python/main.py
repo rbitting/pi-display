@@ -1,11 +1,11 @@
 from config import weather, crypto, pihole, network, news, dictionary
-from modules.crypto import print_crypto_prices
-from modules.dictionary import print_word_of_the_day
-from modules.pihole import print_pihole_data
-from modules.network import print_network_speed, print_network_name
-from modules.news import print_news_headlines
-from modules.util import print_current_date, get_current_date_time
-from modules.weather import print_weather
+from crypto import print_crypto_prices
+from dictionary import print_word_of_the_day
+from pihole import print_pihole_data
+from network import print_network_speed, print_network_name
+from news import print_news_headlines
+from util import print_current_date, get_current_date_time
+from weather import print_weather
 
 print_network_name()
 

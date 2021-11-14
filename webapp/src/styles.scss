@@ -30,7 +30,7 @@ $body-color: $light-grey;
 $strong-color: $light-grey;
 $label-color: $light-grey;
 $input-background-color: $light-grey;
-$title-color: $primary;
+$title-color: $light-blue;
 
 .navbar-menu.show {
     display: block;
@@ -50,6 +50,21 @@ body {
 
 .field.is-grouped>.control {
     width: 100%;
+}
+
+button {
+    white-space: normal!important;
+    height: 100%!important;
+}
+
+.loading-spinner {
+    width: 50px;
+    line-height: 1;
+}
+
+.min-height-60 {
+    min-height: 60px;
+    line-height: 1;
 }
 
 @import "~bulma/bulma";

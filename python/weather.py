@@ -1,4 +1,4 @@
-from modules.util import fetch, get_day_of_week_from_ms, get_time_from_ms
+from util import fetch, get_day_of_week_from_ms, get_time_from_ms
 from config import weather
 
 def print_weather():
@@ -6,6 +6,7 @@ def print_weather():
     error_code = results.get('cod')
     if (error_code):
         print(str(error_code) + ' ' + results.get('message'))
+        exit(2)
     else:
         current = results['current']
         weather_id = current['weather'][0]['id']
@@ -24,6 +25,7 @@ def get_weather_data():
         return fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + weather.get('lat') + '&lon=' + weather.get('lon') +'&units=' + weather.get('units') + '&exclude=minutely,hourly&appid=' + api_key)
     else:
         print('Open Weather Map API key (' + weather.get('env_var') + ') is not defined in environment variables.')
+        exit(1)
         return
 
 def get_weather_icon(weather_id):

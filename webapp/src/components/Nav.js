@@ -4,23 +4,21 @@ import {
     Link
 } from 'react-router-dom';
 
-function Header() {
+function Nav() {
     const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
 
     function toggleMenu() {
-        console.log('toggle');
         setIsMobileMenuActive(!isMobileMenuActive);
     }
     return (<Navbar color='black' className='mb-6'>
         <Container breakpoint='desktop'>
             <Navbar.Brand>
-                <Link className='navbar-item has-text-primary' to='/'>Control Center</Link>
+                <Link className='navbar-item has-text-primary is-size-5' to='/'>Control Center</Link>
                 <Navbar.Burger onClick={toggleMenu} />
             </Navbar.Brand>
             <Navbar.Menu className={isMobileMenuActive ? 'show' : ''}>
                 <Navbar.Container>
-                    <Link className='navbar-item has-text-link' to='/log'>Log</Link>
-                    <Link className='navbar-item has-text-link' to='/send-message'>Send Message</Link>
+                    <Link className='navbar-item has-text-link pl-5 pr-5' to='/log'>Log</Link>
                 </Navbar.Container>
             </Navbar.Menu>
         </Container>
@@ -28,4 +26,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default Nav;
