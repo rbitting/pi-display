@@ -48,7 +48,8 @@ module.exports = {
                 { from: 'node_modules/@fortawesome/fontawesome-free/css/solid.min.css', to: 'vendor/fa/css/solid.min.css' },
                 { from: 'node_modules/@fortawesome/fontawesome-free/css/all.min.css', to: 'vendor/fa/css/all.min.css' },
                 { from: 'node_modules/@fortawesome/fontawesome-free/css/brands.min.css', to: 'vendor/fa/css/brands.min.css' },
-                { from: 'node_modules/@fortawesome/fontawesome-free/webfonts', to: 'vendor/fa/webfonts/' }
+                { from: 'node_modules/@fortawesome/fontawesome-free/webfonts', to: 'vendor/fa/webfonts/' },
+                { from: 'src/assets/', to: 'assets/' }
             ]
         })
     ],
