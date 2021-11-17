@@ -22,9 +22,12 @@ def get_minutes_until_bus(bus_time):
     time = bus_time.replace('a', '').replace('p', '').split(':') # ['6','30']
     date = datetime.today()
     day = date.day
-    if (date.strftime('%p') == 'PM' and 'p' in bus_time):   
+    hour = int(time[0])
+    if (date.strftime('%p') == 'PM' and 'a' in bus_time):   
         day = day + 1   # If today is currently PM and bus time is AM, bus arrival is the next day
-    bus_date = date.replace(hour=int(time[0]), minute=int(time[1]), day=day)
+    elif ('p' in bus_time):
+        hour += 12  # Convert from 12-hour to 24-hour time
+    bus_date = date.replace(hour=hour, minute=int(time[1]), day=day)
     seconds = abs((bus_date - date).seconds)
     minutes = seconds/60
     if minutes < 60:
