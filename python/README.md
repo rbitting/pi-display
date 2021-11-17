@@ -12,7 +12,7 @@ Information to display on an e-ink display powered by a Raspberry Pi.
     * Crypto prices: [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/)
     * News: [New York Times API](https://developer.nytimes.com/)
     * Word of the day: [Wordnik API](https://developer.wordnik.com/)
-1. Set your environment variables (note that the IP address for your Pi-Hole also needs to be stored):
+1. Set your environment variables in a `.env` file within the `/python` directory (note that the IP address for your Pi-Hole also needs to be stored):
     ```
     export OWM_API_KEY=[open_weather_map_key]
     export CMC_API_KEY=[coinmarketcap_key]
@@ -20,6 +20,7 @@ Information to display on an e-ink display powered by a Raspberry Pi.
     export WORDNIK_API_KEY=[wordnik_api_key]
     export PIHOLE_ADDRESS=[ip_address_for_your_pihole]
     ```
+1. You may need to also install the python-dotenv python dependency: `pip install python-dotenv`
 
 This project was specificially built for the [Waveshare 5.83inch e-Paper HAT](https://www.waveshare.com/wiki/5.83inch_e-Paper_HAT).
 

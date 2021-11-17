@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 WEATHER_ENV_VAR = 'OWM_API_KEY'
 CRYPTO_ENV_VAR = 'CMC_API_KEY'
