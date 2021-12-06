@@ -30,7 +30,7 @@ Some module settings can be set in the `src/config.py` file. Use this file to en
 
 ## Run
 
-To run the python program to retrieve and print the display data, run the command `python main.py`.
+To run the python program to retrieve and print the display data, run the command `python3 -m python.main` from the root folder.
 
 ## Data Modules
 
