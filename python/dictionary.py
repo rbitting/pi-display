@@ -1,17 +1,40 @@
-from config import dictionary
-from util import fetch
+from .config import dictionary
+from .util import fetch
+    
+class WordOfTheDay():
+    def __init__(self):
+        self.word = ""
+        self.definition = ""
+        
+    @property
+    def word(self):
+        return self._word
+        
+    @word.setter
+    def word(self, a):
+        self._word = a
+        
+    @property
+    def definition(self):
+        return self._definition
+        
+    @definition.setter
+    def definition(self, a):
+        self._definition = a
 
-def print_word_of_the_day():
-    results = get_word_of_the_day()
+def get_word_of_the_day():
+    results = fetch_word_of_the_day()
     error = results.get('message')
     if (error):
         print(error)
     else:
-        print(capitalize_first_letter(results['word']))
-        print(results['definitions'][0]['text'])
+        wotd = WordOfTheDay()
+        wotd.word = capitalize_first_letter(results['word'])
+        wotd.definition = results['definitions'][0]['text']
+        return wotd
         
 
-def get_word_of_the_day():
+def fetch_word_of_the_day():
     api_key = dictionary['api_key']
     if (api_key):
         return fetch('https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=' + api_key)

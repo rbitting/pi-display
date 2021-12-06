@@ -4,8 +4,8 @@ import re
 
 def print_network_speed():
     results = get_network_speed()
-    print('/assets/icons/download.png ' + results['download'])
-    print('/assets/icons/upload.png ' + results['upload'])
+    print('python/assets/icons/download.png ' + results['download'])
+    print('python/assets/icons/upload.png ' + results['upload'])
 
 def get_network_speed():
     # TODO: Run in new thread to avoid lagging
@@ -21,18 +21,18 @@ def get_network_speed():
         'upload': regex_result[last_index]
     }
 
-def print_network_name():
-    network_name = get_network_name()
-    if (network_name == ''):
-        print('/assets/icons/offline.png' + ' Not connected to wifi')
-    else:
-        print('/assets/icons/wifi.png ' + network_name)
 
 def get_network_name():
-    r = subprocess.run(['netsh', 'wlan', 'show', 'interfaces'], stdout=subprocess.PIPE) # Get network info
+    r = subprocess.run(['iwgetid'], stdout=subprocess.PIPE) # Get network info
     result = r.stdout.decode('utf-8')
-    regex_result = re.search('Profile                : (.*)\n', result) # Find network name in returned info(\d+) Mbps
+    regex_result = re.search('ESSID:"(.*)"', result) # Find network name in returned info
     if (regex_result is None):  # If regex fails, wifi is not connected
         return ''
     else:
         return regex_result.group(1)
+        
+def get_online_icon():
+    return 'python/assets/icons/wifi.png'
+
+def get_offline_icon():
+    return 'python/assets/icons/offline.png';

@@ -26,7 +26,7 @@ def get_day_of_week_from_ms(ms):
 
 def get_time_from_ms(ms):
     date = get_date_from_ms(ms)
-    return date.strftime('%I:%M %p')
+    return date.strftime('%-I:%M %p')
 
 def get_date_from_ms(ms):
     return datetime.utcfromtimestamp(ms)
@@ -38,11 +38,11 @@ def get_current_date():
     date = datetime.today()
     if (date.month == 3 and date.day == 19):
         print('Happy birthday!')
-    return get_day_of_week(date) + ', \n' + date.strftime('%B %d')
+    return get_day_of_week(date) + ', \n' + date.strftime('%B %-d')
 
 def get_current_date_time():
-    date = datetime.today()
-    return date.strftime('%b %d, %I:%M:%S %p')
+    date = datetime.now()
+    return date.strftime('%b %-d, %-I:%M:%S %p')
 
 def print_current_date():
     print(get_current_date())
