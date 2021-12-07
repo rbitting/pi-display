@@ -45,7 +45,7 @@ network = {
 # News
 news = {
     'enabled': True,
-    'source': 'nytimes',    # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
+    'source': 'the-washington-post',    # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
     'num': 3,  
     'api_key': {
         'nytimes': os.environ.get(NYTIMES_ENV_VAR),
@@ -68,15 +68,19 @@ dictionary = {
 
 septa = {
     'enabled': True,
-    'num': 2,
+    'num': 3,
     'routes': [
+        {
+            'route': '48',
+            'stop': '2863'    # 23rd & Green
+        },
         {
             'route': '33',    # Bus route
             'stop': '2828'    # Stop ID - 20th & Green    
         },
         {
-            'route': '48',
-            'stop': '2863'    # 23rd & Green
+            'route': '32',
+            'stop': '16566'    # Penn & SG
         }
     ]
 }
