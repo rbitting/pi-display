@@ -1,6 +1,8 @@
 import os
 import time
 import textwrap
+
+from python.send_status import send_status
 from . import epd5in83_V2
 from .config import weather, crypto, pihole, network, news, dictionary, septa
 from .dictionary import get_word_of_the_day
@@ -38,7 +40,9 @@ def print_sm_text_in_box(x, y, text):
     return y
 
 try:
-    print("Initializing display refresh " + get_current_date_time())
+    start_time = get_current_date_time()
+    print("Initializing display refresh " + start_time)
+    send_status(start_time, False, 'Display refresh in progress')
     
     epd = epd5in83_V2.EPD()
     epd.init()
@@ -169,14 +173,21 @@ try:
     print("Go to Sleep...")
     epd.sleep()
     
-    print("Completed refresh " + get_current_date_time())
+    completed = get_current_date_time()
+    print("Completed refresh " + completed)
+
+    send_status(completed, False, 'Successful refresh.')
 
 except IOError as e:
     print(e)
+    completed = get_current_date_time()
+    send_status(completed, True, e)
     
 except KeyboardInterrupt:    
     print("ctrl + c:")
     epd5in83_V2.epdconfig.module_exit()
+    completed = get_current_date_time()
+    send_status(completed, False, 'Refresh interrupted by keyboard')
     exit()
 
 '''print_network_name()

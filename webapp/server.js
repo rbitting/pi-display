@@ -5,12 +5,40 @@ const path = require('path');
 const { spawn } = require('child_process');
 const bodyParser = require('body-parser');
 
+const displayStatus = {
+    lastRefresh: '',
+    isError: false,
+    message: ''
+};
+
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 app.use(bodyParser.json());
+
+app.get('/display-status', (req, res) => {
+    res.status(200);
+    res.send(JSON.stringify(displayStatus));
+});
+
+app.post('/display-status', (req, res) => {
+    console.log('Request body: ', req.body);
+    if (req.body) {
+        displayStatus.isError = req.body.isError;
+        displayStatus.lastRefresh = req.body.lastRefresh || new Date().toLocaleString('en-US');
+        displayStatus.message = req.body.message || '';
+        res.status(200);
+        res.send(JSON.stringify(displayStatus));
+    } else {
+        res.status(400);
+        res.send(JSON.stringify({
+            'code': 400,
+            'message': 'No message sent in request body.'
+        }));
+    }
+});
 
 app.post('/sendmessage', (req, res) => {
     let dataToSend = {};
@@ -24,7 +52,6 @@ app.post('/sendmessage', (req, res) => {
         // Output from script
         python.stdout.on('data', function (data) {
             const output = data.toString();
-            console.log(output);
             try {
                 dataToSend = JSON.parse(output);
             } catch (e) {
@@ -46,7 +73,6 @@ app.post('/sendmessage', (req, res) => {
                 res.status(dataToSend.code);
                 res.send(responseMsg);
             } else {
-                console.log({ dataToSend });
                 res.status(500);
                 if (!dataToSend.message) {
                     dataToSend.message = 'Unknown error from script.';
