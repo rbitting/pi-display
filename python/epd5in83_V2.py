@@ -30,7 +30,7 @@
 # Source: https://github.com/waveshare/e-Paper/blob/master/RaspberryPi_JetsonNano/python/lib/waveshare_epd/epd5in83_V2.py
 
 import logging
-from . import epdconfig
+import epdconfig
 
 # Display resolution
 EPD_WIDTH       = 648

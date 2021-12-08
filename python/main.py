@@ -15,7 +15,6 @@ from .news import get_news_headlines
 from .septa import get_next_buses, get_bus_icon
 from .util import get_current_date, get_current_date_time
 from .weather import get_weather_data
-from .weather_data import WeatherData
 from PIL import Image, ImageDraw, ImageFont
 
 def get_small_icon(path):
@@ -166,9 +165,6 @@ try:
     draw.text((col_1_w + 100, epd.height - 20), last_updated, font = font_italic_sm, fill = 0)
     
     epd.display(epd.getbuffer(Himage))
-
-    #print("Clear...")
-    #epd.Clear()
     
     print("Go to Sleep...")
     epd.sleep()

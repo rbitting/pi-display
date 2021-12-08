@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Columns } from 'react-bulma-components';
-import piholePng from '../assets/pihole.png';
+//import piholePng from '../assets/pihole.png';
 import Loading from './Loading';
 import RefreshButton from './RefreshButton';
 
-const REFRESH_CRYPTO_PATH = './refresh/crypto';
+const REFRESH_ALL_PATH = './refresh/all';
+const CLEAR_ALL_PATH = './refresh/clear';
+/* const REFRESH_CRYPTO_PATH = './refresh/crypto';
 const REFRESH_WEATHER_PATH = './refresh/weather';
 const REFRESH_NETWORK_PATH = './refresh/network';
 const REFRESH_PIHOLE_PATH = './refresh/pihole';
 const REFRESH_NEWS_PATH = './refresh/news';
-const REFRESH_SEPTA_PATH = './refresh/septa';
+const REFRESH_SEPTA_PATH = './refresh/septa'; */
 
 export default function RefreshData() {
     const [buttonResult, setButtonResult] = useState('');
@@ -44,8 +46,26 @@ export default function RefreshData() {
         console.log(response);
     }
     return (<section className='mb-5'>
-        <h1 className='title is-2'>Refresh Data</h1>
+        <h1 className='title is-size-2-desktop'>Display Commands</h1>
         <Columns breakpoint='mobile' mobile={{ gap: '1' }}>
+            <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
+                <RefreshButton
+                    isDisabled={isLoading}
+                    icon='fas fa-sync-alt'
+                    title='Refresh Display'
+                    text='Refresh'
+                    handleClick={() => postToEndpoint(REFRESH_ALL_PATH)} />
+            </Columns.Column>
+            <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
+                <RefreshButton
+                    isDisabled={isLoading}
+                    icon='fas fa-eraser'
+                    title='Clear Display'
+                    text='Clear'
+                    handleClick={() => postToEndpoint(CLEAR_ALL_PATH)} />
+            </Columns.Column>
+        </Columns>
+        {/* <Columns breakpoint='mobile' mobile={{ gap: '1' }}>
             <Columns.Column mobile={{ size: 2 }}>
                 <RefreshButton
                     isDisabled={isLoading}
@@ -89,7 +109,7 @@ export default function RefreshData() {
                     title='Refresh Septa'
                     handleClick={() => postToEndpoint(REFRESH_SEPTA_PATH)} />
             </Columns.Column>
-        </Columns>
+        </Columns> */}
         <div className='min-height-60'>
             {isLoading && <Loading />}
             <p className={isError ? 'has-text-danger' : 'has-text-success'}>{buttonResult}</p>

@@ -65,7 +65,7 @@ export default function SendMessageForm() {
         }
     };
     return (<section>
-        <h1 className='title is-2 mb-2'>Send a Message</h1>
+        <h1 className='title is-size-2-desktop mb-2'>Send a Message</h1>
         <p className='mb-4'>Send a message that will be displayed on the Pi-powered display.</p>
         <Form.Field>
             <Form.Label>Message</Form.Label>
