@@ -24,6 +24,7 @@
         "semi": ["error", "always"],
         "quote-props": 0,
         "prefer-template": 2,
-        "react/prop-types": [0]
+        "react/prop-types": [0],
+        "spaced-comment": "off"
     }
 }

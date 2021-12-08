@@ -13,7 +13,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 
 app.post('/sendmessage', (req, res) => {
-    let dataToSend;
+    let dataToSend = {};
     console.log('Request body: ', req.body);
     res.setHeader('content-type', 'application/json');
     if (req.body.message) {
@@ -23,12 +23,14 @@ app.post('/sendmessage', (req, res) => {
 
         // Output from script
         python.stdout.on('data', function (data) {
+            const output = data.toString();
+            console.log(output);
             try {
-                dataToSend = JSON.parse(data.toString());
+                dataToSend = JSON.parse(output);
             } catch (e) {
                 dataToSend = {
                     code: 500,
-                    message: data.toString()
+                    message: output
                 };
             }
         });
@@ -44,11 +46,12 @@ app.post('/sendmessage', (req, res) => {
                 res.status(dataToSend.code);
                 res.send(responseMsg);
             } else {
+                console.log({ dataToSend });
                 res.status(500);
-                res.send(JSON.stringify({
-                    code: 500,
-                    message: 'Unknown error from script.'
-                }));
+                if (!dataToSend.message) {
+                    dataToSend.message = 'Unknown error from script.';
+                }
+                res.send(JSON.stringify(dataToSend));
             }
         });
     } else {
@@ -60,7 +63,52 @@ app.post('/sendmessage', (req, res) => {
     }
 });
 
-app.post('/refresh/crypto', (req, res) => {
+app.post('/refresh/all', (req, res) => {
+    const python = spawn('python3', ['-m', 'python.main']);
+
+    res.setHeader('content-type', 'application/json');
+
+    // Output from script
+    python.stdout.on('data', function (data) {
+        console.log(data.toString());
+    });
+
+    // Script finished
+    python.on('close', (code) => {
+        const response = {
+            code: 200,
+            message: 'Display refreshed successfully.'
+        };
+        console.log(`Display refresh script run with exit code ${code}`);
+        if (code === 0) {
+            const responseMsg = JSON.stringify(response);
+            console.log(`Response message: ${responseMsg}`);
+
+            // Send data in response
+            res.status(response.code);
+            res.send(responseMsg);
+        } else {
+            response.code = 500;
+            if (code === 1) {
+                response.message = 'Could not get data. Missing API Key.';
+            } else {
+                response.message = `Script exited with exit code ${code}.`;
+            }
+            const responseMsg = JSON.stringify(response);
+            console.log(`Response message: ${responseMsg}`);
+
+            // Send data in response
+            res.status(500);
+            res.send(responseMsg);
+        }
+    });
+});
+
+app.post('/refresh/clear', (req, res) => {
+    runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
+});
+
+/* app.post('/refresh/crypto', (req, res) => {
     runRefreshScript('../python/refresh_crypto.py', res, 'Crypto refreshed successfully.');
 });
 
@@ -82,7 +130,7 @@ app.post('/refresh/septa', (req, res) => {
 
 app.post('/refresh/weather', (req, res) => {
     runRefreshScript('../python/refresh_weather.py', res, 'Weather refreshed successfully.');
-});
+}); */
 
 // This displays message that the server running and listening to specified port
 app.listen(port, () => console.log(`Listening on port ${port}`));
