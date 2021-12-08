@@ -1,5 +1,5 @@
-from .config import septa;
-from .util import fetch;
+from config import septa;
+from util import fetch;
 from datetime import datetime
 import math 
 
@@ -76,9 +76,12 @@ def get_minutes_until_bus(bus_time):
     date = datetime.today()
     day = date.day
     hour = int(time[0])
-    if (date.strftime('%p') == 'PM' and 'a' in bus_time):   
+    is_am = 'a' in bus_time
+    if (is_am and hour == 12):  # Convert 12am to 0 (24-hour time)
+        hour = 0
+    if (date.strftime('%p') == 'PM' and is_am):   
         day = day + 1   # If today is currently PM and bus time is AM, bus arrival is the next day
-    elif ('p' in bus_time):
+    elif (not is_am and hour != 12):
         hour += 12  # Convert from 12-hour to 24-hour time
     bus_date = date.replace(hour=hour, minute=int(time[1]), day=day)
     seconds = abs((bus_date - date).seconds)

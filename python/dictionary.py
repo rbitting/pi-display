@@ -1,10 +1,11 @@
-from .config import dictionary
-from .util import fetch
+from config import dictionary
+from util import fetch
     
 class WordOfTheDay():
     def __init__(self):
         self.word = ""
         self.definition = ""
+        self.word_type = ""
         
     @property
     def word(self):
@@ -21,6 +22,29 @@ class WordOfTheDay():
     @definition.setter
     def definition(self, a):
         self._definition = a
+        
+    @property
+    def word_type(self):
+        return self._word_type
+        
+    @word_type.setter
+    def word_type(self, a):
+        # Reduce to abbreviation
+        if (a == "adjective"):
+            a = "adj."
+        elif (a == "noun"):
+            a = "n."
+        elif (a == "verb"):
+            a = "v."
+        elif (a == "adverb"):
+            a = "adv."
+        elif (a == "pronoun"):
+            a = "pron."
+        elif (a == "preposition"):
+            a = "prep."
+        elif (a == "interjection"):
+            a = "interj."
+        self._word_type = '(' + a + ')'
 
 def get_word_of_the_day():
     results = fetch_word_of_the_day()
@@ -31,6 +55,7 @@ def get_word_of_the_day():
         wotd = WordOfTheDay()
         wotd.word = capitalize_first_letter(results['word'])
         wotd.definition = results['definitions'][0]['text']
+        wotd.word_type = results['definitions'][0]['partOfSpeech']
         return wotd
         
 
