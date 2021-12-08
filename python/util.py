@@ -46,3 +46,10 @@ def get_current_date_time():
 
 def print_current_date():
     print(get_current_date())
+
+#Print last updated date + time in bottom right of screen
+def print_last_updated(draw, font, display_w, display_h):
+    last_updated = 'Last updated ' + get_current_date_time()
+    width, height = font.getsize(last_updated)
+    draw.text((display_w - width, display_h - height), last_updated, font = font, fill = 0)
+    return last_updated

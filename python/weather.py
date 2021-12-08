@@ -1,6 +1,6 @@
-from .util import fetch, get_day_of_week_from_ms, get_time_from_ms
-from .config import weather
-from .weather_data import WeatherData, WeatherDay
+from util import fetch, get_day_of_week_from_ms, get_time_from_ms
+from config import weather
+from weather_data import WeatherData, WeatherDay
 
 def get_weather_data():
     results = fetch_weather_data()
@@ -13,8 +13,9 @@ def get_weather_data():
         current = results['current']
         weather_id = current['weather'][0]['id']
         
-        weather.current_icon = get_weather_icon(weather_id)# Current weather icon
-            # current['weather'][0]['main'] # Current weather short description (ex. 'Clouds')
+        weather.current_icon_id = str(weather_id)
+        weather.current_icon = get_weather_icon(weather_id) # Current weather icon
+        weather.current_desc = current['weather'][0]['main'] # Current weather short description (ex. 'Clouds')
         today_forecast = results['daily'][0]['temp']
         weather.current_temp = str(round(current['temp'])) + '°'
         weather.current = ('Feels Like: ' + str(round(current['feels_like'])) + '°\n' + # Feels like temp 
@@ -63,6 +64,8 @@ def get_weather_icon(weather_id):
         return 'python/assets/icons/tornado.png'
     elif (weather_id >= 700 and weather_id < 800):
         return 'python/assets/icons/atmosphere.png'
+    else:
+        return 'python/assets/icons/unknown.png'
         # 701	Mist	mist	 50d
         # 711	Smoke	Smoke	 50d
         # 721	Haze	Haze	 50d

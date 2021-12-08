@@ -7,6 +7,8 @@ class WeatherData():
         self.current = ""
         self.current_temp = ""
         self.current_icon = ""
+        self.current_icon_id = ""
+        self.current_desc = ""
         self.sunrise = ""
         self.sunset = ""
         
@@ -33,6 +35,22 @@ class WeatherData():
     @current_icon.setter
     def current_icon(self, a):
         self._current_icon = a
+        
+    @property
+    def current_icon_id(self):
+        return self._current_icon_id
+        
+    @current_icon_id.setter
+    def current_icon_id(self, a):
+        self._current_icon_id = a
+        
+    @property
+    def current_desc(self):
+        return self._current_desc
+        
+    @current_desc.setter
+    def current_desc(self, a):
+        self._current_desc = a
         
     @property
     def sunrise(self):

@@ -4,8 +4,8 @@ import { Columns } from 'react-bulma-components';
 import Loading from './Loading';
 import RefreshButton from './RefreshButton';
 
-const REFRESH_ALL_PATH = './refresh/all';
-const CLEAR_ALL_PATH = './refresh/clear';
+const REFRESH_ALL_PATH = '/refresh/all';
+const CLEAR_ALL_PATH = '/refresh/clear';
 /* const REFRESH_CRYPTO_PATH = './refresh/crypto';
 const REFRESH_WEATHER_PATH = './refresh/weather';
 const REFRESH_NETWORK_PATH = './refresh/network';

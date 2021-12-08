@@ -1,5 +1,5 @@
-from .util import fetch
-from .config import news
+from util import fetch
+from config import news
 
 def get_nytimes_headlines():
     results = fetch_nytimes_data()

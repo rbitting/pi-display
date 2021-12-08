@@ -12,7 +12,7 @@ def send_status(last_refresh, isError, message):
         "message": message
     }
     try:
-        r = requests.post('http://localhsdfsdfdfsost:3000/display-status', data=json.dumps(body), headers=headers)
+        r = requests.post('http://localhost:3000/display-status', data=json.dumps(body), headers=headers)
         print(json.loads(r.text))
     except requests.exceptions.RequestException as e:
         print('Could not send status update: ' + str(e))

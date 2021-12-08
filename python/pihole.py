@@ -1,6 +1,6 @@
 import os
-from .config import pihole
-from .util import fetch
+from config import pihole
+from util import fetch
         
 class PiholeStatus():
     def __init__(self):

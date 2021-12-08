@@ -41,58 +41,80 @@ app.post('/display-status', (req, res) => {
 });
 
 app.post('/sendmessage', (req, res) => {
-    let dataToSend = {};
-    console.log('Request body: ', req.body);
-    res.setHeader('content-type', 'application/json');
-    if (req.body.message) {
-        const msg = req.body.message.replace(/"/g, '\\"');
-        console.log(`Sending message to script: ${msg}`);
-        const python = spawn('python', ['../python/printmessage.py', msg]); // Escape quotes
+	if (!displayStatus.isProcessing) {
+		let dataToSend = {};
+		console.log('Request body: ', req.body);
+		res.setHeader('content-type', 'application/json');
+		if (req.body.message) {
+			const msg = req.body.message.replace(/"/g, '\\"');
+			console.log(`Sending message to script: ${msg}`);
+			const python = spawn('python', ['../python/printmessage.py', msg]); // Escape quotes
 
-        // Output from script
-        python.stdout.on('data', function (data) {
-            const output = data.toString();
-            try {
-                dataToSend = JSON.parse(output);
-            } catch (e) {
-                dataToSend = {
-                    code: 500,
-                    message: output
-                };
-            }
-        });
+			// Output from script
+			python.stdout.on('data', function (data) {
+				const output = data.toString();
+				try {
+					dataToSend = JSON.parse(output);
+				} catch (e) {
+					dataToSend = {
+						code: 500,
+						message: output
+					};
+				}
+			});
 
-        // Script finished
-        python.on('close', (code) => {
-            console.log(`Python script run with exit code ${code}`);
+			// Script finished
+			python.on('close', (code) => {
+				console.log(`Python script run with exit code ${code}`);
 
-            // Send data in response
-            if (code === 0) {
-                const responseMsg = JSON.stringify(dataToSend);
-                console.log(`Response message: ${responseMsg}`);
-                res.status(dataToSend.code);
-                res.send(responseMsg);
-            } else {
-                res.status(500);
-                if (!dataToSend.message) {
-                    dataToSend.message = 'Unknown error from script.';
-                }
-                res.send(JSON.stringify(dataToSend));
-            }
-        });
-    } else {
-        res.status(400);
-        res.send(JSON.stringify({
-            'code': 400,
-            'message': 'No message sent in request body.'
-        }));
-    }
+				// Send data in response
+				if (code === 0) {
+					const responseMsg = JSON.stringify(dataToSend);
+					console.log(`Response message: ${responseMsg}`);
+					res.status(dataToSend.code);
+					res.send(responseMsg);
+				} else {
+					res.status(500);
+					if (!dataToSend.message) {
+						dataToSend.message = 'Unknown error from script.';
+					}
+					res.send(JSON.stringify(dataToSend));
+				}
+				
+				// Refresh display after a minute
+				setTimeout(() => {
+					if (!displayStatus.isProcessing) {
+						triggerMainScript(req, res, false);
+					}
+				}, 60000);
+			});
+		} else {
+			res.status(400);
+			res.send(JSON.stringify({
+				'code': 400,
+				'message': 'No message sent in request body.'
+			}));
+		}
+	}
+	else {
+		res.status(409);
+		res.send(JSON.stringify({
+			'code': 409,
+			'message': 'Server is busy. Please try again in a few minutes.'
+		}));
+	}
 });
 
 app.post('/refresh/all', (req, res) => {
-    const python = spawn('python3', ['-m', 'python.main']);
+    triggerMainScript(req, res, true);
+});
 
-    res.setHeader('content-type', 'application/json');
+app.post('/refresh/clear', (req, res) => {
+    runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
+});
+
+function triggerMainScript(req, res, doRespond) {
+	const python = spawn('python3', ['../python/main.py']);
 
     // Output from script
     python.stdout.on('data', function (data) {
@@ -101,38 +123,41 @@ app.post('/refresh/all', (req, res) => {
 
     // Script finished
     python.on('close', (code) => {
-        const response = {
-            code: 200,
-            message: 'Display refreshed successfully.'
-        };
         console.log(`Display refresh script run with exit code ${code}`);
-        if (code === 0) {
-            const responseMsg = JSON.stringify(response);
-            console.log(`Response message: ${responseMsg}`);
+		if (doRespond) {
+			res.setHeader('content-type', 'application/json');
+			
+			const response = {
+				code: 200,
+				message: 'Display refreshed successfully.'
+			};
+			if (code === 0) {
+				const responseMsg = JSON.stringify(response);
+				console.log(`Response message: ${responseMsg}`);
 
-            // Send data in response
-            res.status(response.code);
-            res.send(responseMsg);
-        } else {
-            response.code = 500;
-            if (code === 1) {
-                response.message = 'Could not get data. Missing API Key.';
-            } else {
-                response.message = `Script exited with exit code ${code}.`;
-            }
-            const responseMsg = JSON.stringify(response);
-            console.log(`Response message: ${responseMsg}`);
-
-            // Send data in response
-            res.status(500);
-            res.send(responseMsg);
-        }
+				// Send data in response
+				res.status(response.code);
+				res.send(responseMsg);
+			} else {
+				response.code = 500;
+				if (code === 1) {
+					response.message = 'Could not get data. Missing API Key.';
+				} else {
+					response.message = `Script exited with exit code ${code}.`;
+				}
+				const responseMsg = JSON.stringify(response);
+				console.log(`Response message: ${responseMsg}`);
+				
+				// Send data in response
+				res.status(500);
+				res.send(responseMsg);
+			}
+		}
+		else {
+			console.log('Refresh complete.');
+		}
     });
-});
-
-app.post('/refresh/clear', (req, res) => {
-    runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
-});
+}
 
 /* app.post('/refresh/crypto', (req, res) => {
     runRefreshScript('../python/refresh_crypto.py', res, 'Crypto refreshed successfully.');
