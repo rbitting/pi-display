@@ -2,7 +2,6 @@ import os
 import time
 import textwrap
 
-from send_status import send_status
 import epd5in83_V2
 from config import weather, crypto, pihole, network, news, dictionary, septa
 from dictionary import get_word_of_the_day
@@ -59,7 +58,6 @@ def print_all_data():
     try:
         start_time = get_current_date_time()
         print("Initializing display refresh " + start_time)
-        send_status(start_time, False, 'Display refresh in progress')
         
         epd = epd5in83_V2.EPD()
         epd.init()
@@ -181,18 +179,14 @@ def print_all_data():
         completed = get_current_date_time()
         print("Completed refresh " + completed)
 
-        send_status(completed, False, 'Successful refresh.')
-
     except IOError as e:
         print(e)
         completed = get_current_date_time()
-        send_status(completed, True, e)
         
     except KeyboardInterrupt:    
         print("ctrl + c:")
         epd5in83_V2.epdconfig.module_exit()
         completed = get_current_date_time()
-        send_status(completed, False, 'Refresh interrupted by keyboard')
         exit()
 
 print_all_data()

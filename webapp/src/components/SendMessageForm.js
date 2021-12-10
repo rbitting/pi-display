@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Form, Icon, Button } from 'react-bulma-components';
 
 const MIN_CHARS = 1;
-const MAX_CHARS = 30;
+const MAX_CHARS = 100;
 const ENDPOINT = '/sendmessage';
 
-export default function SendMessageForm() {
+export default function SendMessageForm(props) {
     const [message, setMessage] = useState('');
     const [isValid, setIsValid] = useState(false);
     const [isSubmitError, setIsSubmitError] = useState(false);
@@ -24,6 +24,7 @@ export default function SendMessageForm() {
     };
 
     const handleSubmit = async (e) => {
+        props.setIsProcessing(true);
         if (isValid) {
             const response = await fetch(ENDPOINT, {
                 method: 'POST',
@@ -54,7 +55,6 @@ export default function SendMessageForm() {
                 } else {
                     try {
                         const json = await response.json();
-                        console.log(json);
                         setFormResponse(json.message);
                     } catch (e) {
                         console.log(e);
@@ -62,6 +62,7 @@ export default function SendMessageForm() {
                     }
                 }
             }
+            props.setIsProcessing(false);
         }
     };
     return (<section>
@@ -83,8 +84,9 @@ export default function SendMessageForm() {
         </Form.Field>
         <Form.Field kind='group'>
             <Form.Control className='is-flex'>
-                <Button disabled={!isValid} color='primary' onClick={handleSubmit}>Submit</Button>
+                <Button disabled={!isValid || props.isProcessing} color='primary' onClick={handleSubmit}>Submit</Button>
                 {<span className={`is-justify-content-center is-flex is-flex-direction-column ml-2 ${isSubmitError ? 'has-text-danger' : ''}`}>{formResponse}</span>}
+                {props.isProcessing && <span className={'is-justify-content-center is-flex is-flex-direction-column ml-2 has-text-warning'}>Please wait. Display is processing.</span>}
             </Form.Control>
         </Form.Field>
     </section>);

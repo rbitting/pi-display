@@ -13,14 +13,14 @@ const REFRESH_PIHOLE_PATH = './refresh/pihole';
 const REFRESH_NEWS_PATH = './refresh/news';
 const REFRESH_SEPTA_PATH = './refresh/septa'; */
 
-export default function RefreshData() {
+export default function RefreshData(props) {
     const [buttonResult, setButtonResult] = useState('');
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     async function postToEndpoint(path) {
         setButtonResult('');
-        setIsLoading(true);
+        props.setIsProcessing(true);
         const response = await fetch(path, {
             method: 'POST',
             credentials: 'same-origin',
@@ -35,12 +35,14 @@ export default function RefreshData() {
                 setIsError(data.code !== 200);
                 setButtonResult(data.message);
                 setIsLoading(false);
+                props.setIsProcessing(false);
             })
             .catch(err => {
                 console.log(err);
                 setIsError(true);
                 setButtonResult(err);
                 setIsLoading(false);
+                props.setIsProcessing(false);
             });
 
         console.log(response);
@@ -50,7 +52,7 @@ export default function RefreshData() {
         <Columns breakpoint='mobile' mobile={{ gap: '1' }}>
             <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
                 <RefreshButton
-                    isDisabled={isLoading}
+                    isDisabled={props.isProcessing}
                     icon='fas fa-sync-alt'
                     title='Refresh Display'
                     text='Refresh'
@@ -58,7 +60,7 @@ export default function RefreshData() {
             </Columns.Column>
             <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
                 <RefreshButton
-                    isDisabled={isLoading}
+                    isDisabled={props.isProcessing}
                     icon='fas fa-eraser'
                     title='Clear Display'
                     text='Clear'
