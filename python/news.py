@@ -1,5 +1,6 @@
-from util import fetch
-from config import news
+from util_formatting import print_md_text_in_box
+from util_fetch import fetch
+from config import news, today_x, today_y, font_md, padding, padding_sm
 
 def get_nytimes_headlines():
     results = fetch_nytimes_data()
@@ -57,3 +58,10 @@ def get_news_headlines():
         return get_nytimes_headlines()
     else:
         return get_newsapi_headlines(source)
+
+def print_news_data(draw):
+    news_data = get_news_headlines()
+    y = today_y + 80
+    for headline in news_data:
+        draw.text((today_x, y), '•', font = font_md, fill = 0)
+        y = print_md_text_in_box(draw, today_x + padding, y, headline) + padding_sm

@@ -1,5 +1,7 @@
-import os
 from dotenv import load_dotenv
+from PIL import ImageFont
+from util_os import get_absolute_path, get_env_var
+from epd5in83_V2 import EPD_HEIGHT, EPD_WIDTH
 
 load_dotenv()
 
@@ -13,7 +15,7 @@ NEWSAPI_ENV_VAR = 'NEWSAPI_API_KEY'
 # Weather
 weather = {
     'enabled': True,
-    'api_key': os.environ.get(WEATHER_ENV_VAR),
+    'api_key': get_env_var(WEATHER_ENV_VAR),
     'env_var': WEATHER_ENV_VAR,
     'lon': '-75.175',
     'lat': '39.9656',
@@ -24,7 +26,7 @@ weather = {
 # Crypto
 crypto = {
     'enabled': True,
-    'api_key': os.environ.get(CRYPTO_ENV_VAR),
+    'api_key': get_env_var(CRYPTO_ENV_VAR),
     'env_var': CRYPTO_ENV_VAR,
     'tokens': ['BTC', 'ETH', 'ALGO', 'MANA', 'PAWTH'],
     'currency': 'USD'
@@ -33,7 +35,7 @@ crypto = {
 # Pihole
 pihole = {
     'enabled': True,
-    'ip': os.environ.get(IP_ENV_VAR),
+    'ip': get_env_var(IP_ENV_VAR),
     'env_var': IP_ENV_VAR
 }
 
@@ -48,8 +50,8 @@ news = {
     'source': 'the-washington-post',    # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
     'num': 3,  
     'api_key': {
-        'nytimes': os.environ.get(NYTIMES_ENV_VAR),
-        'newsapi': os.environ.get(NEWSAPI_ENV_VAR)
+        'nytimes': get_env_var(NYTIMES_ENV_VAR),
+        'newsapi': get_env_var(NEWSAPI_ENV_VAR)
     },
     'env_var': {
         'nytimes': NYTIMES_ENV_VAR,
@@ -60,7 +62,7 @@ news = {
 # Dictionary for word of the day
 dictionary = {
     'enabled': True,
-    'api_key': os.environ.get(WORDNIK_ENV_VAR),
+    'api_key': get_env_var(WORDNIK_ENV_VAR),
     'env_var': WORDNIK_ENV_VAR
 }
 
@@ -84,3 +86,20 @@ septa = {
         }
     ]
 }
+
+font_italic_sm = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 18)
+font_italic = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 22)
+font_sm = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 16)
+font_md = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 22)
+font_lg = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 40)
+icon_w = 50
+icon_h = 50
+icon_size_sm = 40
+padding = 10
+padding_sm = padding/2
+padding_lg = padding*2
+col_1_w = 280
+today_x = col_1_w + 30
+today_y = 45
+display_w = EPD_WIDTH
+display_h = EPD_HEIGHT

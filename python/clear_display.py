@@ -1,6 +1,5 @@
-
 import epd5in83_V2
-from util import get_current_date_time
+from util_dates import get_current_date_time
 
 try:
     start_time = get_current_date_time()

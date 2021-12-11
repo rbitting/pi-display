@@ -1,4 +1,4 @@
-from util import fetch_with_headers_params
+from util_fetch import fetch_with_headers_params
 from config import crypto
 from dict import currency_symbols
 

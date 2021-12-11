@@ -1,7 +1,9 @@
-from config import septa;
-from util import fetch;
+import math
+from config import septa, font_md, font_italic, padding, col_1_w
+from util_fetch import fetch
+from util_formatting import get_small_icon
+from util_os import get_absolute_path
 from datetime import datetime
-import math 
 
 class BusArrival():
     def __init__(self):
@@ -98,4 +100,18 @@ def get_hours_and_min(minutes):
 def get_bus_icon():
     return 'python/assets/icons/septa.png'
 
-get_next_buses()
+def print_septa_data(Himage, draw):
+    septa_y = 300
+    x = 60
+    bus_routes = get_next_buses()
+    Himage.paste(get_small_icon(get_absolute_path(get_bus_icon())), (0, septa_y))
+    for bus in bus_routes:
+        y = septa_y
+        draw.text((x, y), bus.route, font = font_italic, fill = 0)
+        arrivals = bus.get_arrivals()
+        for arrival in arrivals:
+            y += 24
+            draw.text((x, y), arrival.eta, font = font_md, fill = 0)
+        x+=75
+    y += 30
+    draw.line((0, y, col_1_w, y), fill = 0) # Horizontal line break
