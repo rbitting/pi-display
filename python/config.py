@@ -1,7 +1,8 @@
 from dotenv import load_dotenv
 from PIL import ImageFont
-from util_os import get_absolute_path, get_env_var
+
 from epd5in83_V2 import EPD_HEIGHT, EPD_WIDTH
+from util_os import get_absolute_path, get_env_var
 
 load_dotenv()
 
@@ -19,7 +20,7 @@ weather = {
     'env_var': WEATHER_ENV_VAR,
     'lon': '-75.175',
     'lat': '39.9656',
-    'units': 'imperial' # 'standard', 'metric' or 'imperial'
+    'units': 'imperial'  # 'standard', 'metric' or 'imperial'
 }
 
 
@@ -47,8 +48,9 @@ network = {
 # News
 news = {
     'enabled': True,
-    'source': 'the-washington-post',    # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
-    'num': 3,  
+    # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
+    'source': 'the-washington-post',
+    'num': 3,
     'api_key': {
         'nytimes': get_env_var(NYTIMES_ENV_VAR),
         'newsapi': get_env_var(NEWSAPI_ENV_VAR)
@@ -78,7 +80,7 @@ septa = {
         },
         {
             'route': '33',    # Bus route
-            'stop': '2828'    # Stop ID - 20th & Green    
+            'stop': '2828'    # Stop ID - 20th & Green
         },
         {
             'route': '32',
@@ -96,8 +98,8 @@ icon_w = 50
 icon_h = 50
 icon_size_sm = 40
 padding = 10
-padding_sm = padding/2
-padding_lg = padding*2
+padding_sm = padding / 2
+padding_lg = padding * 2
 col_1_w = 280
 today_x = col_1_w + 30
 today_y = 45

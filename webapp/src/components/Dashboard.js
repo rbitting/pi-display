@@ -1,9 +1,9 @@
 import React from 'react';
-import Nav from './Nav';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Container } from 'react-bulma-components';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './HomePage';
 import Log from './Log';
-import { Container } from 'react-bulma-components';
+import Nav from './Nav';
 import SendMessageForm from './SendMessageForm';
 
 const Dashboard = () => {

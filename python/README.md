@@ -101,3 +101,11 @@ News headlines can also be retrieved from the [News API](https://newsapi.org/). 
 ## Icons
 
 Icons are from [Icons8](https://icons8.com).
+
+## Linting
+
+[autopep8](https://pypi.org/project/autopep8/) is used for Python linting.
+
+```
+autopep8 --in-place --aggressive --aggressive --max-line-length 100 --in-place --ignore E302 -v --recursive .
+```

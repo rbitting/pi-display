@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import SendMessageForm from './SendMessageForm';
-import RefreshData from './RefreshData';
 import DisplayStatus from './DisplayStatus';
+import RefreshData from './RefreshData';
+import SendMessageForm from './SendMessageForm';
 
 export default function HomePage() {
     const [isProcessing, setIsProcessing] = useState(false);
