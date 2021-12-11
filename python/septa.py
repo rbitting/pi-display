@@ -63,7 +63,7 @@ def get_next_buses():
         for i in range(min_range):
             bus = BusArrival()
             bus.date = bus_route[i].get('DateCalender')
-            bus.eta = get_minutes_until_bus(bus_route[i].get('date'))
+            bus.eta = bus_route[i].get('date') + 'm' #get_minutes_until_bus(bus_route[i].get('date'))
             arrival.add_arrival(bus)
         buses.append(arrival)
     return buses
@@ -97,3 +97,5 @@ def get_hours_and_min(minutes):
     
 def get_bus_icon():
     return 'python/assets/icons/septa.png'
+
+get_next_buses()
