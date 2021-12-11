@@ -8,6 +8,7 @@
     "start": "eslint src --fix && webpack-dev-server --mode=development --open --hot",
     "build": "eslint src --fix && webpack --mode=production",
     "server": "npm run build && node server.js",
+    "server:log": "node server.js >> ~/logs/server.log 2>&1",
     "webpack": "webpack --mode=production",
 	"deploy": "npm run webpack && node server.js"
   },

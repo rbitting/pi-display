@@ -1,3 +1,5 @@
+import logging
+
 from config import pihole, font_sm, font_md, col_1_w
 from util_fetch import fetch
 
@@ -31,13 +33,14 @@ def get_pihole_data():
             '             ' + results['ads_percentage_today'] + '%'
         return data
     else:
+        logging.error('No results returned from fetch_pihole_data.')
         exit(2)
 
 def fetch_pihole_data():
     if (pihole['ip']):
         return fetch('http://' + pihole['ip'] + '/admin/api.php?summary')
     else:
-        print('Pihole IP adress (' + pihole['env_var'] +
+        logging.error('Pihole IP adress (' + pihole['env_var'] +
               ') is not defined in environment variables.')
         exit(1)
         return
@@ -45,8 +48,8 @@ def fetch_pihole_data():
 def print_pihole_data(draw):
     pihole_data = get_pihole_data()
     y = 200
-    print(pihole_data.status)
-    print(pihole_data.stats)
+    logging.info(pihole_data.status)
+    logging.info(pihole_data.stats)
     draw.text((64, y), pihole_data.status, font=font_md, fill=0)    # "Pihole is [enabled/disabled]"
     draw.text((50, y + 30), pihole_data.stats, font=font_md, fill=0)
     draw.text((52, y + 58), 'requests           of all requests', font=font_sm, fill=0)

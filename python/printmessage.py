@@ -1,3 +1,4 @@
+import logging
 import sys
 import textwrap
 
@@ -11,6 +12,8 @@ from util_dates import print_last_updated
 font_italic_sm = ImageFont.truetype(roboto_italic, 18)
 font_md = ImageFont.truetype(roboto, 26)
 font_lg = ImageFont.truetype(noto_sans_mono, 42)
+
+logging.basicConfig(level=logging.INFO, filename='../../../logs/main.log', encoding='utf-8', format='[%(levelname)s] %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 def print_header(draw):
     draw.rectangle((0, 0, 648, 56), fill=0)
@@ -34,8 +37,10 @@ def print_msg_on_display(draw, msg):
     draw.multiline_text((x, y), centered_text, font=font_lg, fill=0)
 
 
+logging.info("********* Initializing message refresh *********")
 if (len(sys.argv) > 1):
     msg = sys.argv[1]
+    logging.info('Message: ' + msg)
     try:
         epd = epd5in83_V2.EPD()
         epd.init()
@@ -45,20 +50,26 @@ if (len(sys.argv) > 1):
         print_header(draw)
         print_msg_on_display(draw, msg)
         last_updated = print_last_updated(draw, display_w, display_h)
+        logging.info(last_updated)
 
         epd.display(epd.getbuffer(Himage))
         epd.sleep()
+        logging.info('Message printed')
         print('{"code":200,"message":"Message received","data":"' + msg + '"}')
 
     except IOError as e:
+        logging.exception('IOError')
         print('{"code":500,"message":"IO Error.","data":' + str(e) + '}')
 
     except KeyboardInterrupt:
         epd5in83_V2.epdconfig.module_exit()
+        logging.exception('Keyboard interrupt')
         print('{"code":400,"message":"Keyboard interrupt","data":null}')
 
     except BaseException:
         e = sys.exc_info()[0]
+        logging.exception('Unknown error')
         print('{"code":500,"message":"Unknown Error.","data":"' + str(e) + '"}')
 else:
+    logging.warning('No message received')
     print('{"code":400,"message":"No message received","data":null}')

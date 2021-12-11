@@ -1,4 +1,4 @@
-import json
+import logging
 import re
 import subprocess
 
@@ -9,8 +9,8 @@ from util_os import get_absolute_path
 
 def print_network_speed():
     results = get_network_speed()
-    print('python/assets/icons/download.png ' + results['download'])
-    print('python/assets/icons/upload.png ' + results['upload'])
+    logging.info('python/assets/icons/download.png ' + results['download'])
+    logging.info('python/assets/icons/upload.png ' + results['upload'])
 
 def get_network_speed():
     # TODO: Run in new thread to avoid lagging
@@ -55,5 +55,5 @@ def print_wifi_info(Himage, draw):
     y = 0
     Himage.paste(get_small_icon(get_absolute_path(network_icon)), (x, y))
     x = x + icon_size_sm + padding
-    print('Network name: ' + network_name)
+    logging.info('Network name: ' + network_name)
     draw.text((x, y + padding), network_name, font=font_md, fill=0)
