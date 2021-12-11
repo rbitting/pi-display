@@ -1,6 +1,10 @@
-from util import fetch, get_day_of_week_from_ms, get_time_from_ms
-from config import weather
+from util_dates import get_day_of_week_from_ms, get_time_from_ms
+from util_fetch import fetch
+from util_formatting import get_small_icon
+from util_os import get_absolute_path, path_exists
+from config import weather, icon_size_sm, padding, padding_sm, col_1_w, font_sm, font_md, font_lg
 from weather_data import WeatherData, WeatherDay
+from PIL import Image
 
 def get_weather_data():
     results = fetch_weather_data()
@@ -85,3 +89,36 @@ def get_forecast(json, weather):
         data.day = get_day_of_week_from_ms(day['dt'])[0:3] # Day of week 3-letter abbreviation
         data.temps = str(round(day['temp']['max'])) + '° | ' + str(round(day['temp']['min'])) + '°' # High and low for forecasted day 
         weather.add_forecasted_day(data)
+
+def print_weather(Himage, draw):
+    weather_data = get_weather_data()
+    weather_icon = get_absolute_path(weather_data.current_icon)
+    if path_exists(weather_icon):
+        Himage.paste(Image.open(weather_icon), (0,0))   # Current weather icon
+    else:
+        print('No icon for current weather: ' + weather_data.current_icon_id  + ' ' + weather_data.current_desc)
+    print('current temp: ' + weather_data.current_temp)
+    draw.text((60, 0), weather_data.current_temp, font = font_lg, fill = 0)   # Current temperature
+    draw.text((0, 50), weather_data.current, font = font_md, fill = 0)    # Feels like temp + high/low
+    
+    x = 160
+    y = 15
+    Himage.paste(get_small_icon(get_absolute_path(weather_data.get_sunrise_icon())), (x,y))   # Sunrise icon
+    draw.text((x+icon_size_sm+padding_sm, y+padding), weather_data.sunrise, font = font_md, fill = 0)   # Sunrise time
+    
+    Himage.paste(get_small_icon(get_absolute_path(weather_data.get_sunset_icon())), (x,y+icon_size_sm))   # Sunset icon
+    draw.text((x+icon_size_sm+padding_sm, y+icon_size_sm+padding), weather_data.sunset, font = font_md, fill = 0)   # Sunset time
+    
+    forecast = weather_data.get_forecast()
+    y = 110 # Y coordinate (to display forecasts in a row)
+    x = 0
+    next_line = y + icon_size_sm
+    
+    for day in forecast:
+        Himage.paste(get_small_icon(get_absolute_path(day.icon)), (x,y))   # Forecasted weather icon
+        draw.text((x+icon_size_sm+padding, y+padding_sm), day.day, font = font_sm, fill = 0)   # Day of week next to icon
+        draw.text((x, next_line), day.temps, font = font_md, fill = 0)   # High/low below
+        x += (icon_size_sm + 65)
+    
+    y = 190
+    draw.line((0, y, col_1_w, y), fill = 0)

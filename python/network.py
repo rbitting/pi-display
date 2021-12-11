@@ -1,6 +1,9 @@
 import subprocess
 import json
 import re
+from config import col_1_w, padding, icon_size_sm, font_md
+from util_formatting import get_small_icon
+from util_os import get_absolute_path
 
 def print_network_speed():
     results = get_network_speed()
@@ -35,4 +38,20 @@ def get_online_icon():
     return 'python/assets/icons/wifi.png'
 
 def get_offline_icon():
-    return 'python/assets/icons/offline.png';
+    return 'python/assets/icons/offline.png'
+
+def print_wifi_info(Himage, draw):
+    network_name = get_network_name()
+    is_connected = network_name != ''
+    network_icon = ''
+    if (is_connected):
+        network_icon = get_online_icon()
+    else:
+        network_name = 'Not connected to wifi'
+        network_icon = get_offline_icon()
+    x = col_1_w + 100
+    y = 0
+    Himage.paste(get_small_icon(get_absolute_path(network_icon)), (x,y))
+    x = x + icon_size_sm + padding
+    print('Network name: ' + network_name)
+    draw.text((x, y+padding), network_name, font = font_md, fill = 0)
