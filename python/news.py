@@ -1,3 +1,5 @@
+import logging
+
 from config import font_md, news, padding, padding_sm, today_x, today_y
 from util_fetch import fetch
 from util_formatting import print_md_text_in_box
@@ -7,10 +9,10 @@ def get_nytimes_headlines():
     results = fetch_nytimes_data()
     error = results.get('fault')
     if (error):
-        print(error['detail']['errorcode'] + ' ' + error['faultstring'])
+        logging.error(error['detail']['errorcode'] + ' ' + error['faultstring'])
         exit(2)
     else:
-        # print('/assets/icons/news.png')
+        # logging.info('/assets/icons/news.png')
         num = min([results['num_results'], news['num']])
         headlines = get_headlines(results['results'], num)
         return headlines
@@ -20,7 +22,7 @@ def fetch_nytimes_data():
     if (api_key):
         return fetch('https://api.nytimes.com/svc/topstories/v2/home.json?api-key=' + api_key)
     else:
-        print(
+        logging.error(
             'New York Times API key (' +
             news.get('env_var').get('nytimes') +
             ') is not defined in environment variables.')
@@ -30,10 +32,10 @@ def get_newsapi_headlines(source):
     results = fetch_newsapi_headlines(source)
     if (results):
         if (results['status'] == 'error'):
-            print(results['code'] + ' ' + results['message'])
+            logging.error(results['code'] + ' ' + results['message'])
             exit(2)
         elif (results.get('totalResults') == 0):
-            print(
+            logging.info(
                 'No news results returned for "' +
                 source +
                 '". Source should be "nytimes" or any source ID from Newsapi (https://newsapi.org/docs/endpoints/sources).')
@@ -53,7 +55,7 @@ def fetch_newsapi_headlines(source):
             '&apiKey=' +
             api_key)
     else:
-        print(
+        logging.error(
             'Newsapi.org API key (' +
             news.get('env_var').get('newsapi') +
             ') is not defined in environment variables.')

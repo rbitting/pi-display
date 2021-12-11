@@ -1,3 +1,4 @@
+import logging
 from PIL import Image
 
 from config import (col_1_w, font_lg, font_md, font_sm, icon_size_sm, padding, padding_sm, weather)
@@ -12,7 +13,7 @@ def get_weather_data():
     results = fetch_weather_data()
     error_code = results.get('cod')
     if (error_code):
-        print(str(error_code) + ' ' + results.get('message'))
+        logging.error(str(error_code) + ' ' + results.get('message'))
         exit(2)
     else:
         weather = WeatherData()
@@ -45,7 +46,7 @@ def fetch_weather_data():
             '&exclude=minutely,hourly&appid=' +
             api_key)
     else:
-        print(
+        logging.error(
             'Open Weather Map API key (' +
             weather.get('env_var') +
             ') is not defined in environment variables.')
@@ -111,12 +112,12 @@ def print_weather(Himage, draw):
     if path_exists(weather_icon):
         Himage.paste(Image.open(weather_icon), (0, 0))   # Current weather icon
     else:
-        print(
+        logging.warning(
             'No icon for current weather: ' +
             weather_data.current_icon_id +
             ' ' +
             weather_data.current_desc)
-    print('current temp: ' + weather_data.current_temp)
+    logging.info('current temp: ' + weather_data.current_temp)
     draw.text((60, 0), weather_data.current_temp, font=font_lg, fill=0)   # Current temperature
     draw.text((0, 50), weather_data.current, font=font_md, fill=0)    # Feels like temp + high/low
 

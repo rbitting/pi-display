@@ -1,3 +1,5 @@
+import logging
+
 from config import dictionary, today_x, font_md, display_w, display_h
 from util_fetch import fetch
 from util_formatting import print_sm_text_in_box
@@ -51,7 +53,7 @@ def get_word_of_the_day():
     results = fetch_word_of_the_day()
     error = results.get('message')
     if (error):
-        print(error)
+        logging.error(error)
     else:
         wotd = WordOfTheDay()
         wotd.word = capitalize_first_letter(results['word'])
@@ -65,7 +67,7 @@ def fetch_word_of_the_day():
     if (api_key):
         return fetch('https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=' + api_key)
     else:
-        print('Wordnik API key (' + dictionary.get('env_var') +
+        logging.error('Wordnik API key (' + dictionary.get('env_var') +
               ') is not defined in environment variables.')
         exit(1)
 
@@ -79,6 +81,6 @@ def print_word_of_the_day(draw):
     y = display_h - 100
     draw.line((today_x, y - 10, display_w, y - 10), fill=0)
     wotd_str = 'Word of the Day: ' + wotd.word
-    print(wotd_str)
+    logging.info(wotd_str)
     draw.text((today_x, y), wotd_str, font=font_md, fill=0)
     y = print_sm_text_in_box(draw, today_x, y + 24, wotd.word_type + " " + wotd.definition)

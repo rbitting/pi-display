@@ -68,6 +68,7 @@ app.post('/display-status', (req, res) => {
 });
 
 app.post('/sendmessage', (req, res) => {
+	console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
     res.setHeader('content-type', 'application/json');
     if (!displayStatus.isProcessing) {
         let dataToSend = {};
@@ -140,11 +141,13 @@ app.post('/refresh/all', (req, res) => {
 });
 
 app.post('/refresh/clear', (req, res) => {
+	console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
     runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
 });
 
 function displayIsBusy(res) {
     const errorMsg = 'Display is busy. Please try again in a few minutes.';
+	console.log(`${new Date().toLocaleString('en-US')} ${errorMsg}`);
     res.status(409);
     res.send(JSON.stringify({
         'code': 409,
@@ -153,6 +156,7 @@ function displayIsBusy(res) {
 }
 
 function triggerMainScript(req, res, doRespond) {
+	console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
     if (!displayStatus.isProcessing) {
         setIsProcessing(true);
         setSuccess('Starting display refresh...');
@@ -197,9 +201,16 @@ function triggerMainScript(req, res, doRespond) {
                     res.send(responseMsg);
                 }
             } else {
-                const status = 'Refresh complete.';
-                console.log(status);
-                setError(status);
+                if (code === 0) {
+					const status = 'Refresh complete.';
+					console.log(status);
+					setSuccess(status);
+				}
+				else {
+					const status = `Script exited with exit code ${code}.`;
+					setError(status);
+				}
+					
             }
             setIsProcessing(false);
         });
@@ -233,7 +244,7 @@ app.post('/refresh/weather', (req, res) => {
 }); */
 
 // This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, () => console.log(`${new Date().toLocaleString('en-US')}: Listening on port ${port}`));
 
 app.use(express.static(path.join(__dirname, '/build')));
 

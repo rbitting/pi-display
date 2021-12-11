@@ -1,3 +1,5 @@
+import logging
+
 from PIL import Image, ImageDraw
 
 import epd5in83_V2
@@ -10,6 +12,8 @@ from septa import print_septa_data
 from util_dates import (get_current_date_time, print_last_updated, print_todays_date)
 from weather import print_weather
 
+logging.basicConfig(level=logging.INFO, filename='../../../logs/main.log', encoding='utf-8', format='[%(levelname)s] %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+
 '''
 from crypto import print_crypto_prices
 from network import print_network_speed, print_network_name
@@ -17,7 +21,7 @@ from network import print_network_speed, print_network_name
 
 def print_all_data():
     try:
-        print("Initializing display refresh " + get_current_date_time())
+        logging.info("********* Initializing display refresh *********")
 
         # Init display
         epd = epd5in83_V2.EPD()
@@ -47,20 +51,20 @@ def print_all_data():
             print_news_data(draw)
 
         last_updated = print_last_updated(draw, display_w, display_h)
-        print(last_updated)
+        logging.info(last_updated)
 
         epd.display(epd.getbuffer(Himage))
 
-        print("Go to Sleep...")
+        logging.info("Go to Sleep...")
         epd.sleep()
 
-        print("Completed refresh " + get_current_date_time())
+        logging.info("Completed refresh " + get_current_date_time())
 
     except IOError as e:
-        print(e)
+        logging.exception('IOError')
 
     except KeyboardInterrupt:
-        print("ctrl + c:")
+        logging.warning("ctrl + c:")
         epd5in83_V2.epdconfig.module_exit()
         exit()
 
