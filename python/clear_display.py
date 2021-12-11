@@ -13,7 +13,7 @@ try:
 
     print("Going to sleep...")
     epd.sleep()
-    
+
     end_time = get_current_date_time()
     end_msg = "Display clear complete"
     print(end_msg + " " + end_time)
@@ -23,12 +23,12 @@ except IOError as e:
     completed = get_current_date_time()
     exit(3)
 
-except KeyboardInterrupt:    
+except KeyboardInterrupt:
     print("ctrl + C:")
     epd5in83_V2.epdconfig.module_exit()
     completed = get_current_date_time()
     exit(4)
 
-except:
+except BaseException:
     completed = get_current_date_time()
     exit(5)

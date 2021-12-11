@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Navbar, Container } from 'react-bulma-components';
-import {
-    Link
-} from 'react-router-dom';
+import { Container, Navbar } from 'react-bulma-components';
+import { Link } from 'react-router-dom';
 
 function Nav() {
     const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
