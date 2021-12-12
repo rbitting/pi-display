@@ -9,7 +9,8 @@ const displayStatus = {
     lastRefresh: new Date().toLocaleString('en-US'),
     isError: false,
     isProcessing: false,
-    message: 'Server initiated.'
+    message: 'Server initiated.',
+    isWaiting: false
 };
 
 function setError(message) {
@@ -37,6 +38,9 @@ function setStatusMsg(message) {
 function setIsProcessing(value) {
     displayStatus.isProcessing = value;
 }
+function setIsWaiting(value) {
+    displayStatus.isWaiting = value;
+}
 
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -53,9 +57,10 @@ app.get('/display-status', (req, res) => {
 app.post('/display-status', (req, res) => {
     console.log('Request body: ', req.body);
     if (req.body) {
-        displayStatus.isError = req.body.isError;
-        displayStatus.lastRefresh = req.body.lastRefresh || new Date().toLocaleString('en-US');
+        displayStatus.lastRefresh = new Date().toLocaleString('en-US');
         displayStatus.message = req.body.message || '';
+        setIsError(req.body.isError);
+        setIsProcessing(req.body.isProcessing);
         res.status(200);
         res.send(JSON.stringify(displayStatus));
     } else {
@@ -68,9 +73,13 @@ app.post('/display-status', (req, res) => {
 });
 
 app.post('/sendmessage', (req, res) => {
+    setIsWaiting(false); // Override waiting flag if command is sent via api
     console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
     res.setHeader('content-type', 'application/json');
     if (!displayStatus.isProcessing) {
+        if (req.body.minToDisplay) {
+            setIsWaiting(true);
+        }
         let dataToSend = {};
         console.log('Request body: ', req.body);
         if (req.body.message) {
@@ -104,7 +113,7 @@ app.post('/sendmessage', (req, res) => {
                     console.log(`Response message: ${responseMsg}`);
                     res.status(dataToSend.code);
                     res.send(responseMsg);
-                    setSuccess('Refresh script run successfully.');
+                    setSuccess('Message displayed successfully.');
                 } else {
                     res.status(500);
                     if (!dataToSend.message) {
@@ -117,14 +126,17 @@ app.post('/sendmessage', (req, res) => {
                 if (req.body.minToDisplay) {
                     // Refresh display after designated time
                     const minToDisplay = parseInt(req.body.minToDisplay);
-					const msToDisplay = minToDisplay * 60000;
-					console.log(`Waiting ${msToDisplay}ms`);
-					setTimeout(() => {
-						if (!displayStatus.isProcessing) {
-							console.log(`Triggering screen refresh after displaying message...`);
-							triggerMainScript(req, res, false);
-						}
-					}, msToDisplay);
+                    const msToDisplay = minToDisplay * 60000;
+                    console.log(`Waiting ${msToDisplay}ms`);
+                    setTimeout(() => {
+                        if (displayStatus.isWaiting) {
+                            setIsWaiting(false);
+                            if (!displayStatus.isProcessing) {
+                                console.log('Triggering screen refresh after displaying message...');
+                                triggerMainScript(req, res, false);
+                            }
+                        }
+                    }, msToDisplay);
                 }
             });
         } else {
@@ -142,10 +154,12 @@ app.post('/sendmessage', (req, res) => {
 });
 
 app.post('/refresh/all', (req, res) => {
+    setIsWaiting(false);
     triggerMainScript(req, res, true);
 });
 
 app.post('/refresh/clear', (req, res) => {
+    setIsWaiting(false);
     console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
     runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
 });
@@ -161,6 +175,7 @@ function displayIsBusy(res) {
 }
 
 function triggerMainScript(req, res, doRespond) {
+    setIsWaiting(false); // Override waiting flag if command is sent via api
     console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
     if (!displayStatus.isProcessing) {
         setIsProcessing(true);
@@ -266,6 +281,7 @@ app.get('/*', (req, res) => {
 });
 
 function runRefreshScript(scriptPath, res, successMsg) {
+    setIsWaiting(false); // Override waiting flag if command is sent via api
     if (!displayStatus.isProcessing) {
         setIsProcessing(true);
         setSuccess(`Running ${scriptPath} refresh.`);

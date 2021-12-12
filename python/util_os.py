@@ -8,3 +8,9 @@ def path_exists(file_path):
 
 def get_env_var(var):
     return os.environ.get(var)
+
+def mkdir(file_path):
+    os.mkdir(file_path)
+
+def get_home_dir():
+    return os.path.expanduser('~')

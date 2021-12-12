@@ -6,22 +6,25 @@ import epd5in83_V2
 from config import (crypto, dictionary, display_h, display_w, network, news, pihole, septa, weather)
 from dictionary import print_word_of_the_day
 from network import print_wifi_info
-from news import get_news_headlines, print_news_data
+from news import print_news_data
 from pihole import print_pihole_data
+from util_logging import set_logging_config
 from septa import print_septa_data
 from util_dates import (get_current_date_time, print_last_updated, print_todays_date)
+from util_server import is_display_busy, send_status
 from weather import print_weather
 
-logging.basicConfig(level=logging.INFO, filename='../../../logs/main.log', encoding='utf-8', format='[%(levelname)s] %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+set_logging_config()
 
 '''
 from crypto import print_crypto_prices
 from network import print_network_speed, print_network_name
 '''
 
-def print_all_data():
+if (not is_display_busy()):
+    send_status(False, True, "Starting display refresh...")
     try:
-        logging.info("********* Initializing display refresh *********")
+        logging.info('********* Initializing display refresh *********')
 
         # Init display
         epd = epd5in83_V2.EPD()
@@ -51,25 +54,28 @@ def print_all_data():
             print_news_data(draw)
 
         last_updated = print_last_updated(draw, display_w, display_h)
-        logging.info(last_updated)
+        logging.debug(last_updated)
 
         epd.display(epd.getbuffer(Himage))
 
-        logging.info("Go to Sleep...")
+        logging.debug('Going to Sleep...')
         epd.sleep()
 
-        logging.info("Completed refresh " + get_current_date_time())
+        logging.info('Completed refresh ' + get_current_date_time())
+
+        send_status(False, False, "Display refresh complete.")
 
     except IOError as e:
         logging.exception('IOError')
+        send_status(True, False, "IOError while refreshing display.")
 
     except KeyboardInterrupt:
-        logging.warning("ctrl + c:")
+        logging.warning('ctrl + c:')
         epd5in83_V2.epdconfig.module_exit()
+        send_status(True, False, "Keyboard interrupt while refreshing display.")
         exit()
-
-
-print_all_data()
+else:
+    logging.info('Server is processing or waiting. Can not refresh right now.')
 
 '''
 if (network['enabled']):

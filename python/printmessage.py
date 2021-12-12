@@ -8,12 +8,13 @@ import epd5in83_V2
 from config import display_h, display_w
 from fonts import noto_sans_mono, roboto, roboto_italic
 from util_dates import print_last_updated
+from util_logging import set_logging_config
 
 font_italic_sm = ImageFont.truetype(roboto_italic, 18)
 font_md = ImageFont.truetype(roboto, 26)
 font_lg = ImageFont.truetype(noto_sans_mono, 42)
 
-logging.basicConfig(level=logging.INFO, filename='../../../logs/main.log', encoding='utf-8', format='[%(levelname)s] %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+set_logging_config()
 
 def print_header(draw):
     draw.rectangle((0, 0, 648, 56), fill=0)
@@ -35,7 +36,6 @@ def print_msg_on_display(draw, msg):
     x = (display_w - max_x) / 2
     y = (display_h - y) / 2
     draw.multiline_text((x, y), centered_text, font=font_lg, fill=0)
-
 
 logging.info("********* Initializing message refresh *********")
 if (len(sys.argv) > 1):
