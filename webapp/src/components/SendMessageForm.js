@@ -72,6 +72,7 @@ export default function SendMessageForm(props) {
                 setFormResponse(`Message sent: '${json.data}'`);
                 setMessage('');
                 setIsValid(false);
+                setIsSubmitError(false);
             } else {
                 setIsSubmitError(true);
                 if (status === 404) {
