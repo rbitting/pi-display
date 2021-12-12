@@ -11,7 +11,7 @@ function Nav() {
     return (<Navbar color='black' className='mb-6'>
         <Container breakpoint='desktop'>
             <Navbar.Brand>
-                <Link className='navbar-item has-text-primary is-size-5' to='/'>Control Center</Link>
+                <Link className='navbar-item has-text-primary is-size-4' to='/'>Pi Display</Link>
                 <Navbar.Burger onClick={toggleMenu} />
             </Navbar.Brand>
             <Navbar.Menu className={isMobileMenuActive ? 'show' : ''}>

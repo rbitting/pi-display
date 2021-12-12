@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Columns } from 'react-bulma-components';
+import Headline from './Headline';
 //import piholePng from '../assets/pihole.png';
-import Loading from './Loading';
 import RefreshButton from './RefreshButton';
 
 const REFRESH_ALL_PATH = '/refresh/all';
@@ -14,12 +14,7 @@ const REFRESH_NEWS_PATH = './refresh/news';
 const REFRESH_SEPTA_PATH = './refresh/septa'; */
 
 export default function RefreshData(props) {
-    const [buttonResult, setButtonResult] = useState('');
-    const [isError, setIsError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
     async function postToEndpoint(path) {
-        setButtonResult('');
         props.setIsProcessing(true);
         const response = await fetch(path, {
             method: 'POST',
@@ -30,26 +25,17 @@ export default function RefreshData(props) {
             redirect: 'follow',
             referrerPolicy: 'no-referrer'
         })
-            .then(data => data.json())
-            .then(data => {
-                setIsError(data.code !== 200);
-                setButtonResult(data.message);
-                setIsLoading(false);
-                props.setIsProcessing(false);
-            })
+            .then(data => props.setIsProcessing(false))
             .catch(err => {
-                console.log(err);
-                setIsError(true);
-                setButtonResult(err);
-                setIsLoading(false);
+                console.error(err);
                 props.setIsProcessing(false);
             });
 
         console.log(response);
     }
-    return (<section className='mb-5'>
-        <h1 className='title is-size-2-desktop'>Display Commands</h1>
-        <Columns breakpoint='mobile' mobile={{ gap: '1' }}>
+    return (<section className='mb-6'>
+        <Headline title='Display Commands' icon='fas fa-terminal' />
+        <Columns className='mt-3' breakpoint='mobile' mobile={{ gap: '1' }}>
             <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
                 <RefreshButton
                     isDisabled={props.isProcessing}
@@ -112,9 +98,5 @@ export default function RefreshData(props) {
                     handleClick={() => postToEndpoint(REFRESH_SEPTA_PATH)} />
             </Columns.Column>
         </Columns> */}
-        <div className='min-height-60'>
-            {isLoading && <Loading />}
-            <p className={isError ? 'has-text-danger' : 'has-text-success'}>{buttonResult}</p>
-        </div>
     </section>);
 }

@@ -68,7 +68,7 @@ app.post('/display-status', (req, res) => {
 });
 
 app.post('/sendmessage', (req, res) => {
-	console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
+    console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
     res.setHeader('content-type', 'application/json');
     if (!displayStatus.isProcessing) {
         let dataToSend = {};
@@ -114,13 +114,18 @@ app.post('/sendmessage', (req, res) => {
                     setError(`Unknown error code ${code}`);
                 }
                 setIsProcessing(false);
-
-                // Refresh display after a minute
-                setTimeout(() => {
-                    if (!displayStatus.isProcessing) {
-                        triggerMainScript(req, res, false);
-                    }
-                }, 60000);
+                if (req.body.minToDisplay) {
+                    // Refresh display after designated time
+                    const minToDisplay = parseInt(req.body.minToDisplay);
+					const msToDisplay = minToDisplay * 60000;
+					console.log(`Waiting ${msToDisplay}ms`);
+					setTimeout(() => {
+						if (!displayStatus.isProcessing) {
+							console.log(`Triggering screen refresh after displaying message...`);
+							triggerMainScript(req, res, false);
+						}
+					}, msToDisplay);
+                }
             });
         } else {
             const errorMsg = 'No message sent in request body.';
@@ -141,13 +146,13 @@ app.post('/refresh/all', (req, res) => {
 });
 
 app.post('/refresh/clear', (req, res) => {
-	console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
+    console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
     runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.');
 });
 
 function displayIsBusy(res) {
     const errorMsg = 'Display is busy. Please try again in a few minutes.';
-	console.log(`${new Date().toLocaleString('en-US')} ${errorMsg}`);
+    console.log(`${new Date().toLocaleString('en-US')} ${errorMsg}`);
     res.status(409);
     res.send(JSON.stringify({
         'code': 409,
@@ -156,7 +161,7 @@ function displayIsBusy(res) {
 }
 
 function triggerMainScript(req, res, doRespond) {
-	console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
+    console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
     if (!displayStatus.isProcessing) {
         setIsProcessing(true);
         setSuccess('Starting display refresh...');
@@ -202,15 +207,13 @@ function triggerMainScript(req, res, doRespond) {
                 }
             } else {
                 if (code === 0) {
-					const status = 'Refresh complete.';
-					console.log(status);
-					setSuccess(status);
-				}
-				else {
-					const status = `Script exited with exit code ${code}.`;
-					setError(status);
-				}
-					
+                    const status = 'Refresh complete.';
+                    console.log(status);
+                    setSuccess(status);
+                } else {
+                    const status = `Script exited with exit code ${code}.`;
+                    setError(status);
+                }
             }
             setIsProcessing(false);
         });

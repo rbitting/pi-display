@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Headline from './Headline';
 
 export default function DisplayStatus(props) {
     const [lastRefresh, setLastRefresh] = useState('');
@@ -31,8 +32,8 @@ export default function DisplayStatus(props) {
 
     const className = props.isProcessing ? 'has-text-warning' : (isError ? 'has-text-danger' : 'has-text-success');
 
-    return (<section className='mb-5'>
-        <h1 className='title is-size-2-desktop'>Current Status</h1>
+    return (<section className='mb-6 display-status'>
+        <Headline title="Current Status" icon="fas fa-info-circle" isProcessing={props.isProcessing} />
         <ul>
             <li>Last Refresh Time: {lastRefresh}</li>
             <li>
