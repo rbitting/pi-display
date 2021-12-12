@@ -1,6 +1,6 @@
 import React from 'react';
-import loadingGif from '../assets/loading.gif';
+import loadingImg from '../assets/loading.svg';
 
 export default function Loading() {
-    return <img className='loading-spinner' src={loadingGif} alt='Loading'/>;
+    return <img className='loading-spinner' src={loadingImg} alt='Loading'/>;
 }

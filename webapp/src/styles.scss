@@ -1,5 +1,5 @@
 @charset "utf-8";
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inconsolata&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata&family=Righteous&family=Nunito');
 
 // Set your brand colors
 $green: #0DBF8A;
@@ -13,14 +13,11 @@ $white: #ffffff;
 
 // Update Bulma's global variables
 $family-sans-serif: "Nunito", sans-serif;
-//$grey-dark: $dark-grey;
 $grey-light: $light-grey;
-$primary: $green;
+$primary: $light-blue;
 $link: $light-grey;
-/* $widescreen-enabled: false;
-$fullhd-enabled: false; */
 
-$font-logo: 'Orbitron', 'Ariel';
+$font-logo: 'Righteous', 'sans-serif';
 $font-standard: 'Inconsolata', 'sans-serif';
 
 $family-primary: $font-standard;
@@ -28,9 +25,9 @@ $background: $dark-grey;
 $body-background-color: $dark-grey;
 $body-color: $light-grey;
 $strong-color: $light-grey;
-$label-color: $light-grey;
+$label-color: $light-blue;
 $input-background-color: $light-grey;
-$title-color: $light-blue;
+$title-color: $green;
 
 .navbar-menu.show {
     display: block;
@@ -71,4 +68,24 @@ button img {
     max-height: 26px;
 }
 
+.display-status {
+    .loading-spinner {
+        height: 2.5rem;
+        width: 2.5rem;
+        margin-top: 4px;
+    }
+}
+
 @import "~bulma/bulma";
+
+.radio,
+.radio:hover,
+.checkbox,
+.checkbox:hover {
+    color: $white;
+}
+
+.navbar.is-black .navbar-brand > a.navbar-item:hover,
+.navbar.is-black .navbar-start > a.navbar-item:hover {
+    background-color: unset;
+}
