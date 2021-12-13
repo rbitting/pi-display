@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Columns } from 'react-bulma-components';
 import Headline from './Headline';
 //import piholePng from '../assets/pihole.png';
@@ -14,8 +14,11 @@ const REFRESH_NEWS_PATH = './refresh/news';
 const REFRESH_SEPTA_PATH = './refresh/septa'; */
 
 export default function RefreshData(props) {
+    const [isLoading, setIsLoading] = useState(false);
+
     async function postToEndpoint(path) {
         props.setIsProcessing(true);
+        setIsLoading(true);
         const response = await fetch(path, {
             method: 'POST',
             credentials: 'same-origin',
@@ -25,10 +28,14 @@ export default function RefreshData(props) {
             redirect: 'follow',
             referrerPolicy: 'no-referrer'
         })
-            .then(data => props.setIsProcessing(false))
+            .then(data => {
+                props.setIsProcessing(false);
+                setIsLoading(false);
+            })
             .catch(err => {
                 console.error(err);
                 props.setIsProcessing(false);
+                setIsLoading(false);
             });
 
         console.log(response);
@@ -38,7 +45,7 @@ export default function RefreshData(props) {
         <Columns className='mt-3' breakpoint='mobile' mobile={{ gap: '1' }}>
             <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
                 <RefreshButton
-                    isDisabled={props.isProcessing}
+                    isDisabled={isLoading || props.isProcessing}
                     icon='fas fa-sync-alt'
                     title='Refresh Display'
                     text='Refresh'
@@ -46,7 +53,7 @@ export default function RefreshData(props) {
             </Columns.Column>
             <Columns.Column mobile={{ size: 6 }} tablet={{ size: 6 }} desktop={{ size: 3 }}>
                 <RefreshButton
-                    isDisabled={props.isProcessing}
+                    isDisabled={isLoading || props.isProcessing}
                     icon='fas fa-eraser'
                     title='Clear Display'
                     text='Clear'
