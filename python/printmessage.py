@@ -9,10 +9,13 @@ from config import display_h, display_w
 from fonts import noto_sans_mono, roboto, roboto_italic
 from util_dates import print_last_updated
 from util_logging import set_logging_config
+from util_server import send_status
 
 font_italic_sm = ImageFont.truetype(roboto_italic, 18)
 font_md = ImageFont.truetype(roboto, 26)
 font_lg = ImageFont.truetype(noto_sans_mono, 42)
+
+PREFIX = 'Message Display: '
 
 set_logging_config()
 
@@ -41,6 +44,7 @@ logging.info("********* Initializing message refresh *********")
 if (len(sys.argv) > 1):
     msg = sys.argv[1]
     logging.info('Message: ' + msg)
+    send_status(False, True, PREFIX + "Starting message display...")
     try:
         epd = epd5in83_V2.EPD()
         epd.init()
@@ -54,22 +58,30 @@ if (len(sys.argv) > 1):
 
         epd.display(epd.getbuffer(Himage))
         epd.sleep()
-        logging.info('Message printed')
+        
+        end_msg = 'Message printed'
+        logging.info(end_msg)
+        send_status(False, False, PREFIX + end_msg)
         print('{"code":200,"message":"Message received","data":"' + msg + '"}')
 
     except IOError as e:
         logging.exception('IOError')
+        send_status(True, False, PREFIX + "IOError while displaying message.")
         print('{"code":500,"message":"IO Error.","data":' + str(e) + '}')
 
     except KeyboardInterrupt:
         epd5in83_V2.epdconfig.module_exit()
         logging.exception('Keyboard interrupt')
+        send_status(True, False, PREFIX + "Keyboard interrupt while displaying message.")
         print('{"code":400,"message":"Keyboard interrupt","data":null}')
 
     except BaseException:
         e = sys.exc_info()[0]
         logging.exception('Unknown error')
+        send_status(True, False, PREFIX + "Unknown error while displaying message.")
         print('{"code":500,"message":"Unknown Error.","data":"' + str(e) + '"}')
 else:
-    logging.warning('No message received')
-    print('{"code":400,"message":"No message received","data":null}')
+    no_msg_response = 'No message received.'
+    logging.warning(no_msg_response)
+    send_status(True, False, PREFIX + no_msg_response)
+    print('{"code":400,"message":"' + no_msg_response + '","data":null}')

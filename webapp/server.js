@@ -85,7 +85,6 @@ app.post('/sendmessage', (req, res) => {
         if (req.body.message) {
             const msg = req.body.message.replace(/"/g, '\\"');
             console.log(`Sending message to script: ${msg}`);
-            setIsProcessing(true);
             setSuccess(`Received message: ${msg}`);
             // Pass message to python script
             const python = spawn('python', ['../python/printmessage.py', msg]);
@@ -122,7 +121,6 @@ app.post('/sendmessage', (req, res) => {
                     res.send(JSON.stringify(dataToSend));
                     setError(`Unknown error code ${code}`);
                 }
-                setIsProcessing(false);
                 if (req.body.minToDisplay) {
                     // Refresh display after designated time
                     const minToDisplay = parseInt(req.body.minToDisplay);
@@ -178,7 +176,6 @@ function triggerMainScript(req, res, doRespond) {
     setIsWaiting(false); // Override waiting flag if command is sent via api
     console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
     if (!displayStatus.isProcessing) {
-        setIsProcessing(true);
         setSuccess('Starting display refresh...');
         const python = spawn('python', ['../python/main.py']);
 
@@ -230,7 +227,6 @@ function triggerMainScript(req, res, doRespond) {
                     setError(status);
                 }
             }
-            setIsProcessing(false);
         });
     } else {
         displayIsBusy(res);
@@ -283,7 +279,6 @@ app.get('/*', (req, res) => {
 function runRefreshScript(scriptPath, res, successMsg) {
     setIsWaiting(false); // Override waiting flag if command is sent via api
     if (!displayStatus.isProcessing) {
-        setIsProcessing(true);
         setSuccess(`Running ${scriptPath} refresh.`);
         const python = spawn('python', [scriptPath]);
 
@@ -324,7 +319,6 @@ function runRefreshScript(scriptPath, res, successMsg) {
                 res.status(500);
                 res.send(responseMsg);
             }
-            setIsProcessing(false);
         });
     } else {
         displayIsBusy(res);
