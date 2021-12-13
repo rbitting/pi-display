@@ -61,8 +61,8 @@ news = {
     }
 }
 
-# Dictionary for word of the day
-dictionary = {
+# Word of the day via Wordnik
+word_of_the_day = {
     'enabled': True,
     'api_key': get_env_var(WORDNIK_ENV_VAR),
     'env_var': WORDNIK_ENV_VAR

@@ -3,8 +3,8 @@ import logging
 from PIL import Image, ImageDraw
 
 import epd5in83_V2
-from config import (crypto, dictionary, display_h, display_w, network, news, pihole, septa, weather)
-from dictionary import print_word_of_the_day
+from config import (crypto, word_of_the_day, display_h, display_w, network, news, pihole, septa, weather)
+from word_of_the_day import print_word_of_the_day
 from network import print_wifi_info
 from news import print_news_data
 from pihole import print_pihole_data
@@ -47,7 +47,7 @@ if (not is_display_busy()):
         if (septa['enabled']):
             print_septa_data(Himage, draw)
 
-        if (dictionary['enabled']):
+        if (word_of_the_day['enabled']):
             print_word_of_the_day(draw)
 
         if (news['enabled']):

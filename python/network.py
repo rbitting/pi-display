@@ -2,8 +2,8 @@ import logging
 import re
 import subprocess
 
-from config import col_1_w, font_md, icon_size_sm, padding
-from util_formatting import get_small_icon
+from config import col_1_w, font_md, icon_size_sm, padding, display_w
+from util_formatting import get_small_icon, get_width_of_text
 from util_os import get_absolute_path
 
 
@@ -51,7 +51,8 @@ def print_wifi_info(Himage, draw):
     else:
         network_name = 'Not connected to wifi'
         network_icon = get_offline_icon()
-    x = col_1_w + 100
+    width = get_width_of_text(font_md, network_name) + icon_size_sm + (padding*2)
+    x = display_w - width
     y = 0
     Himage.paste(get_small_icon(get_absolute_path(network_icon)), (x, y))
     x = x + icon_size_sm + padding

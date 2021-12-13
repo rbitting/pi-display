@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Icon, Button } from 'react-bulma-components';
+import DisplayTimeOptions from './DisplayTimeOptions';
 import Headline from './Headline';
 
 const MIN_CHARS = 1;
@@ -20,7 +21,7 @@ const ALLOWED_TIMES = [
     },
     {
         value: '0',
-        label: 'Indefinitely'
+        label: '∞'
     }
 ];
 
@@ -91,20 +92,15 @@ export default function SendMessageForm(props) {
         }
     };
 
-    const handleTimeChange = (e) => {
-        setMinToDisplay(e.target.value);
-    };
-
-    return (<section>
+    return (<section className='mb-6'>
         <Headline title='Send a Message' icon='fas fa-comment-alt' />
-        <p className='mb-4'>Send a message that will be displayed on the display.</p>
         <Form.Field className='mb-0'>
-            <Form.Label>Message</Form.Label>
             <Form.Control>
                 <Form.Input
                     color={isValid ? (isSubmitError ? 'danger' : 'success') : 'text'}
-                    value={message}
                     onChange={handleChange}
+                    placeholder='Type a message to show on display'
+                    value={message}
                 />
                 <Icon align='left' size='small' className='has-text-grey'>
                     <i className='far fa-comment' />
@@ -112,25 +108,14 @@ export default function SendMessageForm(props) {
             </Form.Control>
             <div className='has-text-right'>{MAX_CHARS - message.length}</div>
         </Form.Field>
-        <Form.Field className='mb-5'>
-            <Form.Label>Keep Message Displayed for</Form.Label>
-            <Form.Control>
-                {ALLOWED_TIMES.map(time => {
-                    return <Form.Radio
-                        checked={minToDisplay === time.value}
-                        className='mr-3'
-                        key={time.value}
-                        name='time-to-display'
-                        onChange={handleTimeChange}
-                        value={time.value} >
-                        {time.label}
-                    </Form.Radio>;
-                })}
-            </Form.Control>
-        </Form.Field>
+        <DisplayTimeOptions
+            id="send-message"
+            value={minToDisplay}
+            handleChange={setMinToDisplay}
+            times={ALLOWED_TIMES} />
         <Form.Field kind='group'>
             <Form.Control className='is-flex'>
-                <Button disabled={!isValid || props.isProcessing} color='primary' onClick={handleSubmit}>Submit</Button>
+                <Button disabled={!isValid || props.isProcessing} color='primary' onClick={handleSubmit}>Send Message</Button>
                 {!props.isProcessing && <span className={`is-justify-content-center is-flex is-flex-direction-column ml-2 ${isSubmitError ? 'has-text-danger' : ''}`}>{formResponse}</span>}
                 {props.isProcessing && <span className={'is-justify-content-center is-flex is-flex-direction-column ml-2 has-text-warning'}>Please wait. Display is processing.</span>}
             </Form.Control>

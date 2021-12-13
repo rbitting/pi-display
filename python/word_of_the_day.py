@@ -1,8 +1,8 @@
 import logging
 
-from config import dictionary, today_x, font_md, display_w, display_h
+from config import word_of_the_day, today_x, font_md, display_w, display_h
 from util_fetch import fetch
-from util_formatting import print_sm_text_in_box
+from util_formatting import print_sm_text_in_box, get_height_of_text, get_height_of_sm_multiline_text
 
 class WordOfTheDay():
     def __init__(self):
@@ -63,11 +63,11 @@ def get_word_of_the_day():
 
 
 def fetch_word_of_the_day():
-    api_key = dictionary['api_key']
+    api_key = word_of_the_day['api_key']
     if (api_key):
         return fetch('https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=' + api_key)
     else:
-        logging.error('Wordnik API key (' + dictionary.get('env_var') +
+        logging.error('Wordnik API key (' + word_of_the_day.get('env_var') +
               ') is not defined in environment variables.')
         exit(1)
 
@@ -77,10 +77,20 @@ def capitalize_first_letter(word):
     return ''.join(chars)
 
 def print_word_of_the_day(draw):
+    start_wotd_section =  display_h - 110
+    max_height_of_wotd = 92
+    
+    draw.line((today_x, start_wotd_section, display_w, start_wotd_section), fill=0)
+    
     wotd = get_word_of_the_day()
-    y = display_h - 100
-    draw.line((today_x, y - 10, display_w, y - 10), fill=0)
     wotd_str = 'Word of the Day: ' + wotd.word
+    description = wotd.word_type + " " + wotd.definition
+    
+    height_title = get_height_of_text(font_md, wotd_str)
+    height_desc = get_height_of_sm_multiline_text(description)
+    
+    x = today_x
+    y = start_wotd_section + ((max_height_of_wotd - (height_title + height_desc)) / 2)  # Center section vertically in wotd area
+    draw.text((x, y), wotd_str, font=font_md, fill=0)
+    y = print_sm_text_in_box(draw, x, y + 24, description)
     logging.info(wotd_str)
-    draw.text((today_x, y), wotd_str, font=font_md, fill=0)
-    y = print_sm_text_in_box(draw, today_x, y + 24, wotd.word_type + " " + wotd.definition)

@@ -28,3 +28,5 @@ def get_server_status():
 def is_display_busy():
     server_status = get_server_status()
     return server_status['isProcessing'] == True or server_status['isWaiting'] == True
+
+send_status(True, False, "Stop")

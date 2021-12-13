@@ -1,16 +1,17 @@
 {
   "name": "webapp",
   "version": "1.0.0",
-  "description": "Control center for Raspberry Pi display.",
+  "description": "Command center for Raspberry Pi display.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "eslint src --fix && webpack-dev-server --mode=development --open --hot",
     "build": "eslint src --fix && webpack --mode=production",
     "server": "npm run build && node server.js",
+    "server:dev": "npm run build && nodemon server.js",
     "server:log": "node server.js >> ~/logs/server.log 2>&1",
     "webpack": "webpack --mode=production",
-	"deploy": "npm run webpack && node server.js"
+    "deploy": "npm run webpack && node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "multer": "^1.4.4",
     "react": "^17.0.2",
     "react-bulma-components": "^4.0.7",
     "react-dom": "^17.0.2",
@@ -45,6 +47,7 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.4.4",
     "node-sass": "^6.0.1",
+    "nodemon": "^2.0.15",
     "prettier": "2.4.1",
     "sass-loader": "^12.3.0",
     "source-map-loader": "^3.0.0",

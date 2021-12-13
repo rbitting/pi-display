@@ -103,17 +103,18 @@ def get_bus_icon():
     return 'python/assets/icons/septa.png'
 
 def print_septa_data(Himage, draw):
-    septa_y = 310
+    septa_y = 305
     x = 60
     bus_routes = get_next_buses()
-    Himage.paste(get_small_icon(get_absolute_path(get_bus_icon())), (0, septa_y))
+    Himage.paste(get_small_icon(get_absolute_path(get_bus_icon())), (0, septa_y+4)) # 
     for bus in bus_routes:
         y = septa_y
         draw.text((x, y), bus.route, font=font_md, fill=0)
+        y += 28
         arrivals = bus.get_arrivals()
         for arrival in arrivals:
-            y += 25
             draw.text((x, y), arrival.eta, font=font_sm, fill=0)
+            y += 22
         x += 75
-    y += 30
+    y += 5
     draw.line((0, y, col_1_w, y), fill=0)  # Horizontal line break
