@@ -35,9 +35,9 @@ export default function DisplayStatus(props) {
     return (<section className='mb-6 display-status'>
         <Headline title="Current Status" icon="fas fa-info-circle" isProcessing={props.isProcessing} />
         <ul>
-            <li>Last Refresh Time: {lastRefresh}</li>
+            <li>Time: {lastRefresh}</li>
             <li>
-                Last Refresh Status:{' '}
+                Status:{' '}
                 <span className={className}>
                     {message}
                 </span>
