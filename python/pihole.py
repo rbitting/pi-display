@@ -47,16 +47,16 @@ def fetch_pihole_data():
 
 def print_pihole_data(draw):
     pihole_data = get_pihole_data()
-    y = 200
+    y = 220
     logging.info(pihole_data.status)
     logging.info(pihole_data.stats)
-    draw.text((64, y), pihole_data.status, font=font_md, fill=0)    # "Pihole is [enabled/disabled]"
-    draw.text((50, y + 30), pihole_data.stats, font=font_md, fill=0)
-    draw.text((52, y + 58), 'requests           of all requests', font=font_sm, fill=0)
-    draw.text((54, y + 74), 'blocked                 blocked', font=font_sm, fill=0)
+    draw.text((84, y), pihole_data.status, font=font_md, fill=0)    # "Pihole is [enabled/disabled]"
+    draw.text((70, y + 30), pihole_data.stats, font=font_md, fill=0)
+    draw.text((72, y + 58), 'requests           of all requests', font=font_sm, fill=0)
+    draw.text((74, y + 74), 'blocked                 blocked', font=font_sm, fill=0)
 
-    x = 140
+    x = 160
     draw.line((x, y + 40, x, y + 85), fill=0)  # Vertical line break
 
-    y += 100
-    draw.line((0, y, col_1_w, y), fill=0)  # Horizontal line break
+    y += 110
+    draw.line((20, y, col_1_w, y), fill=0)  # Horizontal line break

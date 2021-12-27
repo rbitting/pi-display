@@ -1,3 +1,6 @@
+const { runRefreshScript, triggerMainScript } = require('./server/helpers');
+const { displayIsBusy, DisplayStatus } = require('./server/status');
+const { sendLog, watchForLogChanges } = require('./server/watch-logs');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,43 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 const fs = require('fs');
-
-const displayStatus = {
-    lastRefresh: new Date().toLocaleString('en-US'),
-    isError: false,
-    isProcessing: false,
-    message: 'Server initiated.',
-    isWaiting: false
-};
-
-function setError(message) {
-    setIsError(true);
-    setStatusMsg(message);
-    setLastRefresh();
-}
-
-function setSuccess(message) {
-    setIsError(false);
-    setStatusMsg(message);
-    setLastRefresh();
-}
-
-function setLastRefresh() {
-    displayStatus.lastRefresh = new Date().toLocaleString('en-US');
-}
-
-function setIsError(value) {
-    displayStatus.isError = value;
-}
-function setStatusMsg(message) {
-    displayStatus.message = message;
-}
-function setIsProcessing(value) {
-    displayStatus.isProcessing = value;
-}
-function setIsWaiting(value) {
-    displayStatus.isWaiting = value;
-}
+const displayStatus = new DisplayStatus();
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -75,17 +42,19 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 
 app.get('/display-status', (req, res) => {
+    res.setHeader('content-type', 'application/json');
     res.status(200);
     res.send(JSON.stringify(displayStatus));
 });
 
 app.post('/display-status', (req, res) => {
     console.log('Request body: ', req.body);
+    res.setHeader('content-type', 'application/json');
     if (req.body) {
         displayStatus.lastRefresh = new Date().toLocaleString('en-US');
         displayStatus.message = req.body.message || '';
-        setIsError(req.body.isError);
-        setIsProcessing(req.body.isProcessing);
+        displayStatus.isError = req.body.isError;
+        displayStatus.isProcessing = req.body.isProcessing;
         res.status(200);
         res.send(JSON.stringify(displayStatus));
     } else {
@@ -97,6 +66,12 @@ app.post('/display-status', (req, res) => {
             })
         );
     }
+});
+
+app.get('/logs/python', (req, res) => {
+    res.setHeader('content-type', 'application/json');
+    res.status(200);
+    sendLog(res);
 });
 
 app.post('/send-image', upload.single('file'), (req, res) => {
@@ -114,7 +89,7 @@ app.post('/send-image', upload.single('file'), (req, res) => {
     if (!displayStatus.isProcessing) {
         let dataToSend = {};
         console.log(`Sending image path to script: ${imageName}`);
-        setSuccess(`Received message: ${imageName}`);
+        displayStatus.setSuccess(`Received image: ${imageName}`);
         // Pass message to python script
         const python = spawn('python', ['../python/printimage.py', imageName]);
 
@@ -141,7 +116,7 @@ app.post('/send-image', upload.single('file'), (req, res) => {
                 console.log(`Response message: ${responseMsg}`);
                 res.status(dataToSend.code);
                 res.send(responseMsg);
-                setSuccess('Image displayed successfully.');
+                displayStatus.setSuccess('Image displayed successfully.');
 
                 const minToDisplay = req.body.minToDisplay;
                 if (minToDisplay) {
@@ -153,7 +128,7 @@ app.post('/send-image', upload.single('file'), (req, res) => {
                     dataToSend.message = 'Unknown error from script.';
                 }
                 res.send(JSON.stringify(dataToSend));
-                setError(`Unknown error code ${code}`);
+                displayStatus.setError(`Unknown error code ${code}`);
             }
             removeFile(imageName);
         });
@@ -170,19 +145,19 @@ function removeFile(filePath) {
 }
 
 app.post('/sendmessage', (req, res) => {
-    setIsWaiting(false); // Override waiting flag if command is sent via api
+    displayStatus.isWaiting = false; // Override waiting flag if command is sent via api
     console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
     res.setHeader('content-type', 'application/json');
     if (!displayStatus.isProcessing) {
         if (req.body.minToDisplay) {
-            setIsWaiting(true);
+            displayStatus.isWaiting = true;
         }
         let dataToSend = {};
         console.log('Request body: ', req.body);
         if (req.body.message) {
             const msg = req.body.message.replace(/"/g, '\\"');
             console.log(`Sending message to script: ${msg}`);
-            setSuccess(`Received message: ${msg}`);
+            displayStatus.setSuccess(`Received message: ${msg}`);
             // Pass message to python script
             const python = spawn('python', ['../python/printmessage.py', msg]);
 
@@ -209,14 +184,14 @@ app.post('/sendmessage', (req, res) => {
                     console.log(`Response message: ${responseMsg}`);
                     res.status(dataToSend.code);
                     res.send(responseMsg);
-                    setSuccess('Message displayed successfully.');
+                    displayStatus.setSuccess('Message displayed successfully.');
                 } else {
                     res.status(500);
                     if (!dataToSend.message) {
                         dataToSend.message = 'Unknown error from script.';
                     }
                     res.send(JSON.stringify(dataToSend));
-                    setError(`Unknown error code ${code}`);
+                    displayStatus.setError(`Unknown error code ${code}`);
                 }
 
                 const minToDisplay = req.body.minToDisplay;
@@ -233,7 +208,7 @@ app.post('/sendmessage', (req, res) => {
                     message: errorMsg
                 })
             );
-            setError(errorMsg);
+            displayStatus.setError(errorMsg);
         }
     } else {
         displayIsBusy(res);
@@ -248,12 +223,12 @@ function handleMinToDisplayWait(req, res, min) {
     if (msToDisplay > 0) {
         setTimeout(() => {
             if (displayStatus.isWaiting) {
-                setIsWaiting(false);
+                displayStatus.isWaiting = false;
                 if (!displayStatus.isProcessing) {
                     console.log(
                         'Triggering screen refresh after displaying message...'
                     );
-                    triggerMainScript(req, res, false);
+                    triggerMainScript(req, res, false, displayStatus);
                 }
             }
         }, msToDisplay);
@@ -261,126 +236,31 @@ function handleMinToDisplayWait(req, res, min) {
 }
 
 app.post('/refresh/all', (req, res) => {
-    setIsWaiting(false);
-    triggerMainScript(req, res, true);
+    displayStatus.isWaiting = false;
+    triggerMainScript(req, res, true, displayStatus);
 });
 
 app.post('/refresh/clear', (req, res) => {
-    setIsWaiting(false);
+    displayStatus.isWaiting = false;
     console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
     runRefreshScript(
         '../python/clear_display.py',
         res,
-        'Display cleared successfully.'
+        'Display cleared successfully.',
+        displayStatus
     );
 });
-
-function displayIsBusy(res) {
-    const errorMsg = 'Display is busy. Please try again in a few minutes.';
-    console.log(`${new Date().toLocaleString('en-US')} ${errorMsg}`);
-    res.status(409);
-    res.send(
-        JSON.stringify({
-            code: 409,
-            message: errorMsg
-        })
-    );
-}
-
-function triggerMainScript(req, res, doRespond) {
-    setIsWaiting(false); // Override waiting flag if command is sent via api
-    console.log(`${new Date().toLocaleString('en-US')} Refresh display`);
-    if (!displayStatus.isProcessing) {
-        setSuccess('Starting display refresh...');
-        const python = spawn('python', ['../python/main.py']);
-
-        // Output from script
-        python.stdout.on('data', function (data) {
-            console.log(data.toString());
-        });
-
-        // Script finished
-        python.on('close', (code) => {
-            console.log(`Display refresh script run with exit code ${code}`);
-            if (doRespond) {
-                res.setHeader('content-type', 'application/json');
-
-                const response = {
-                    code: 200,
-                    message: 'Display refreshed successfully.'
-                };
-                if (code === 0) {
-                    const responseMsg = JSON.stringify(response);
-                    console.log(`Response message: ${responseMsg}`);
-
-                    // Send data in response
-                    res.status(response.code);
-                    res.send(responseMsg);
-                    setSuccess(response.message);
-                } else {
-                    response.code = 500;
-                    if (code === 1) {
-                        response.message =
-                            'Could not get data. Missing API Key.';
-                    } else {
-                        response.message = `Script exited with exit code ${code}.`;
-                    }
-                    setError(response.message);
-                    const responseMsg = JSON.stringify(response);
-                    console.log(`Response message: ${responseMsg}`);
-
-                    // Send data in response
-                    res.status(500);
-                    res.send(responseMsg);
-                }
-            } else {
-                if (code === 0) {
-                    const status = 'Refresh complete.';
-                    console.log(status);
-                    setSuccess(status);
-                } else {
-                    const status = `Script exited with exit code ${code}.`;
-                    setError(status);
-                }
-            }
-        });
-    } else {
-        displayIsBusy(res);
-    }
-}
-
-/* app.post('/refresh/crypto', (req, res) => {
-    runRefreshScript('../python/refresh_crypto.py', res, 'Crypto refreshed successfully.');
-});
-
-app.post('/refresh/network', (req, res) => {
-    runRefreshScript('../python/refresh_network.py', res, 'Network refreshed successfully.');
-});
-
-app.post('/refresh/news', (req, res) => {
-    runRefreshScript('../python/refresh_news.py', res, 'News refreshed successfully.');
-});
-
-app.post('/refresh/pihole', (req, res) => {
-    runRefreshScript('../python/refresh_pihole.py', res, 'Pi-Hole refreshed successfully.');
-});
-
-app.post('/refresh/septa', (req, res) => {
-    runRefreshScript('../python/refresh_septa.py', res, 'Septa refreshed successfully.');
-});
-
-app.post('/refresh/weather', (req, res) => {
-    runRefreshScript('../python/refresh_weather.py', res, 'Weather refreshed successfully.');
-}); */
 
 // This displays message that the server running and listening to specified port
-app.listen(port, () =>
+const server = app.listen(port, () =>
     console.log(
         `${new Date().toLocaleString('en-US')}: Listening on port ${port}`
     )
 );
 
 app.use(express.static(path.join(__dirname, '/build')));
+
+watchForLogChanges(server);
 
 app.get('/', (req, res) => {
     serveReactApp(res);
@@ -395,55 +275,6 @@ app.get('/*', (req, res) => {
     res.status(404);
     res.send({ code: 404, message: 'Path not found.' });
 });
-
-function runRefreshScript(scriptPath, res, successMsg) {
-    setIsWaiting(false); // Override waiting flag if command is sent via api
-    if (!displayStatus.isProcessing) {
-        setSuccess(`Running ${scriptPath} refresh.`);
-        const python = spawn('python', [scriptPath]);
-
-        res.setHeader('content-type', 'application/json');
-
-        // Output from script
-        python.stdout.on('data', function (data) {
-            console.log(data.toString());
-        });
-
-        // Script finished
-        python.on('close', (code) => {
-            const response = {
-                code: 200,
-                message: successMsg
-            };
-            console.log(`Python script run with exit code ${code}`);
-            if (code === 0) {
-                const responseMsg = JSON.stringify(response);
-                console.log(`Response message: ${responseMsg}`);
-
-                // Send data in response
-                res.status(200);
-                res.send(responseMsg);
-                setSuccess(successMsg);
-            } else {
-                response.code = 500;
-                if (code === 1) {
-                    response.message = 'Could not get data. Missing API Key.';
-                } else {
-                    response.message = `Script exited with exit code ${code}.`;
-                }
-                setError(response.message);
-                const responseMsg = JSON.stringify(response);
-                console.log(`Response message: ${responseMsg}`);
-
-                // Send data in response
-                res.status(500);
-                res.send(responseMsg);
-            }
-        });
-    } else {
-        displayIsBusy(res);
-    }
-}
 
 function serveReactApp(res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
