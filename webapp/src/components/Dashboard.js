@@ -19,6 +19,7 @@ const Dashboard = () => {
                     </Routes>
                 </Container>
             </div>
+            <footer className='mt-6 mb-6 pt-5 pb-5'></footer>
         </Router>
     );
 };

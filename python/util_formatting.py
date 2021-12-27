@@ -2,7 +2,7 @@ import textwrap
 
 from PIL import Image
 
-from config import font_md, font_sm, icon_size_sm
+from config import font_md, font_sm, icon_size_sm, icon_size_xs
 
 
 def get_width_of_text(font, text):
@@ -16,6 +16,10 @@ def get_height_of_text(font, text):
 def get_small_icon(path):
     icon = Image.open(path)
     return icon.resize((icon_size_sm, icon_size_sm))
+    
+def get_xsmall_icon(path):
+    icon = Image.open(path)
+    return icon.resize((icon_size_xs, icon_size_xs))
 
 def print_md_text_in_box(draw, x, y, text):
     lines = textwrap.wrap(text, width=30, max_lines=3, placeholder="...")

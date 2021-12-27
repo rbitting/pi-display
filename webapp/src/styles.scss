@@ -20,6 +20,7 @@ $link: $light-grey;
 $font-logo: 'Righteous', 'sans-serif';
 $font-standard: 'Inconsolata', 'sans-serif';
 
+$navbar-black: #0a0a0a;
 $family-primary: $font-standard;
 $background: $dark-grey;
 $body-background-color: $dark-grey;
@@ -28,11 +29,16 @@ $strong-color: $light-grey;
 $label-color: $light-blue;
 $input-background-color: $light-grey;
 $title-color: $green;
+$navbar-background-color: $navbar-black;
+$navbar-item-active-background-color: $navbar-black;
+$navbar-item-hover-background-color: $navbar-black;
 
-.navbar-menu.show {
-    display: block;
-    position: absolute;
-    width: 100%;
+@media screen and (max-width: 1024px) {
+    .navbar-menu.show {
+        display: block;
+        position: absolute;
+        width: 100%;
+    }
 }
 
 .navbar-brand {

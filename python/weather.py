@@ -110,7 +110,7 @@ def print_weather(Himage, draw):
     weather_data = get_weather_data()
     weather_icon = get_absolute_path(weather_data.current_icon)
     if path_exists(weather_icon):
-        Himage.paste(Image.open(weather_icon), (0, 0))   # Current weather icon
+        Himage.paste(Image.open(weather_icon), (20, 15))   # Current weather icon
     else:
         logging.warning(
             'No icon for current weather: ' +
@@ -118,11 +118,11 @@ def print_weather(Himage, draw):
             ' ' +
             weather_data.current_desc)
     logging.info('current temp: ' + weather_data.current_temp)
-    draw.text((60, 0), weather_data.current_temp, font=font_lg, fill=0)   # Current temperature
-    draw.text((0, 50), weather_data.current, font=font_md, fill=0)    # Feels like temp + high/low
+    draw.text((80, 15), weather_data.current_temp, font=font_lg, fill=0)   # Current temperature
+    draw.text((20, 65), weather_data.current, font=font_md, fill=0)    # Feels like temp + high/low
 
-    x = 160
-    y = 15
+    x = 180
+    y = 30
     Himage.paste(
         get_small_icon(
             get_absolute_path(
@@ -138,8 +138,8 @@ def print_weather(Himage, draw):
               weather_data.sunset, font=font_md, fill=0)   # Sunset time
 
     forecast = weather_data.get_forecast()
-    y = 110  # Y coordinate (to display forecasts in a row)
-    x = 0
+    y = 125  # Y coordinate (to display forecasts in a row)
+    x = 20
     next_line = y + icon_size_sm
 
     for day in forecast:
@@ -148,7 +148,7 @@ def print_weather(Himage, draw):
         draw.text((x + icon_size_sm + padding, y + padding_sm), day.day,
                   font=font_sm, fill=0)   # Day of week next to icon
         draw.text((x, next_line), day.temps, font=font_md, fill=0)   # High/low below
-        x += (icon_size_sm + 65)
+        x += (icon_size_sm + 60)
 
-    y = 190
-    draw.line((0, y, col_1_w, y), fill=0)
+    y = 205
+    draw.line((20, y, col_1_w, y), fill=0)

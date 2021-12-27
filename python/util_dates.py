@@ -36,7 +36,7 @@ def print_current_date():
 def print_last_updated(draw, display_w, display_h):
     last_updated = 'Last updated ' + get_current_date_time()
     width, height = font_italic_sm.getsize(last_updated)
-    draw.text((display_w - width, display_h - height), last_updated, font=font_italic_sm, fill=0)
+    draw.text((display_w - width - 20, display_h - height), last_updated, font=font_italic_sm, fill=0)
     return last_updated
 
 # Print day of the week and date in designated space

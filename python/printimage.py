@@ -20,9 +20,11 @@ def get_resized_image(image):
     width = image.width
     new_width = width
     new_height = height
+    logging.info("New height: " + str(new_height) + ", New width: " + str(new_height));
     
     # If image is smaller than display, no resize is needed
     if (height <= display_h and width <= display_w):
+        logging.info("Original image is smaller than display")
         return image
 
     # Resize photo if larger than display
@@ -32,11 +34,12 @@ def get_resized_image(image):
             new_height = display_h
             new_width = round(width / ratio)
     else:
-        if (width > display_h):
+        if (width > display_w):
             ratio = width / display_w
             new_width = display_w
             new_height = round(height / ratio)
-
+    
+    logging.info("New height: " + str(new_height) + ", New width: " + str(new_height));
     return image.resize((new_width, new_height))
 
 logging.info("********* Initializing image refresh *********")
