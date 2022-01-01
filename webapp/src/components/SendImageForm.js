@@ -57,7 +57,6 @@ export default function SendImageForm(props) {
         })
             .then(data => data.json())
             .then(json => {
-                console.log(json);
                 setFormResponse(json.message);
                 props.setIsProcessing(false);
             })

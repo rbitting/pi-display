@@ -1,6 +1,6 @@
 import logging
 
-from config import font_md, news, padding, padding_sm, today_x, today_y
+from config import FONT_MD, news, PADDING, PADDING_SM, COL_2_X, COL_2_Y
 from util_fetch import fetch
 from util_formatting import print_md_text_in_box
 
@@ -77,7 +77,9 @@ def get_news_headlines():
 
 def print_news_data(draw):
     news_data = get_news_headlines()
-    y = today_y + 80
+    y = COL_2_Y + 98
+    
+    # Print bulleted list
     for headline in news_data:
-        draw.text((today_x, y), '•', font=font_md, fill=0)
-        y = print_md_text_in_box(draw, today_x + padding, y, headline) + padding_sm
+        draw.text((COL_2_X, y), '•', font=FONT_MD, fill=0)
+        y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + PADDING_SM

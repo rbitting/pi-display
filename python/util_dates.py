@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 
-from config import font_italic_sm, font_lg, font_md, today_x, today_y
+from config import FONT_ITALIC_SM, FONT_LG, FONT_MD, COL_2_X, COL_2_Y
 
 day_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -23,7 +23,7 @@ def get_current_date():
     date = datetime.today()
     if (date.month == 3 and date.day == 19):
         logging.info('Happy birthday!')
-    return get_day_of_week(date) + ', \n' + date.strftime('%B %-d')
+    return get_day_of_week(date) + ', \n' + date.strftime('%B %-d, %Y')
 
 def get_current_date_time():
     date = datetime.now()
@@ -33,14 +33,14 @@ def print_current_date():
     logging.info(get_current_date())
 
 # Print last updated date + time in bottom right of screen
-def print_last_updated(draw, display_w, display_h):
+def print_last_updated(draw, DISPLAY_W, DISPLAY_H):
     last_updated = 'Last updated ' + get_current_date_time()
-    width, height = font_italic_sm.getsize(last_updated)
-    draw.text((display_w - width - 20, display_h - height), last_updated, font=font_italic_sm, fill=0)
+    width, height = FONT_ITALIC_SM.getsize(last_updated)
+    draw.text((DISPLAY_W - width - 20, DISPLAY_H - height), last_updated, font=FONT_ITALIC_SM, fill=0)
     return last_updated
 
 # Print day of the week and date in designated space
 def print_todays_date(draw):
     day_and_date = get_current_date().split('\n')
-    draw.text((today_x, today_y), day_and_date[0], font=font_md, fill=0)
-    draw.text((today_x, today_y + 22), day_and_date[1], font=font_lg, fill=0)
+    draw.text((COL_2_X, COL_2_Y), day_and_date[0], font=FONT_MD, fill=0)
+    draw.text((COL_2_X, COL_2_Y + 22), day_and_date[1], font=FONT_LG, fill=0)

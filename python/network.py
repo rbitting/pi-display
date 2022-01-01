@@ -2,7 +2,7 @@ import logging
 import re
 import subprocess
 
-from config import col_1_w, font_sm, icon_size_xs, padding, display_w
+from config import FONT_SM, ICON_SIZE_XS, PADDING, DISPLAY_W
 from util_formatting import get_xsmall_icon, get_width_of_text
 from util_os import get_absolute_path
 
@@ -11,6 +11,7 @@ def print_network_speed():
     results = get_network_speed()
     logging.info('python/assets/icons/download.png ' + results['download'])
     logging.info('python/assets/icons/upload.png ' + results['upload'])
+
 
 def get_network_speed():
     # TODO: Run in new thread to avoid lagging
@@ -30,7 +31,8 @@ def get_network_speed():
 def get_network_name():
     r = subprocess.run(['iwgetid'], stdout=subprocess.PIPE)  # Get network info
     result = r.stdout.decode('utf-8')
-    regex_result = re.search('ESSID:"(.*)"', result)  # Find network name in returned info
+    # Find network name in returned info
+    regex_result = re.search('ESSID:"(.*)"', result)
     if (regex_result is None):  # If regex fails, wifi is not connected
         return ''
     else:
@@ -51,10 +53,10 @@ def print_wifi_info(Himage, draw):
     else:
         network_name = 'Not connected to wifi'
         network_icon = get_offline_icon()
-    width = get_width_of_text(font_sm, network_name) + icon_size_xs + padding
-    x = display_w - width - 20
+    width = get_width_of_text(FONT_SM, network_name) + ICON_SIZE_XS + PADDING
+    x = DISPLAY_W - width - 20
     y = 10
     Himage.paste(get_xsmall_icon(get_absolute_path(network_icon)), (x, y - 2))
-    x = x + icon_size_xs + padding 
+    x = x + ICON_SIZE_XS + PADDING
     logging.info('Network name: ' + network_name)
-    draw.text((x, y), network_name, font=font_sm, fill=0)
+    draw.text((x, y), network_name, font=FONT_SM, fill=0)

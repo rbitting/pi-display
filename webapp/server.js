@@ -253,27 +253,19 @@ app.post('/refresh/clear', (req, res) => {
 
 // This displays message that the server running and listening to specified port
 const server = app.listen(port, () =>
-    console.log(
-        `${new Date().toLocaleString('en-US')}: Listening on port ${port}`
-    )
+    console.log(`${new Date().toLocaleString('en-US')}: Listening on port ${port}`)
 );
 
 app.use(express.static(path.join(__dirname, '/build')));
 
 watchForLogChanges(server);
 
-app.get('/', (req, res) => {
-    serveReactApp(res);
-});
-
 app.get('/log', (req, res) => {
     serveReactApp(res);
 });
 
 app.get('/*', (req, res) => {
-    res.setHeader('content-type', 'application/json');
-    res.status(404);
-    res.send({ code: 404, message: 'Path not found.' });
+    serveReactApp(res);
 });
 
 function serveReactApp(res) {

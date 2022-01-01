@@ -5,15 +5,15 @@ import textwrap
 from PIL import Image, ImageDraw, ImageFont
 
 import epd5in83_V2
-from config import display_h, display_w
-from fonts import noto_sans_mono, roboto, roboto_italic
+from config import DISPLAY_H, DISPLAY_W
+from fonts import NOTO_SANS_MONO, ROBOTO, ROBOTO_ITALIC
 from util_dates import print_last_updated
 from util_logging import set_logging_config
 from util_server import send_status
 
-font_italic_sm = ImageFont.truetype(roboto_italic, 18)
-font_md = ImageFont.truetype(roboto, 26)
-font_lg = ImageFont.truetype(noto_sans_mono, 42)
+FONT_ITALIC_SM = ImageFont.truetype(ROBOTO_ITALIC, 18)
+FONT_MD = ImageFont.truetype(ROBOTO, 26)
+FONT_LG = ImageFont.truetype(NOTO_SANS_MONO, 42)
 
 PREFIX = 'Message Display: '
 
@@ -21,7 +21,7 @@ set_logging_config()
 
 def print_header(draw):
     draw.rectangle((0, 0, 648, 56), fill=0)
-    draw.text((10, 10), "New Message", font=font_md, fill=255)
+    draw.text((10, 10), "New Message", font=FONT_MD, fill=255)
 
 def print_msg_on_display(draw, msg):
     lines = textwrap.wrap(msg, width=20, max_lines=5, placeholder="...")
@@ -31,14 +31,14 @@ def print_msg_on_display(draw, msg):
     centered_text = ''
     for line in lines:
         centered_line = line.center(35)
-        width, height = font_lg.getsize(centered_line)
+        width, height = FONT_LG.getsize(centered_line)
         centered_text += centered_line + '\n'
         if (width > max_x):
             max_x = width
         y += height
-    x = (display_w - max_x) / 2
-    y = (display_h - y) / 2
-    draw.multiline_text((x, y), centered_text, font=font_lg, fill=0)
+    x = (DISPLAY_W - max_x) / 2
+    y = (DISPLAY_H - y) / 2
+    draw.multiline_text((x, y), centered_text, font=FONT_LG, fill=0)
 
 logging.info("********* Initializing message refresh *********")
 if (len(sys.argv) > 1):
@@ -48,12 +48,12 @@ if (len(sys.argv) > 1):
     try:
         epd = epd5in83_V2.EPD()
         epd.init()
-        Himage = Image.new('1', (display_w, display_h), 255)
+        Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
         draw = ImageDraw.Draw(Himage)
 
         print_header(draw)
         print_msg_on_display(draw, msg)
-        last_updated = print_last_updated(draw, display_w, display_h)
+        last_updated = print_last_updated(draw, DISPLAY_W, DISPLAY_H)
         logging.info(last_updated)
 
         epd.display(epd.getbuffer(Himage))

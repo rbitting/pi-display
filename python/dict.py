@@ -1,4 +1,4 @@
-currency_symbols = {
+CURRENCY_SYMBOLS = {
     'ALL': 'Lek',
     'AFN': '؋',
     'ARS': '$',

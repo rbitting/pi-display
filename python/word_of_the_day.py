@@ -1,6 +1,6 @@
 import logging
 
-from config import word_of_the_day, today_x, font_md, display_w, display_h
+from config import word_of_the_day, COL_2_X, FONT_MD, DISPLAY_W, DISPLAY_H
 from util_fetch import fetch
 from util_formatting import print_sm_text_in_box, get_height_of_text, get_height_of_sm_multiline_text
 
@@ -77,20 +77,20 @@ def capitalize_first_letter(word):
     return ''.join(chars)
 
 def print_word_of_the_day(draw):
-    start_wotd_section =  display_h - 110
+    start_wotd_section =  DISPLAY_H - 110
     max_height_of_wotd = 92
     
-    draw.line((today_x, start_wotd_section, display_w, start_wotd_section), fill=0)
+    draw.line((COL_2_X, start_wotd_section, DISPLAY_W, start_wotd_section), fill=0)
     
     wotd = get_word_of_the_day()
     wotd_str = 'Word of the Day: ' + wotd.word
     description = wotd.word_type + " " + wotd.definition
     
-    height_title = get_height_of_text(font_md, wotd_str)
+    height_title = get_height_of_text(FONT_MD, wotd_str)
     height_desc = get_height_of_sm_multiline_text(description)
     
-    x = today_x
+    x = COL_2_X
     y = start_wotd_section + ((max_height_of_wotd - (height_title + height_desc)) / 2)  # Center section vertically in wotd area
-    draw.text((x, y), wotd_str, font=font_md, fill=0)
-    y = print_sm_text_in_box(draw, x, y + 24, description)
+    draw.text((x, y), wotd_str, font=FONT_MD, fill=0)
+    print_sm_text_in_box(draw, x, y + 24, description)
     logging.info(wotd_str)

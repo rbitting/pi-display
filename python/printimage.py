@@ -4,8 +4,7 @@ import sys
 from PIL import Image, ImageDraw
 
 import epd5in83_V2
-from config import display_h, display_w
-from util_dates import print_last_updated
+from config import DISPLAY_H, DISPLAY_W
 from util_logging import set_logging_config
 from util_os import path_exists
 from util_server import send_status
@@ -23,20 +22,20 @@ def get_resized_image(image):
     logging.info("New height: " + str(new_height) + ", New width: " + str(new_height));
     
     # If image is smaller than display, no resize is needed
-    if (height <= display_h and width <= display_w):
+    if (height <= DISPLAY_H and width <= DISPLAY_W):
         logging.info("Original image is smaller than display")
         return image
 
     # Resize photo if larger than display
     if (height > width):
-        if (height > display_h):
-            ratio = height / display_h
-            new_height = display_h
+        if (height > DISPLAY_H):
+            ratio = height / DISPLAY_H
+            new_height = DISPLAY_H
             new_width = round(width / ratio)
     else:
-        if (width > display_w):
-            ratio = width / display_w
-            new_width = display_w
+        if (width > DISPLAY_W):
+            ratio = width / DISPLAY_W
+            new_width = DISPLAY_W
             new_height = round(height / ratio)
     
     logging.info("New height: " + str(new_height) + ", New width: " + str(new_height));
@@ -52,12 +51,12 @@ if (len(sys.argv) > 1):
             # Init display and image
             epd = epd5in83_V2.EPD()
             epd.init()
-            Himage = Image.new('1', (display_w, display_h), 255)
+            Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
             draw = ImageDraw.Draw(Himage)
 
             image = get_resized_image(Image.open(img))  # Resize image to fit on display
-            x = round((display_w - image.width) / 2)   # Centered horizontally
-            y = round((display_h - image.height) / 2)   # Centered vertically
+            x = round((DISPLAY_W - image.width) / 2)   # Centered horizontally
+            y = round((DISPLAY_H - image.height) / 2)   # Centered vertically
             Himage.paste(image, (x, y))
 
             # Print on display

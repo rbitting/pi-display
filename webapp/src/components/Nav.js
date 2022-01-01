@@ -17,6 +17,7 @@ function Nav() {
             <Navbar.Menu className={isMobileMenuActive ? 'show' : ''}>
                 <Navbar.Container>
                     <Link className='navbar-item has-text-link pl-5 pr-5' to='/log'>Log</Link>
+                    <Link className='navbar-item has-text-link pl-5 pr-5' to='/calendar'>Calendar</Link>
                 </Navbar.Container>
             </Navbar.Menu>
         </Container>

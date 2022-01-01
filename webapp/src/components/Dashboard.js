@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'react-bulma-components';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Calendar from './Calendar';
 import HomePage from './HomePage';
 import Log from './Log';
 import Nav from './Nav';
@@ -15,7 +16,9 @@ const Dashboard = () => {
                     <Routes>
                         <Route exact path='/' element={<HomePage />}/>
                         <Route exact path='/send-message' element={<SendMessageForm />}/>
-                        <Route path='/*' element={<Log />}/>
+                        <Route path='/log' element={<Log />}/>
+                        <Route path='/calendar' element={<Calendar />}/>
+                        <Route path="/*" element={<Navigate to="/" />}/>
                     </Routes>
                 </Container>
             </div>

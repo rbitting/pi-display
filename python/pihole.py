@@ -1,6 +1,6 @@
 import logging
 
-from config import pihole, font_sm, font_md, col_1_w
+from config import pihole, FONT_SM, FONT_MD, COL_1_W
 from util_fetch import fetch
 
 class PiholeStatus():
@@ -50,13 +50,13 @@ def print_pihole_data(draw):
     y = 220
     logging.info(pihole_data.status)
     logging.info(pihole_data.stats)
-    draw.text((84, y), pihole_data.status, font=font_md, fill=0)    # "Pihole is [enabled/disabled]"
-    draw.text((70, y + 30), pihole_data.stats, font=font_md, fill=0)
-    draw.text((72, y + 58), 'requests           of all requests', font=font_sm, fill=0)
-    draw.text((74, y + 74), 'blocked                 blocked', font=font_sm, fill=0)
+    draw.text((84, y), pihole_data.status, font=FONT_MD, fill=0)    # "Pihole is [enabled/disabled]"
+    draw.text((70, y + 30), pihole_data.stats, font=FONT_MD, fill=0)
+    draw.text((72, y + 58), 'requests           of all requests', font=FONT_SM, fill=0)
+    draw.text((74, y + 74), 'blocked                 blocked', font=FONT_SM, fill=0)
 
     x = 160
     draw.line((x, y + 40, x, y + 85), fill=0)  # Vertical line break
 
     y += 110
-    draw.line((20, y, col_1_w, y), fill=0)  # Horizontal line break
+    draw.line((20, y, COL_1_W, y), fill=0)  # Horizontal line break

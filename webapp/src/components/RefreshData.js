@@ -19,7 +19,7 @@ export default function RefreshData(props) {
     async function postToEndpoint(path) {
         props.setIsProcessing(true);
         setIsLoading(true);
-        const response = await fetch(path, {
+        await fetch(path, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -37,8 +37,6 @@ export default function RefreshData(props) {
                 props.setIsProcessing(false);
                 setIsLoading(false);
             });
-
-        console.log(response);
     }
     return (<section className='mb-6'>
         <Headline title='Display Commands' icon='fas fa-terminal' />
