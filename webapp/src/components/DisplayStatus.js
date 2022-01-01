@@ -16,7 +16,7 @@ export default function DisplayStatus(props) {
                 props.setIsProcessing(json.isProcessing);
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
                 props.setIsProcessing(false);
             });
     }

@@ -1,5 +1,5 @@
 from util_os import get_absolute_path
 
-roboto = get_absolute_path('python/assets/fonts/Roboto-Italic.ttf')
-roboto_italic = get_absolute_path('python/assets/fonts/Roboto-Italic.ttf')
-noto_sans_mono = get_absolute_path('python/assets/fonts/NotoSansMono-Regular.ttf')
+ROBOTO = get_absolute_path('python/assets/fonts/Roboto-Italic.ttf')
+ROBOTO_ITALIC = get_absolute_path('python/assets/fonts/Roboto-Italic.ttf')
+NOTO_SANS_MONO = get_absolute_path('python/assets/fonts/NotoSansMono-Regular.ttf')

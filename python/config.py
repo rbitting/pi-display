@@ -89,20 +89,22 @@ septa = {
     ]
 }
 
-font_italic_sm = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 18)
-font_italic = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 22)
-font_sm = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 16)
-font_md = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 22)
-font_lg = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 40)
-icon_w = 50
-icon_h = 50
-icon_size_sm = 40
-icon_size_xs = 22
-padding = 10
-padding_sm = padding / 2
-padding_lg = padding * 2
-col_1_w = 300
-today_x = col_1_w + 30
-today_y = 45
-display_w = EPD_WIDTH
-display_h = EPD_HEIGHT
+google_cal = {
+    'enabled': True,
+    'cal_id': 'c1jupqqhjogqfujmvbuo7kv2ns@group.calendar.google.com'
+}
+
+FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 18)
+FONT_ITALIC = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 22)
+FONT_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 16)
+FONT_MD = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 22)
+FONT_LG = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 40)
+ICON_SIZE_SM = 40
+ICON_SIZE_XS = 22
+PADDING = 10
+PADDING_SM = PADDING / 2
+COL_1_W = 300   # Max width for first column
+COL_2_X = COL_1_W + 30  # Horizontal start of 2nd column
+COL_2_Y = 27    # Vertical start of 2nd column (date info)
+DISPLAY_W = EPD_WIDTH
+DISPLAY_H = EPD_HEIGHT

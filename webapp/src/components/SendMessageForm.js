@@ -62,7 +62,7 @@ export default function SendMessageForm(props) {
                 body: JSON.stringify(payload)
             })
                 .catch(err => {
-                    console.log(err);
+                    console.error(err);
                     setIsSubmitError(true);
                     setFormResponse(`Could not fetch ${ENDPOINT}. ${err}`);
                 });
@@ -83,7 +83,7 @@ export default function SendMessageForm(props) {
                         const json = await response.json();
                         setFormResponse(json.message);
                     } catch (e) {
-                        console.log(e);
+                        console.error(e);
                         setFormResponse(`${status} ${response.statusText}`);
                     }
                 }

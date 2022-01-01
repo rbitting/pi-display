@@ -1,7 +1,7 @@
 import logging 
 
 from config import crypto
-from dict import currency_symbols
+from dict import CURRENCY_SYMBOLS
 from util_fetch import fetch_with_headers_params
 
 def print_crypto_prices():
@@ -18,7 +18,7 @@ def print_crypto_prices():
                 num_format = '{:.2f}'  # 2 decimal places
                 if price < 1:
                     num_format = '{:.4f}'  # Round to 4 decimal places if price is under a dollar
-                logging.info(token + ': ' + currency_symbols[currency] + str(num_format.format(price)))
+                logging.info(token + ': ' + CURRENCY_SYMBOLS[currency] + str(num_format.format(price)))
 
 
 def get_crypto_prices():

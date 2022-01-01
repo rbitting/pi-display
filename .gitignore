@@ -4,3 +4,6 @@ build/
 .env
 .vscode/
 image-to-print.*
+credentials.json
+token.pickle
+token.json

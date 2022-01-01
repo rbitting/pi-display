@@ -1,7 +1,7 @@
 import logging
 from PIL import Image
 
-from config import (col_1_w, font_lg, font_md, font_sm, icon_size_sm, padding, padding_sm, weather)
+from config import (COL_1_W, FONT_LG, FONT_MD, FONT_SM, ICON_SIZE_SM, PADDING, PADDING_SM, weather)
 from util_dates import get_day_of_week_from_ms, get_time_from_ms
 from util_fetch import fetch
 from util_formatting import get_small_icon
@@ -118,8 +118,8 @@ def print_weather(Himage, draw):
             ' ' +
             weather_data.current_desc)
     logging.info('current temp: ' + weather_data.current_temp)
-    draw.text((80, 15), weather_data.current_temp, font=font_lg, fill=0)   # Current temperature
-    draw.text((20, 65), weather_data.current, font=font_md, fill=0)    # Feels like temp + high/low
+    draw.text((80, 15), weather_data.current_temp, font=FONT_LG, fill=0)   # Current temperature
+    draw.text((20, 65), weather_data.current, font=FONT_MD, fill=0)    # Feels like temp + high/low
 
     x = 180
     y = 30
@@ -129,26 +129,26 @@ def print_weather(Himage, draw):
                 weather_data.get_sunrise_icon())),
         (x,
          y))   # Sunrise icon
-    draw.text((x + icon_size_sm + padding_sm, y + padding),
-              weather_data.sunrise, font=font_md, fill=0)   # Sunrise time
+    draw.text((x + ICON_SIZE_SM + PADDING_SM, y + PADDING),
+              weather_data.sunrise, font=FONT_MD, fill=0)   # Sunrise time
 
     Himage.paste(get_small_icon(get_absolute_path(weather_data.get_sunset_icon())),
-                 (x, y + icon_size_sm))   # Sunset icon
-    draw.text((x + icon_size_sm + padding_sm, y + icon_size_sm + padding),
-              weather_data.sunset, font=font_md, fill=0)   # Sunset time
+                 (x, y + ICON_SIZE_SM))   # Sunset icon
+    draw.text((x + ICON_SIZE_SM + PADDING_SM, y + ICON_SIZE_SM + PADDING),
+              weather_data.sunset, font=FONT_MD, fill=0)   # Sunset time
 
     forecast = weather_data.get_forecast()
     y = 125  # Y coordinate (to display forecasts in a row)
     x = 20
-    next_line = y + icon_size_sm
+    next_line = y + ICON_SIZE_SM
 
     for day in forecast:
         Himage.paste(get_small_icon(get_absolute_path(day.icon)),
                      (x, y))   # Forecasted weather icon
-        draw.text((x + icon_size_sm + padding, y + padding_sm), day.day,
-                  font=font_sm, fill=0)   # Day of week next to icon
-        draw.text((x, next_line), day.temps, font=font_md, fill=0)   # High/low below
-        x += (icon_size_sm + 60)
+        draw.text((x + ICON_SIZE_SM + PADDING, y + PADDING_SM), day.day,
+                  font=FONT_SM, fill=0)   # Day of week next to icon
+        draw.text((x, next_line), day.temps, font=FONT_MD, fill=0)   # High/low below
+        x += (ICON_SIZE_SM + 60)
 
     y = 205
-    draw.line((20, y, col_1_w, y), fill=0)
+    draw.line((20, y, COL_1_W, y), fill=0)
