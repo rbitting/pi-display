@@ -12,6 +12,7 @@ IP_ENV_VAR = 'PIHOLE_ADDRESS'
 NYTIMES_ENV_VAR = 'NYTIMES_API_KEY'
 WORDNIK_ENV_VAR = 'WORDNIK_API_KEY'
 NEWSAPI_ENV_VAR = 'NEWSAPI_API_KEY'
+GCAL_ENV_VAR = 'GOOGLE_CALENDAR_ID'
 
 # Weather
 weather = {
@@ -91,7 +92,7 @@ septa = {
 
 google_cal = {
     'enabled': True,
-    'cal_id': 'c1jupqqhjogqfujmvbuo7kv2ns@group.calendar.google.com'
+    'cal_id': get_env_var(GCAL_ENV_VAR)
 }
 
 FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 18)
