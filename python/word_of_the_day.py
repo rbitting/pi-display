@@ -51,9 +51,13 @@ class WordOfTheDay():
 
 def get_word_of_the_day():
     results = fetch_word_of_the_day()
+    if results is None:
+        return None
+        
     error = results.get('message')
     if (error):
         logging.error(error)
+        return None
     else:
         wotd = WordOfTheDay()
         wotd.word = capitalize_first_letter(results['word'])
@@ -69,7 +73,7 @@ def fetch_word_of_the_day():
     else:
         logging.error('Wordnik API key (' + word_of_the_day.get('env_var') +
               ') is not defined in environment variables.')
-        exit(1)
+        return None
 
 def capitalize_first_letter(word):
     chars = list(word)
@@ -77,20 +81,24 @@ def capitalize_first_letter(word):
     return ''.join(chars)
 
 def print_word_of_the_day(draw):
+    wotd = get_word_of_the_day()
     start_wotd_section =  DISPLAY_H - 110
     max_height_of_wotd = 92
     
+    # Draw horizontal line
     draw.line((COL_2_X, start_wotd_section, DISPLAY_W, start_wotd_section), fill=0)
-    
-    wotd = get_word_of_the_day()
-    wotd_str = 'Word of the Day: ' + wotd.word
-    description = wotd.word_type + " " + wotd.definition
-    
-    height_title = get_height_of_text(FONT_MD, wotd_str)
-    height_desc = get_height_of_sm_multiline_text(description)
-    
-    x = COL_2_X
-    y = start_wotd_section + ((max_height_of_wotd - (height_title + height_desc)) / 2)  # Center section vertically in wotd area
-    draw.text((x, y), wotd_str, font=FONT_MD, fill=0)
-    print_sm_text_in_box(draw, x, y + 24, description)
-    logging.info(wotd_str)
+
+    if wotd is not None:
+        wotd_str = 'Word of the Day: ' + wotd.word
+        description = wotd.word_type + " " + wotd.definition
+        
+        height_title = get_height_of_text(FONT_MD, wotd_str)
+        height_desc = get_height_of_sm_multiline_text(description)
+        
+        x = COL_2_X
+        y = start_wotd_section + ((max_height_of_wotd - (height_title + height_desc)) / 2)  # Center section vertically in wotd area
+        draw.text((x, y), wotd_str, font=FONT_MD, fill=0)
+        print_sm_text_in_box(draw, x, y + 24, description)
+        logging.info(wotd_str)
+    else:
+        logging.warn('WOTD data was not retrieved.')
