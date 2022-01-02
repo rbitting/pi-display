@@ -36,31 +36,39 @@ try:
             Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
             draw = ImageDraw.Draw(Himage)
 
+            send_status(False, True, "Getting wifi info...")
             print_wifi_info(Himage, draw)
 
             print_todays_date(draw)
 
             if (weather['enabled']):
+                send_status(False, True, "Fetching weather data...")
                 print_weather(Himage, draw)
 
             if (pihole['enabled']):
+                send_status(False, True, "Fetching Pi-Hole status...")
                 print_pihole_data(draw)
 
             if (septa['enabled']):
+                send_status(False, True, "Fetching SEPTA bus data...")
                 print_septa_data(Himage, draw)
 
             if (word_of_the_day['enabled']):
+                send_status(False, True, "Fetching word of the day...")
                 print_word_of_the_day(draw)
 
             if (news['enabled']):
+                send_status(False, True, "Fetching news...")
                 print_news_data(draw)
 
             if (google_cal['enabled']):
+                send_status(False, True, "Fetching Google Calendar events...")
                 print_gcal_event(draw)
 
             last_updated = print_last_updated(draw, DISPLAY_W, DISPLAY_H)
             logging.debug(last_updated)
 
+            send_status(False, True, "Printing to display...")
             epd.display(epd.getbuffer(Himage))
 
             logging.debug('Going to Sleep...')
