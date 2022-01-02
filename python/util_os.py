@@ -14,3 +14,6 @@ def mkdir(file_path):
 
 def get_home_dir():
     return os.path.expanduser('~')
+
+def get_current_dir():
+    return os.getcwd().split('\\')[-1]

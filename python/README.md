@@ -6,12 +6,15 @@ Information to display on an e-ink display powered by a Raspberry Pi.
 
 1. [Python 3.7+](https://www.python.org/downloads/)
 1. [Node.js](https://nodejs.org/)
-1. [Fast CLI](https://github.com/sindresorhus/fast-cli) cli (`npm install --global fast-cli`)
 1. Create API keys for all the data modules listed below that you want to utilize.
     * Weather: [OpenWeatherMap API](https://openweathermap.org/api/one-call-api)
     * Crypto prices: [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/)
     * News: [New York Times API](https://developer.nytimes.com/)
     * Word of the day: [Wordnik API](https://developer.wordnik.com/)
+1. Get the Google Calendar id for the calendar that contains events you want to display. To find your calendar id:
+    1. Go to your [Google Calendar settings](https://calendar.google.com/calendar/u/0/r/settings).
+    1. Click your desired calendar on the left sidebar under "Settings for my calendars".
+    1. Scroll down to the "Integrate calendar" section and copy the `Calendar ID`.
 1. Set your environment variables in a `.env` file within the `/python` directory (note that the IP address for your Pi-Hole also needs to be stored):
     ```
     export OWM_API_KEY=[open_weather_map_key]
@@ -19,8 +22,22 @@ Information to display on an e-ink display powered by a Raspberry Pi.
     export NYTIMES_API_KEY=[nytimes_api_key]
     export WORDNIK_API_KEY=[wordnik_api_key]
     export PIHOLE_ADDRESS=[ip_address_for_your_pihole]
+    export GOOGLE_CALENDAR_ID=[google_calendar_id]
     ```
-1. You may need to also install the python-dotenv python dependency: `pip install python-dotenv`
+1. Install the python-dotenv python dependency: `pip install python-dotenv`
+1. Install the Pillow python dependency: `pip install Pillow`
+1. Required for Google Calendar capabilities: Initialize your Google Calendar credentials and token.
+    1. Follow *all* the directions listed in the `Prerequisites` section of the python [Google Calendar API quickstart guide](https://developers.google.com/calendar/api/quickstart/python). You must create a Google Cloud Platform project and OAuth desktop credentials.
+    1. As part of the prerequisites above, you should have [created OAuth credentials](https://developers.google.com/workspace/guides/create-credentials#oauth-client-id) in the Google Cloud Console. Download and save the JSON credentials from the Google Cloud Console as `credentials.json` in the `python` directory of this project. To download the JSON file:
+        1. Go to the [Google Cloud Console](https://console.cloud.google.com/). Make sure you have the correct project selected.
+        1. In the left hamburger menu, select `APIs & Services` then `Credentials`.
+        1. Under `OAuth 2.0 Client IDs`, click the `Download Auth Client` button for your desktop credentials.
+        1. Click `DOWNLOAD JSON`
+        1. Rename the downloaded file to `credentials.json` and move it to this `python` directory.
+    1. Install the gcal libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib`
+    1. Run the initialization script. This only needs to be run on first install: `python google_cal_init.py`
+        * Note: this requires browser access as you have to log in through the Google UI. If running your Pi headlessly, run this script on another computer and copy the `token.pickle` file that's generated to your Pi.
+1. Required for Fast CLI capabilities: Install [Fast CLI](https://github.com/sindresorhus/fast-cli) cli (`npm install --global fast-cli`)
 
 This project was specificially built for the [Waveshare 5.83inch e-Paper HAT](https://www.waveshare.com/wiki/5.83inch_e-Paper_HAT).
 
@@ -30,7 +47,7 @@ Some module settings can be set in the `src/config.py` file. Use this file to en
 
 ## Run
 
-To run the python program to retrieve and print the display data, run the command `python3 -m python.main` from the root folder.
+To run the python program to retrieve and print the display data, run the command `python main.py` from the root folder.
 
 ## Data Modules
 
@@ -54,16 +71,6 @@ The Pi-Hole status information is retrieved from the local [Pi-Hole API](https:/
 
 * `enabled`: Boolean to declare whether to get and display the Pi-Hole information
 
-### CoinMarketCap
-
-Cypto prices are retrieved from the [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/). Your CoinMarketCap API key needs to be set in the CMC_API_KEY environment variable in order for this functionality to work.
-
-#### Configuration Options
-
-* `enabled`: Boolean to declare whether to get and display cryptocurrency prices
-* `tokens`: Array of coins/tokens to retrieve values for
-* `currency`: Currency to display prices in (ex. USD, GBP, etc.)
-
 ### Wordnik
 
 [Wordnik](https://developer.wordnik.com/) is used to get the word of the day definition. Your Wordnik API key needs to be set in the WORDNIK_API_KEY environment variable in order for this functionality to work.
@@ -71,14 +78,6 @@ Cypto prices are retrieved from the [CoinMarketCap API](https://coinmarketcap.co
 #### Configuration Options
 
 * `enabled`: Boolean to declare whether to get and display the word of the day
-
-### Fast CLI
-
-Network speed information is run in local speed tests via the Fast CLI.
-
-#### Configuration Options
-
-* `enabled`: Boolean to declare whether to calculate and display the network speed
 
 ### News
 
@@ -97,6 +96,28 @@ News headlines can also be retrieved from the [News API](https://newsapi.org/). 
 * `enabled`: Boolean to declare whether to get and display news headlines
 * `source`: Source for the articles. Can be 'nytimes' or any [source ID from News API](https://newsapi.org/docs/endpoints/sources)
 * `num`: Number of headlines to display
+
+## In Progress...
+
+The following integrations are in the codebase but have not been implemented to print on the display.
+
+### Fast CLI
+
+Network speed information is run in local speed tests via the Fast CLI. This data is pretty slow to collect and the results don't seem very precise. 
+
+#### Configuration Options
+
+* `enabled`: Boolean to declare whether to calculate and display the network speed
+
+### CoinMarketCap
+
+Cypto prices are retrieved from the [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/). Your CoinMarketCap API key needs to be set in the CMC_API_KEY environment variable in order for this functionality to work.
+
+#### Configuration Options
+
+* `enabled`: Boolean to declare whether to get and display cryptocurrency prices
+* `tokens`: Array of coins/tokens to retrieve values for
+* `currency`: Currency to display prices in (ex. USD, GBP, etc.)
 
 ## Icons
 
