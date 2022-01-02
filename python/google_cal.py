@@ -1,18 +1,10 @@
 from datetime import datetime
 import logging
-import pickle
 
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 from config import COL_2_X, COL_2_Y, FONT_SM, google_cal
-from util_os import get_absolute_path, path_exists
-
-# If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+from util_gcal import get_gcal_creds
 
 
 def get_gcal_data(gcal_id):
@@ -21,28 +13,9 @@ def get_gcal_data(gcal_id):
         """Shows basic usage of the Google Calendar API.
         Prints the start and name of the next 10 events on the user's calendar.
         """
-        creds = None
-        # The file token.json stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
-        token_file = get_absolute_path('python/token.pickle')
-        if path_exists(token_file):
-            with open(token_file, 'rb') as token:
-                creds = pickle.load(token)
-        # If there are no (valid) credentials available, let the user log in.
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                logging.info("Google calendar credentials are invalid. Attempting refresh...")
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(get_absolute_path('python/credentials.json'), SCOPES)
-                creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
-            with open(get_absolute_path(token_file), 'wb') as token:
-                pickle.dump(creds, token)
+        creds = get_gcal_creds()
 
         service = build('calendar', 'v3', credentials=creds)
-
         # Call the Calendar API
         now = datetime.utcnow()
         now_str = now.isoformat() + 'Z'  # 'Z' indicates UTC time
@@ -68,10 +41,6 @@ def get_gcal_data(gcal_id):
         # Return first event name and time (if applicable)
         return event['summary'] + time
 
-    except HttpError as error:
-        logging.exception('Could not get Google Calendar credentials')
-        return None
-        
     except BaseException as e:
         logging.exception(str(e))
         return None

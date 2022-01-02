@@ -27,10 +27,10 @@ weather = {
 
 # Crypto
 crypto = {
-    'enabled': True,
+    'enabled': False,
     'api_key': get_env_var(CRYPTO_ENV_VAR),
     'env_var': CRYPTO_ENV_VAR,
-    'tokens': ['BTC', 'ETH', 'ALGO', 'MANA', 'PAWTH'],
+    'tokens': ['BTC', 'ETH'],
     'currency': 'USD'
 }
 
@@ -43,7 +43,7 @@ pihole = {
 
 # Network Speed
 network = {
-    'enabled': True
+    'enabled': False
 }
 
 # News
