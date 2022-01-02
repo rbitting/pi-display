@@ -70,9 +70,11 @@ def get_gcal_data(gcal_id):
 
     except HttpError as error:
         logging.exception('Could not get Google Calendar credentials')
+        return None
         
     except BaseException as e:
         logging.exception(str(e))
+        return None
 
 def get_gcal_events():
     cal_id = google_cal['cal_id']

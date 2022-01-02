@@ -11,10 +11,13 @@ from weather_data import WeatherData, WeatherDay
 
 def get_weather_data():
     results = fetch_weather_data()
+    if results is None:
+        return None
+
     error_code = results.get('cod')
     if (error_code):
         logging.error(str(error_code) + ' ' + results.get('message'))
-        exit(2)
+        return None
     else:
         weather = WeatherData()
         current = results['current']
@@ -50,8 +53,7 @@ def fetch_weather_data():
             'Open Weather Map API key (' +
             weather.get('env_var') +
             ') is not defined in environment variables.')
-        exit(1)
-        return
+        return None
 
 def get_weather_icon(weather_id):
     # ID definitions: https://openweathermap.org/weather-conditions
@@ -108,47 +110,50 @@ def get_forecast(json, weather):
 
 def print_weather(Himage, draw):
     weather_data = get_weather_data()
-    weather_icon = get_absolute_path(weather_data.current_icon)
-    if path_exists(weather_icon):
-        Himage.paste(Image.open(weather_icon), (20, 15))   # Current weather icon
+    if weather_data is not None: 
+        weather_icon = get_absolute_path(weather_data.current_icon)
+        if path_exists(weather_icon):
+            Himage.paste(Image.open(weather_icon), (20, 15))   # Current weather icon
+        else:
+            logging.warning(
+                'No icon for current weather: ' +
+                weather_data.current_icon_id +
+                ' ' +
+                weather_data.current_desc)
+        logging.info('current temp: ' + weather_data.current_temp)
+        draw.text((80, 15), weather_data.current_temp, font=FONT_LG, fill=0)   # Current temperature
+        draw.text((20, 65), weather_data.current, font=FONT_MD, fill=0)    # Feels like temp + high/low
+
+        x = 180
+        y = 30
+        Himage.paste(
+            get_small_icon(
+                get_absolute_path(
+                    weather_data.get_sunrise_icon())),
+            (x,
+            y))   # Sunrise icon
+        draw.text((x + ICON_SIZE_SM + PADDING_SM, y + PADDING),
+                weather_data.sunrise, font=FONT_MD, fill=0)   # Sunrise time
+
+        Himage.paste(get_small_icon(get_absolute_path(weather_data.get_sunset_icon())),
+                    (x, y + ICON_SIZE_SM))   # Sunset icon
+        draw.text((x + ICON_SIZE_SM + PADDING_SM, y + ICON_SIZE_SM + PADDING),
+                weather_data.sunset, font=FONT_MD, fill=0)   # Sunset time
+
+        forecast = weather_data.get_forecast()
+        y = 125  # Y coordinate (to display forecasts in a row)
+        x = 20
+        next_line = y + ICON_SIZE_SM
+
+        for day in forecast:
+            Himage.paste(get_small_icon(get_absolute_path(day.icon)),
+                        (x, y))   # Forecasted weather icon
+            draw.text((x + ICON_SIZE_SM + PADDING, y + PADDING_SM), day.day,
+                    font=FONT_SM, fill=0)   # Day of week next to icon
+            draw.text((x, next_line), day.temps, font=FONT_MD, fill=0)   # High/low below
+            x += (ICON_SIZE_SM + 60)
     else:
-        logging.warning(
-            'No icon for current weather: ' +
-            weather_data.current_icon_id +
-            ' ' +
-            weather_data.current_desc)
-    logging.info('current temp: ' + weather_data.current_temp)
-    draw.text((80, 15), weather_data.current_temp, font=FONT_LG, fill=0)   # Current temperature
-    draw.text((20, 65), weather_data.current, font=FONT_MD, fill=0)    # Feels like temp + high/low
-
-    x = 180
-    y = 30
-    Himage.paste(
-        get_small_icon(
-            get_absolute_path(
-                weather_data.get_sunrise_icon())),
-        (x,
-         y))   # Sunrise icon
-    draw.text((x + ICON_SIZE_SM + PADDING_SM, y + PADDING),
-              weather_data.sunrise, font=FONT_MD, fill=0)   # Sunrise time
-
-    Himage.paste(get_small_icon(get_absolute_path(weather_data.get_sunset_icon())),
-                 (x, y + ICON_SIZE_SM))   # Sunset icon
-    draw.text((x + ICON_SIZE_SM + PADDING_SM, y + ICON_SIZE_SM + PADDING),
-              weather_data.sunset, font=FONT_MD, fill=0)   # Sunset time
-
-    forecast = weather_data.get_forecast()
-    y = 125  # Y coordinate (to display forecasts in a row)
-    x = 20
-    next_line = y + ICON_SIZE_SM
-
-    for day in forecast:
-        Himage.paste(get_small_icon(get_absolute_path(day.icon)),
-                     (x, y))   # Forecasted weather icon
-        draw.text((x + ICON_SIZE_SM + PADDING, y + PADDING_SM), day.day,
-                  font=FONT_SM, fill=0)   # Day of week next to icon
-        draw.text((x, next_line), day.temps, font=FONT_MD, fill=0)   # High/low below
-        x += (ICON_SIZE_SM + 60)
+        logging.warn('Weather data was not retrieved.')
 
     y = 205
-    draw.line((20, y, COL_1_W, y), fill=0)
+    draw.line((20, y, COL_1_W, y), fill=0) # Draw horizontal line break

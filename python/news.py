@@ -7,10 +7,13 @@ from util_formatting import print_md_text_in_box
 
 def get_nytimes_headlines():
     results = fetch_nytimes_data()
+    if results is None:
+        return None
+
     error = results.get('fault')
     if (error):
         logging.error(error['detail']['errorcode'] + ' ' + error['faultstring'])
-        exit(2)
+        return None
     else:
         # logging.info('/assets/icons/news.png')
         num = min([results['num_results'], news['num']])
@@ -26,10 +29,14 @@ def fetch_nytimes_data():
             'New York Times API key (' +
             news.get('env_var').get('nytimes') +
             ') is not defined in environment variables.')
-        exit(1)
+        return None
 
 def get_newsapi_headlines(source):
     results = fetch_newsapi_headlines(source)
+
+    if results is None:
+        return None
+
     if (results):
         if (results['status'] == 'error'):
             logging.error(results['code'] + ' ' + results['message'])
@@ -59,8 +66,7 @@ def fetch_newsapi_headlines(source):
             'Newsapi.org API key (' +
             news.get('env_var').get('newsapi') +
             ') is not defined in environment variables.')
-        exit(1)
-        return
+        return None
 
 def get_headlines(articles, num):
     news = []
@@ -77,9 +83,13 @@ def get_news_headlines():
 
 def print_news_data(draw):
     news_data = get_news_headlines()
-    y = COL_2_Y + 98
-    
-    # Print bulleted list
-    for headline in news_data:
-        draw.text((COL_2_X, y), '•', font=FONT_MD, fill=0)
-        y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + PADDING_SM
+
+    if news_data is not None:
+        y = COL_2_Y + 98
+        
+        # Print bulleted list
+        for headline in news_data:
+            draw.text((COL_2_X, y), '•', font=FONT_MD, fill=0)
+            y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + PADDING_SM
+    else:
+        logging.warn('News data was not retrieved.')
