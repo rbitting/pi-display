@@ -24,7 +24,7 @@ This set-up guide assumes you are running Rasberry Pi OS Lite on your Pi and hav
     git clone https://github.com/rbitting/pi-display.git
     ```
 
-1. Complete all prerequisites listed in `python/README.md`
+1. Complete all prerequisites listed in [python/README.md](python/README.md#Prerequisites)
 
 1. Set up a cron job to run the display refresh at regular intervals. Enter the command `crontab -e` to edit the crontab file. Then add the following line (this will run the script every 30 minutes):
 
