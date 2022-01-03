@@ -1,22 +1,7 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "plugin:react/recommended",
-        "standard"
-    ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2017,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
+    "extends": ["airbnb-typescript-prettier"],
+    "ignorePatterns": ["/build/", "/node_modules/", "*.js"],
+    "plugins": ["react", "import"],
     "rules": {
         "space-before-function-paren": 0,
         "indent": ["error", 4],
@@ -24,7 +9,23 @@
         "semi": ["error", "always"],
         "quote-props": 0,
         "prefer-template": 2,
-        "react/prop-types": [0],
-        "spaced-comment": "off"
+        "spaced-comment": "off",
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto",
+                "trailingComma": "none"
+            }
+        ],
+        "comma-dangle": ["error", "never"],
+        "no-console": ["error", { "allow": ["error"] }]
+    },
+    "settings": {
+        "import/parsers": {
+            "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+            "typescript": {}
+        }
     }
 }
