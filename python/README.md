@@ -9,7 +9,7 @@ Information to display on an e-ink display powered by a Raspberry Pi.
 1. Create API keys for all the data modules listed below that you want to utilize.
     * Weather: [OpenWeatherMap API](https://openweathermap.org/api/one-call-api)
     * Crypto prices: [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/)
-    * News: [New York Times API](https://developer.nytimes.com/)
+    * News: [New York Times API](https://developer.nytimes.com/) and/or [Newsapi.org](https://newsapi.org/)
     * Word of the day: [Wordnik API](https://developer.wordnik.com/)
 1. Get the Google Calendar id for the calendar that contains events you want to display. To find your calendar id:
     1. Go to your [Google Calendar settings](https://calendar.google.com/calendar/u/0/r/settings).
@@ -20,6 +20,7 @@ Information to display on an e-ink display powered by a Raspberry Pi.
     export OWM_API_KEY=[open_weather_map_key]
     export CMC_API_KEY=[coinmarketcap_key]
     export NYTIMES_API_KEY=[nytimes_api_key]
+    export NEWSAPI_API_KEY=[newsapi_api_key]
     export WORDNIK_API_KEY=[wordnik_api_key]
     export PIHOLE_ADDRESS=[ip_address_for_your_pihole]
     export GOOGLE_CALENDAR_ID=[google_calendar_id]
@@ -85,11 +86,11 @@ The source for news headlines is set in the `config.py`. News can either be fetc
 
 #### New York Times API
 
-News headlines can be retrieved from the [New York Times API](https://developer.nytimes.com/). Your NYTimes API key needs to be set in the NYTIMES_API_KEY environment variable in order for this functionality to work.
+News headlines can be retrieved from the [New York Times API](https://developer.nytimes.com/). Your NYTimes API key needs to be set in the NYTIMES_API_KEY environment variable in order for this functionality to work and the configuration's `source` needs to be set to `nytimes`.
 
 #### News API
 
-News headlines can also be retrieved from the [News API](https://newsapi.org/). Your News API key needs to be set in the NEWSAPI_API_KEY environment variable in order for this functionality to work. Note: Articles are delayed a hour if you are using the free version.
+News headlines can also be retrieved from the [News API](https://newsapi.org/). Your News API key needs to be set in the NEWSAPI_API_KEY environment variable in order for this functionality to work and the configuration's `source` needs to be set to a [valid Newsapi source ID](https://newsapi.org/docs/endpoints/sources). Note: Articles are delayed a hour if you are using the free version.
 
 #### Configuration Options
 
