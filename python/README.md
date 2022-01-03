@@ -1,11 +1,10 @@
 # Pi Display - Back End
 
-Information to display on an e-ink display powered by a Raspberry Pi.
+Displays data on a Waveshare 5.83in e-ink display powered by a Raspberry Pi.
 
 ## Prerequisites
 
 1. [Python 3.7+](https://www.python.org/downloads/)
-1. [Node.js](https://nodejs.org/)
 1. Create API keys for all the data modules listed below that you want to utilize.
     * Weather: [OpenWeatherMap API](https://openweathermap.org/api/one-call-api)
     * Crypto prices: [CoinMarketCap API](https://coinmarketcap.com/api/documentation/v1/)
@@ -49,6 +48,8 @@ Some module settings can be set in the `src/config.py` file. Use this file to en
 ## Run
 
 To run the python program to retrieve and print the display data, run the command `python main.py` from the root folder.
+
+![Photo of the Pi display displaying all data](assets/pi-display.jpg)
 
 ## Data Modules
 
@@ -97,6 +98,14 @@ News headlines can also be retrieved from the [News API](https://newsapi.org/). 
 * `enabled`: Boolean to declare whether to get and display news headlines
 * `source`: Source for the articles. Can be 'nytimes' or any [source ID from News API](https://newsapi.org/docs/endpoints/sources)
 * `num`: Number of headlines to display
+
+### Google Calendar
+
+The [Google Calendar API](https://developer.wordnik.com/) is used to display the next calendar event. Your Google Calendar ID needs to be set in the GOOGLE_CALENDAR_ID environment variable in order for this functionality to work.
+
+#### Configuration Options
+
+* `enabled`: Boolean to declare whether to get and display Google Calendar data
 
 ## In Progress...
 

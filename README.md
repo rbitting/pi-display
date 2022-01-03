@@ -2,6 +2,8 @@
 
 The purpose of this project is to display various data points on an Waveshare 5.83in V2 e-ink display powered by a Raspberry Pi.
 
+![Photo of the Pi display displaying all data](python/assets/pi-display.jpg)
+
 This project contains two parts:
 
 1. `/python` contains all the files needed to retrieve and print all the data for the display.
