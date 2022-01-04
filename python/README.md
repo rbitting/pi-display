@@ -14,15 +14,15 @@ Displays data on a Waveshare 5.83in e-ink display powered by a Raspberry Pi.
     1. Go to your [Google Calendar settings](https://calendar.google.com/calendar/u/0/r/settings).
     1. Click your desired calendar on the left sidebar under "Settings for my calendars".
     1. Scroll down to the "Integrate calendar" section and copy the `Calendar ID`.
-1. Set your environment variables in a `.env` file within the `/python` directory (note that the IP address for your Pi-Hole also needs to be stored):
+1. Set your environment variables in a `.env` file in the root `/pi-display` directory (note that the IP address for your Pi-Hole also needs to be stored):
     ```
-    export OWM_API_KEY=[open_weather_map_key]
-    export CMC_API_KEY=[coinmarketcap_key]
-    export NYTIMES_API_KEY=[nytimes_api_key]
-    export NEWSAPI_API_KEY=[newsapi_api_key]
-    export WORDNIK_API_KEY=[wordnik_api_key]
-    export PIHOLE_ADDRESS=[ip_address_for_your_pihole]
-    export GOOGLE_CALENDAR_ID=[google_calendar_id]
+    OWM_API_KEY=[open_weather_map_key]
+    CMC_API_KEY=[coinmarketcap_key]
+    NYTIMES_API_KEY=[nytimes_api_key]
+    NEWSAPI_API_KEY=[newsapi_api_key]
+    WORDNIK_API_KEY=[wordnik_api_key]
+    PIHOLE_ADDRESS=[ip_address_for_your_pihole]
+    GOOGLE_CALENDAR_ID=[google_calendar_id]
     ```
 1. Install the python-dotenv python dependency: `pip install python-dotenv`
 1. Install the Pillow python dependency: `pip install Pillow`

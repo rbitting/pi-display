@@ -38,6 +38,8 @@
     "@typescript-eslint/parser": "^5.8.1",
     "bulma": "^0.9.3",
     "copy-webpack-plugin": "^9.1.0",
+    "dotenv": "^10.0.0",
+    "dotenv-webpack": "^7.0.3",
     "css-loader": "^6.5.1",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-typescript-prettier": "^5.0.0",

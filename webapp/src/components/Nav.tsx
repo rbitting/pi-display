@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Navbar } from 'react-bulma-components';
 import { Link } from 'react-router-dom';
+import { hasGoogleCalendarUrl } from '../config';
 
 function Nav() {
     const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
@@ -22,9 +23,11 @@ function Nav() {
                         <Link className="navbar-item has-text-link pl-5 pr-5" to="/log">
                             Log
                         </Link>
-                        <Link className="navbar-item has-text-link pl-5 pr-5" to="/calendar">
-                            Calendar
-                        </Link>
+                        {hasGoogleCalendarUrl && (
+                            <Link className="navbar-item has-text-link pl-5 pr-5" to="/calendar">
+                                Calendar
+                            </Link>
+                        )}
                     </Navbar.Container>
                 </Navbar.Menu>
             </Container>
