@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const dotEnv = require('dotenv-webpack');
 
 module.exports = {
     output: {
@@ -44,6 +45,9 @@ module.exports = {
                 { from: 'node_modules/@fortawesome/fontawesome-free/webfonts', to: 'vendor/fa/webfonts/' },
                 { from: 'src/assets/', to: 'assets/' }
             ]
+        }),
+        new dotEnv({
+            path: '../.env'
         })
     ],
     devtool: 'source-map'
