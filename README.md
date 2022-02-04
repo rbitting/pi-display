@@ -44,6 +44,8 @@ This set-up guide assumes you are running Rasberry Pi OS Lite on your Pi and hav
 
 1. Set up a [static IP address](https://thepihut.com/blogs/raspberry-pi-tutorials/how-to-give-your-raspberry-pi-a-static-ip-address-update) for your Pi.
 
+1. Install Apache web server on your pi: `sudo apt-get install -y apache2`
+
 1. Update the Apache configuration file to proxy port 3000 requests. This will allow access to the webapp at the Pi's direct IP. Open the file:
 
     ```sudo nano /etc/apache2/sites-available/000-default.conf```
