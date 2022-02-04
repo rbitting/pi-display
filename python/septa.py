@@ -124,5 +124,5 @@ def print_septa_data(Himage, draw):
             draw.text((x, y), arrival.eta, font=FONT_SM, fill=0)
             y += 22
         x += 75
-    y = 435
+    y += 8
     draw.line((20, y, COL_1_W, y), fill=0)  # Horizontal line break
