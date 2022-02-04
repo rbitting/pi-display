@@ -16,12 +16,17 @@ def get_gcal_data(gcal_id):
         creds = get_gcal_creds()
 
         service = build('calendar', 'v3', credentials=creds)
-        # Call the Calendar API
+        
+        # Format start and end dates
+        timezone_offset = 5 # EST 
+        service = build('calendar', 'v3', credentials=creds)
         now = datetime.utcnow()
         now_str = now.isoformat() + 'Z'  # 'Z' indicates UTC time
-        eod = now.replace(day=(now.day+1), hour=0, minute=0, second=0, microsecond=0)
+        eod = now.replace(day=(now.day+1), hour=timezone_offset, minute=0, second=0, microsecond=0)
         eod_str = eod.isoformat() + 'Z'
         logging.info("Google calendar - Start: " + now_str + ", End: " + eod_str)
+
+        # Call the Calendar API
         events_result = service.events().list(calendarId=gcal_id, 
                                             timeMin=now_str, timeMax=eod_str,
                                             maxResults=1, singleEvents=True,

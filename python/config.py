@@ -73,7 +73,7 @@ word_of_the_day = {
 
 septa = {
     'enabled': True,
-    'num': 3,
+    'num': 4,
     'routes': [
         {
             'route': '48',
@@ -105,7 +105,7 @@ ICON_SIZE_XS = 22
 PADDING = 10
 PADDING_SM = PADDING / 2
 COL_1_W = 300   # Max width for first column
-COL_2_X = COL_1_W + 30  # Horizontal start of 2nd column
+COL_2_X = COL_1_W + 20  # Horizontal start of 2nd column
 COL_2_Y = 27    # Vertical start of 2nd column (date info)
 DISPLAY_W = EPD_WIDTH
 DISPLAY_H = EPD_HEIGHT

@@ -90,6 +90,6 @@ def print_news_data(draw):
         # Print bulleted list
         for headline in news_data:
             draw.text((COL_2_X, y), '•', font=FONT_MD, fill=0)
-            y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + PADDING_SM
+            y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + 2
     else:
         logging.warn('News data was not retrieved.')
