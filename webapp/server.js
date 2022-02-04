@@ -6,6 +6,9 @@ const enableWs = require('express-ws');
 const app = express();
 enableWs(app);
 
+const events = require('events');
+
+const emitter = new events.EventEmitter();
 const port = process.env.PORT || 3000;
 const path = require('path');
 const { spawn } = require('child_process');
@@ -35,7 +38,15 @@ const upload = multer({ storage });
 const fs = require('fs');
 const { sendLog, watchForLogChanges } = require('./server/watch-logs');
 
-const displayStatus = new DisplayStatus();
+const displayStatus = new DisplayStatus(emitter);
+
+function dispatchStatusUpdateEvent() {
+    emitter.emit(displayStatus.UPDATE_EVENT);
+}
+
+function getCurrentDateTime() {
+    return new Date().toLocaleString('en-US');
+}
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -44,20 +55,16 @@ app.use(function (req, res, next) {
 });
 app.use(bodyParser.json());
 
-app.get('/display-status', (req, res) => {
-    res.setHeader('content-type', 'application/json');
-    res.status(200);
-    res.send(JSON.stringify(displayStatus));
-});
-
+// Update display status
 app.post('/display-status', (req, res) => {
     console.log('Request body: ', req.body);
     res.setHeader('content-type', 'application/json');
     if (req.body) {
-        displayStatus.lastRefresh = new Date().toLocaleString('en-US');
+        displayStatus.lastRefresh = getCurrentDateTime();
         displayStatus.message = req.body.message || '';
         displayStatus.isError = req.body.isError;
         displayStatus.isProcessing = req.body.isProcessing;
+        dispatchStatusUpdateEvent();
         res.status(200);
         res.send(JSON.stringify(displayStatus));
     } else {
@@ -71,12 +78,14 @@ app.post('/display-status', (req, res) => {
     }
 });
 
+// Returns last 20 lines of main python log
 app.get('/logs/python', (req, res) => {
     res.setHeader('content-type', 'application/json');
     res.status(200);
     sendLog(res);
 });
 
+// Send image to show on display
 app.post('/send-image', upload.single('file'), (req, res) => {
     if (!req.file) {
         const errorMsg = 'No image received.';
@@ -147,13 +156,15 @@ function removeFile(filePath) {
     });
 }
 
+// Send message to show on display
 app.post('/sendmessage', (req, res) => {
     displayStatus.isWaiting = false; // Override waiting flag if command is sent via api
-    console.log(`${new Date().toLocaleString('en-US')} /sendmessage`);
+    console.log(`${getCurrentDateTime()} /sendmessage`);
     res.setHeader('content-type', 'application/json');
     if (!displayStatus.isProcessing) {
         if (req.body.minToDisplay) {
             displayStatus.isWaiting = true;
+            dispatchStatusUpdateEvent();
         }
         let dataToSend = {};
         console.log('Request body: ', req.body);
@@ -227,6 +238,7 @@ function handleMinToDisplayWait(req, res, min) {
         setTimeout(() => {
             if (displayStatus.isWaiting) {
                 displayStatus.isWaiting = false;
+                dispatchStatusUpdateEvent();
                 if (!displayStatus.isProcessing) {
                     console.log('Triggering screen refresh after displaying message...');
                     triggerMainScript(req, res, false, displayStatus);
@@ -236,39 +248,75 @@ function handleMinToDisplayWait(req, res, min) {
     }
 }
 
+// Refresh data on display
 app.post('/refresh/all', (req, res) => {
     displayStatus.isWaiting = false;
+    dispatchStatusUpdateEvent();
     triggerMainScript(req, res, true, displayStatus);
 });
 
+// Clear display
 app.post('/refresh/clear', (req, res) => {
     displayStatus.isWaiting = false;
-    console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
+    dispatchStatusUpdateEvent();
+    console.log(`${getCurrentDateTime()} /refresh/clear`);
     runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.', displayStatus);
 });
 
 // This displays message that the server running and listening to specified port
-const server = app.listen(port, () => console.log(`${new Date().toLocaleString('en-US')}: Listening on port ${port}`));
+const server = app.listen(port, () => console.log(`${getCurrentDateTime()}: Listening on port ${port}`));
 
 app.use(express.static(path.join(__dirname, '/build')));
 
+// Web socket to live tail main python log
 app.ws('/logs/python/active', (ws, req) => {
-    console.log(`${new Date().toLocaleString('en-US')}: Logs WebSocket was opened`);
+    console.log(`${getCurrentDateTime()}: Logs WebSocket was opened`);
+
     watchForLogChanges(ws);
+
+    // Not expecting any client messages, but lets log 'em just in case
     ws.on('message', (msg) => {
-        console.log(msg);
-        ws.send(msg);
+        console.log(`Message from logs client: ${msg}`);
     });
 
     ws.on('close', () => {
-        console.log(`${new Date().toLocaleString('en-US')}: Logs WebSocket was closed`);
+        console.log(`${getCurrentDateTime()}: Logs WebSocket was closed`);
     });
 });
 
-app.get('/log', (req, res) => {
-    serveReactApp(res);
+// Get current display status
+app.get('/display-status', (req, res) => {
+    res.setHeader('content-type', 'application/json');
+    res.status(200);
+    res.send(JSON.stringify(displayStatus));
 });
 
+// Web socket for live status updates
+app.ws('/display-status', (ws, req) => {
+    function sendStatusToClient() {
+        ws.send(JSON.stringify(displayStatus));
+    }
+    console.log(`${getCurrentDateTime()}: Status WebSocket was opened`);
+
+    // Send current status on first connect
+    sendStatusToClient();
+
+    // Send status on status update events
+    emitter.on(displayStatus.UPDATE_EVENT, sendStatusToClient);
+
+    // Not expecting any client messages, but lets log 'em just in case
+    ws.on('message', (msg) => {
+        console.log(`Message from status client: ${msg}`);
+    });
+
+    // Remove status update event listener when connection is closed
+    ws.on('close', () => {
+        console.log(`${getCurrentDateTime()}: Status WebSocket was closed`);
+        emitter.off(displayStatus.UPDATE_EVENT, sendStatusToClient);
+    });
+});
+
+// Serve web app on all other paths
 app.get('/*', (req, res) => {
     serveReactApp(res);
 });
