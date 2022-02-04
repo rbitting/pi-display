@@ -15,12 +15,10 @@ export default function Log() {
 
     useEffect(() => {
         // Create WebSocket connection.
-        const socket = new WebSocket('ws://localhost:3000/logs/python/active');
+        const socket = new WebSocket(`ws://${window.location.hostname}:3000/logs/python/active`);
 
         // Connection opened
         socket.addEventListener('open', () => {
-            socket.send('Hello Server!');
-
             // Print existing log
             fetch('/logs/python')
                 .then((data) => data.json())
