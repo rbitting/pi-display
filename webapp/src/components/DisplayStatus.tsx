@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Headline from './Headline';
 import { ProcessingProps } from '../prop-types';
 
@@ -7,27 +7,36 @@ export default function DisplayStatus({ isProcessing, setIsProcessing }: Process
     const [isError, setIsError] = useState(false);
     const [message, setMessage] = useState('');
 
-    const getDisplayStatus = useCallback(() => {
-        fetch('/display-status')
-            .then((data) => data.json())
-            .then((json) => {
+    useEffect(() => {
+        // Create WebSocket connection.
+        const socket = new WebSocket(`ws://${window.location.hostname}:3000/display-status`);
+
+        // Connection opened
+        socket.addEventListener('open', () => {
+            // eslint-disable-next-line no-console
+            console.log('Connection opened.');
+        });
+
+        // Print new incoming log messages
+        socket.addEventListener('message', (event) => {
+            // eslint-disable-next-line no-console
+            console.log('Message from server ', event.data);
+            try {
+                const json = JSON.parse(event.data);
                 setLastRefresh(json.lastRefresh);
                 setIsError(json.isError);
                 setMessage(json.message);
                 setIsProcessing(json.isProcessing);
-            })
-            .catch((error) => {
-                console.error(error);
+            } catch {
+                console.error('Could not parse data');
                 setIsProcessing(false);
-            });
-    }, [setLastRefresh, setIsError, setMessage, setIsProcessing]);
+            }
+        });
 
-    useEffect(() => {
-        const interval = setInterval(getDisplayStatus, 5000); // Get status every 5 seconds
-        return () => {
-            clearInterval(interval); // Stop interval on unmount
+        return function cleanup() {
+            socket.close();
         };
-    }, [getDisplayStatus]);
+    }, [setIsProcessing]);
 
     let className = 'has-text-success';
     if (isProcessing) {
@@ -35,8 +44,6 @@ export default function DisplayStatus({ isProcessing, setIsProcessing }: Process
     } else if (isError) {
         className = 'has-text-danger';
     }
-
-    useEffect(() => getDisplayStatus(), [isProcessing, getDisplayStatus]);
 
     return (
         <section className="mb-6 display-status">

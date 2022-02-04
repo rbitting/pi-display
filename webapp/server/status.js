@@ -1,4 +1,5 @@
-function DisplayStatus() {
+function DisplayStatus(emitter) {
+    this.UPDATE_EVENT = 'DisplayStatusUpdate';
     this.lastRefresh = new Date().toLocaleString('en-US');
     this.isError = false;
     this.isProcessing = false;
@@ -8,13 +9,15 @@ function DisplayStatus() {
         this.isError = true;
         this.message = message;
         this.lastRefresh = new Date().toLocaleString('en-US');
+        emitter.emit(this.UPDATE_EVENT);
     };
     this.setSuccess = (message) => {
         this.isError = false;
         this.message = message;
         this.lastRefresh = new Date().toLocaleString('en-US');
+        emitter.emit(this.UPDATE_EVENT);
     };
-};
+}
 
 function displayIsBusy(res) {
     const errorMsg = 'Display is busy. Please try again in a few minutes.';

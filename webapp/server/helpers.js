@@ -1,5 +1,5 @@
-const { displayIsBusy } = require('./status');
 const { spawn } = require('child_process');
+const { displayIsBusy } = require('./status');
 
 function runRefreshScript(scriptPath, res, successMsg, displayStatus) {
     displayStatus.isWaiting = false; // Override waiting flag if command is sent via api
@@ -82,12 +82,7 @@ function triggerMainScript(req, res, doRespond, displayStatus) {
                     displayStatus.setSuccess(response.message);
                 } else {
                     response.code = 500;
-                    if (code === 1) {
-                        response.message =
-                            'Could not get data. Missing API Key.';
-                    } else {
-                        response.message = `Script exited with exit code ${code}.`;
-                    }
+                    response.message = `Script exited with exit code ${code}.`;
                     displayStatus.setError(response.message);
                     const responseMsg = JSON.stringify(response);
                     console.log(`Response message: ${responseMsg}`);
@@ -96,15 +91,13 @@ function triggerMainScript(req, res, doRespond, displayStatus) {
                     res.status(500);
                     res.send(responseMsg);
                 }
+            } else if (code === 0) {
+                const status = 'Refresh complete.';
+                console.log(status);
+                displayStatus.setSuccess(status);
             } else {
-                if (code === 0) {
-                    const status = 'Refresh complete.';
-                    console.log(status);
-                    displayStatus.setSuccess(status);
-                } else {
-                    const status = `Script exited with exit code ${code}.`;
-                    displayStatus.setError(status);
-                }
+                const status = `Script exited with exit code ${code}.`;
+                displayStatus.setError(status);
             }
         });
     } else {
