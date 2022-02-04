@@ -1,59 +1,56 @@
-const ws = require('ws');
 const fs = require('fs');
 const { exec } = require('child_process');
 const Diff = require('diff');
 const path = require('path');
-const wsServer = new ws.Server({ noServer: true });
 
-const pythonLogPath = path.join(process.env.HOME, '/logs/main.log');
-console.log(`Watching Python log: ${pythonLogPath}`);
+function watchForLogChanges(ws) {
+    const pythonLogPath = getLogPath();
+    console.log(`Watching Python log: ${pythonLogPath}`);
 
-const getCurrent = (filepath) =>
-    fs.readFileSync(filepath, { encoding: 'utf8' });
-
-let currFile = getCurrent(pythonLogPath);
-
-function watchForLogChanges(server) {
-    server.on('upgrade', (request, socket, head) => {
-        const pathname = request.url;
-        console.log(`pathname: ${pathname}`);
-        if (pathname === '/logs/python/active') {
-            wsServer.handleUpgrade(request, socket, head, (socket) => {
-                wsServer.emit('connection', socket, request);
-
-                fs.watchFile(
-                    pythonLogPath,
-                    { encoding: 'buffer' },
-                    (eventType, filename) => {
-                        const newFile = getCurrent(pythonLogPath);
-                        const difference = Diff.diffWordsWithSpace(
-                            currFile,
-                            newFile
-                        );
-                        console.log(difference);
-                        if (difference.length > 1 && difference[1].added) {
-                            console.log(difference[1].value);
-                            socket.send(difference[1].value);
-                        }
-                        currFile = newFile;
-                    }
-                );
-            });
-        }
-    });
+    try {
+        const getCurrent = (filepath) => fs.readFileSync(filepath, { encoding: 'utf8' });
+        let currFile = getCurrent(pythonLogPath);
+        fs.watchFile(pythonLogPath, { encoding: 'buffer' }, (eventType, filename) => {
+            const newFile = getCurrent(pythonLogPath);
+            const difference = Diff.diffWordsWithSpace(currFile, newFile);
+            console.log(difference);
+            if (difference.length > 1 && difference[1].added) {
+                console.log(difference[1].value);
+                ws.send(difference[1].value);
+            }
+            currFile = newFile;
+        });
+    } catch {
+        console.error(`Could not open file: ${pythonLogPath}`);
+        ws.send(`Could not access file: ${pythonLogPath}`);
+    }
 }
 
 function sendLog(res) {
     console.log('Sending log message to client...');
-    exec(`tail -n 20 ${pythonLogPath}`, (error, stdout, stderr) => {
+    exec(`tail -n 20 ${getLogPath()}`, (error, stdout, stderr) => {
         if (error) {
             console.log(error);
-            res.send(JSON.stringify({ 'error': error, 'message': stderr, 'code': 500 }));
+            res.send(JSON.stringify({ error, message: stderr, code: 500 }));
             return;
         }
         console.log(stdout);
-        res.send(JSON.stringify({ 'code': 200, 'message': stdout }));
+        res.send(JSON.stringify({ code: 200, message: stdout }));
     });
-};
+}
+
+function getLogPath() {
+    const today = new Date();
+    let month = `${today.getMonth() + 1}`;
+    if (month.length === 1) {
+        month = `0${month}`;
+    }
+    let day = `${today.getDate()}`;
+    if (day.length === 1) {
+        day = `0${day}`;
+    }
+    const logDate = today.getFullYear() + month + day;
+    return path.join(process.env.HOME, `/logs/${logDate}_main.log`);
+}
 
 module.exports = { watchForLogChanges, sendLog };

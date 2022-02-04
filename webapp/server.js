@@ -1,13 +1,17 @@
 const { runRefreshScript, triggerMainScript } = require('./server/helpers');
 const { displayIsBusy, DisplayStatus } = require('./server/status');
-const { sendLog, watchForLogChanges } = require('./server/watch-logs');
 const express = require('express');
+const enableWs = require('express-ws');
+
 const app = express();
+enableWs(app);
+
 const port = process.env.PORT || 3000;
 const path = require('path');
 const { spawn } = require('child_process');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, '.');
@@ -27,16 +31,15 @@ const storage = multer.diskStorage({
         cb(null, `image-to-print.${filetype}`);
     }
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 const fs = require('fs');
+const { sendLog, watchForLogChanges } = require('./server/watch-logs');
+
 const displayStatus = new DisplayStatus();
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept'
-    );
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 app.use(bodyParser.json());
@@ -118,7 +121,7 @@ app.post('/send-image', upload.single('file'), (req, res) => {
                 res.send(responseMsg);
                 displayStatus.setSuccess('Image displayed successfully.');
 
-                const minToDisplay = req.body.minToDisplay;
+                const { minToDisplay } = req.body;
                 if (minToDisplay) {
                     handleMinToDisplayWait(req, res, minToDisplay);
                 }
@@ -194,7 +197,7 @@ app.post('/sendmessage', (req, res) => {
                     displayStatus.setError(`Unknown error code ${code}`);
                 }
 
-                const minToDisplay = req.body.minToDisplay;
+                const { minToDisplay } = req.body;
                 if (minToDisplay) {
                     handleMinToDisplayWait(req, res, minToDisplay);
                 }
@@ -225,9 +228,7 @@ function handleMinToDisplayWait(req, res, min) {
             if (displayStatus.isWaiting) {
                 displayStatus.isWaiting = false;
                 if (!displayStatus.isProcessing) {
-                    console.log(
-                        'Triggering screen refresh after displaying message...'
-                    );
+                    console.log('Triggering screen refresh after displaying message...');
                     triggerMainScript(req, res, false, displayStatus);
                 }
             }
@@ -243,22 +244,26 @@ app.post('/refresh/all', (req, res) => {
 app.post('/refresh/clear', (req, res) => {
     displayStatus.isWaiting = false;
     console.log(`${new Date().toLocaleString('en-US')} /refresh/clear`);
-    runRefreshScript(
-        '../python/clear_display.py',
-        res,
-        'Display cleared successfully.',
-        displayStatus
-    );
+    runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.', displayStatus);
 });
 
 // This displays message that the server running and listening to specified port
-const server = app.listen(port, () =>
-    console.log(`${new Date().toLocaleString('en-US')}: Listening on port ${port}`)
-);
+const server = app.listen(port, () => console.log(`${new Date().toLocaleString('en-US')}: Listening on port ${port}`));
 
 app.use(express.static(path.join(__dirname, '/build')));
 
-watchForLogChanges(server);
+app.ws('/logs/python/active', (ws, req) => {
+    console.log(`${new Date().toLocaleString('en-US')}: Logs WebSocket was opened`);
+    watchForLogChanges(ws);
+    ws.on('message', (msg) => {
+        console.log(msg);
+        ws.send(msg);
+    });
+
+    ws.on('close', () => {
+        console.log(`${new Date().toLocaleString('en-US')}: Logs WebSocket was closed`);
+    });
+});
 
 app.get('/log', (req, res) => {
     serveReactApp(res);

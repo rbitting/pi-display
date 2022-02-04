@@ -21,13 +21,15 @@ def get_day_of_week(date):
 
 def get_current_date():
     date = datetime.today()
-    if (date.month == 3 and date.day == 19):
-        logging.info('Happy birthday!')
     return get_day_of_week(date) + ', \n' + date.strftime('%B %-d, %Y')
 
 def get_current_date_time():
     date = datetime.now()
     return date.strftime('%b %-d, %-I:%M:%S %p')
+
+def get_current_short_date_time():
+    date = datetime.now()
+    return date.strftime('%Y%m%d') # yyyymmdd
 
 def print_current_date():
     logging.info(get_current_date())
