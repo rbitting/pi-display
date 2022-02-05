@@ -28,13 +28,17 @@ function watchForLogChanges(ws) {
 
 function sendLog(res) {
     console.log('Sending log message to client...');
+
+    /**
+     * If running this code on Windows, make sure to deploy the server
+     * in a bash terminal, otherwise 'tail' will not work
+     */
     exec(`tail -n 20 ${getLogPath()}`, (error, stdout, stderr) => {
         if (error) {
             console.log(error);
             res.send(JSON.stringify({ error, message: stderr, code: 500 }));
             return;
         }
-        console.log(stdout);
         res.send(JSON.stringify({ code: 200, message: stdout }));
     });
 }

@@ -1,17 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Headline from './Headline';
 
 export default function Log() {
-    function showLogMessages(messages: Array<string>) {
+    function focusOnBottom() {
+        document.getElementById('bottom-of-log-list')?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    const showLogMessages = useCallback((messages: Array<string>) => {
         messages.forEach((line) => {
             const li = document.createElement('li');
             li.innerText = line;
             const list = document.getElementById('log-list');
             if (list) {
                 list.append(li);
+                focusOnBottom();
             }
         });
-    }
+    }, []);
 
     useEffect(() => {
         // Create WebSocket connection.
@@ -37,13 +42,14 @@ export default function Log() {
         return function cleanup() {
             socket.close();
         };
-    }, []);
+    }, [showLogMessages]);
 
     return (
         <section>
             <Headline title="Log" icon="fas fa-file-code" />
             <div>
                 <ul id="log-list" />
+                <span id="bottom-of-log-list" />
             </div>
         </section>
     );
