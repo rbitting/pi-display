@@ -9,7 +9,13 @@ export default function Log() {
     const showLogMessages = useCallback((messages: Array<string>) => {
         messages.forEach((line) => {
             const li = document.createElement('li');
-            li.innerText = line;
+            if (line.length > 6 && line.substring(0, 7) === '[ERROR]') {
+                li.innerHTML = `<span class="has-text-danger">${line}</span>`;
+            } else if (line.length > 6 && line.substring(0, 6) === '[WARN]') {
+                li.innerHTML = `<span class="has-text-warning">${line}</span>`;
+            } else {
+                li.innerText = line;
+            }
             const list = document.getElementById('log-list');
             if (list) {
                 list.append(li);
