@@ -20,7 +20,11 @@ def get_gcal_data(gcal_id):
         # Format start and end dates
         timezone_offset = 5 # EST 
         service = build('calendar', 'v3', credentials=creds)
-        now = datetime.utcnow()
+        rightnow = datetime.utcnow()
+        corrected_hour = rightnow.hour + timezone_offset
+        if (corrected_hour > 23):
+            corrected_hour -= 24
+        now = rightnow.replace(hour=corrected_hour)
         now_str = now.isoformat() + 'Z'  # 'Z' indicates UTC time
         eod = now.replace(day=(now.day+1), hour=timezone_offset, minute=0, second=0, microsecond=0)
         eod_str = eod.isoformat() + 'Z'
