@@ -37,7 +37,7 @@ import epdconfig
 EPD_WIDTH = 648
 EPD_HEIGHT = 480
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 class EPD:
     def __init__(self):
@@ -70,10 +70,17 @@ class EPD:
         epdconfig.digital_write(self.cs_pin, 1)
 
     def ReadBusy(self):
-        logger.debug("e-Paper busy")
-        while(epdconfig.digital_read(self.busy_pin) == 0):
+        logging.info("e-Paper busy")
+        count = 0
+        while(epdconfig.digital_read(self.busy_pin) == 0 and count < 500):
+            logging.debug("Waiting for display...")
             epdconfig.delay_ms(20)
-        logger.debug("e-Paper busy release")
+            count += 1
+
+        if (count >= 500):
+            raise SystemError("Could not communicate with display")
+        else:
+            logging.info("e-Paper busy release")
 
     def TurnOnDisplay(self):
         self.send_command(0x12)  # POWER ON
@@ -119,21 +126,21 @@ class EPD:
         return 0
 
     def getbuffer(self, image):
-        # logger.debug("bufsiz = ",int(self.width/8) * self.height)
+        # logging.info("bufsiz = ",int(self.width/8) * self.height)
         buf = [0xFF] * (int(self.width / 8) * self.height)
         image_monocolor = image.convert('1')
         imwidth, imheight = image_monocolor.size
         pixels = image_monocolor.load()
-        # logger.debug("imwidth = %d, imheight = %d",imwidth,imheight)
+        # logging.info("imwidth = %d, imheight = %d",imwidth,imheight)
         if(imwidth == self.width and imheight == self.height):
-            logger.debug("Vertical")
+            logging.debug("Vertical")
             for y in range(imheight):
                 for x in range(imwidth):
                     # Set the bits for the column of pixels at the current position.
                     if pixels[x, y] == 0:
                         buf[int((x + y * self.width) / 8)] &= ~(0x80 >> (x % 8))
         elif(imwidth == self.height and imheight == self.width):
-            logger.debug("Horizontal")
+            logging.debug("Horizontal")
             for y in range(imheight):
                 for x in range(imwidth):
                     newx = y
