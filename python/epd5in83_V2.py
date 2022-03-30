@@ -70,7 +70,7 @@ class EPD:
         epdconfig.digital_write(self.cs_pin, 1)
 
     def ReadBusy(self):
-        logging.info("e-Paper busy")
+        logging.debug("e-Paper busy")
         count = 0
         while(epdconfig.digital_read(self.busy_pin) == 0 and count < 500):
             logging.debug("Waiting for display...")
@@ -80,7 +80,7 @@ class EPD:
         if (count >= 500):
             raise SystemError("Could not communicate with display")
         else:
-            logging.info("e-Paper busy release")
+            logging.debug("e-Paper busy release")
 
     def TurnOnDisplay(self):
         self.send_command(0x12)  # POWER ON
