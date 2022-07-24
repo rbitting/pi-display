@@ -28,11 +28,10 @@ def get_xsmall_icon(path):
 
 # Prints text starting at x until y then jumps to next line
 def print_md_text_in_coord(draw, x, y, text, max_y):
-    max_lines = ceil((max_y - y) / FONT_MD_SIZE)
-    logging.debug('y: ' + str(y) + ', max_y: ' + str(max_y) +
-                  ', Font size: ' + str(FONT_MD_SIZE) + ', max_lines = ' + str(max_lines))
-    lines = textwrap.wrap(
-        text, width=29, max_lines=max_lines, placeholder="...")
+    # For some reason the real line height ends up being 25 instead of 22
+    max_lines = ceil((max_y - y) / (FONT_MD_SIZE + 3))
+    logging.debug('y: ' + str(y) + ', max_y: ' + str(max_y) + ', max_lines = ' + str(max_lines))
+    lines = textwrap.wrap(text, width=29, max_lines=max_lines, placeholder="...")
     for line in lines:
         width, height = FONT_MD.getsize(line)
         draw.text((x, y), line, font=FONT_MD, fill=0)
