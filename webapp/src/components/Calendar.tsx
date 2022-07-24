@@ -9,7 +9,7 @@ export default function Calendar() {
         isValid = false;
     }
     return (
-        <div>
+        <>
             <Headline title="Calendar" icon="fas fa-calendar-alt" />
             {isValid && (
                 <iframe
@@ -23,6 +23,6 @@ export default function Calendar() {
                 />
             )}
             {!isValid && <div>Invalid calendar url.</div>}
-        </div>
+        </>
     );
 }
