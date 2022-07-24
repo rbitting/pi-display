@@ -116,6 +116,8 @@ app.get('/api/logs/python/:numOfLines', (req, res) => {
 
 // Send image to show on display
 app.post('/api/send-image', upload.single('file'), (req, res) => {
+    displayStatus.isWaiting = false;
+    
     if (!req.file) {
         const errorMsg = 'No image received.';
         res.status(500);
@@ -259,6 +261,8 @@ app.post('/api/sendmessage', (req, res) => {
 });
 
 function handleMinToDisplayWait(req, res, min) {
+    displayStatus.isWaiting = true;
+
     // Refresh display after designated time
     const minToDisplay = parseInt(min);
     const msToDisplay = minToDisplay * 60000;
@@ -271,6 +275,7 @@ function handleMinToDisplayWait(req, res, min) {
                 if (!displayStatus.isProcessing) {
                     console.log('Triggering screen refresh after displaying message...');
                     triggerMainScript(req, res, false, displayStatus);
+                    displayStatus.isWaiting = false;
                 }
             }
         }, msToDisplay);
