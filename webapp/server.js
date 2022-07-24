@@ -11,7 +11,7 @@ const events = require('events');
 const emitter = new events.EventEmitter();
 const port = process.env.PORT || 3000;
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 
@@ -83,7 +83,7 @@ app.get('/api/logs/python/:numOfLines', (req, res) => {
     res.setHeader('content-type', 'application/json');
     const val = req.params.numOfLines;
     const int = parseInt(val);
-    console.log({val, int})
+    console.log({ val, int });
     if (!Number.isInteger(int)) {
         res.status(400);
         res.send(
@@ -117,7 +117,7 @@ app.get('/api/logs/python/:numOfLines', (req, res) => {
 // Send image to show on display
 app.post('/api/send-image', upload.single('file'), (req, res) => {
     displayStatus.isWaiting = false;
-    
+
     if (!req.file) {
         const errorMsg = 'No image received.';
         res.status(500);
@@ -297,6 +297,14 @@ app.post('/api/refresh/clear', (req, res) => {
     runRefreshScript('../python/clear_display.py', res, 'Display cleared successfully.', displayStatus);
 });
 
+// Reboot system
+app.post('/api/reboot', (req, res) => {
+    displayStatus.isWaiting = false;
+    displayStatus.setSuccess('Initiating system reboot... BRB!');
+    dispatchStatusUpdateEvent();
+    exec('sudo reboot');
+});
+
 // This displays message that the server running and listening to specified port
 const server = app.listen(port, () => console.log(`${getCurrentDateTime()}: Listening on port ${port}`));
 
@@ -357,7 +365,7 @@ app.get(/^\/api(\/|$)/, (req, res) => {
     res.send(
         JSON.stringify({
             code: 404,
-            message: "No api route found."
+            message: 'No api route found.'
         })
     );
 });

@@ -18,7 +18,8 @@
             }
         ],
         "comma-dangle": ["error", "never"],
-        "no-console": ["error", { "allow": ["error"] }]
+        "no-console": ["error", { "allow": ["error"] }],
+        "react/require-default-props": "off"
     },
     "settings": {
         "import/parsers": {
