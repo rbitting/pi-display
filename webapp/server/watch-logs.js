@@ -13,9 +13,7 @@ function watchForLogChanges(ws) {
         fs.watchFile(pythonLogPath, { encoding: 'buffer' }, (eventType, filename) => {
             const newFile = getCurrent(pythonLogPath);
             const difference = Diff.diffWordsWithSpace(currFile, newFile);
-            console.log(difference);
             if (difference.length > 1 && difference[1].added) {
-                console.log(difference[1].value);
                 ws.send(difference[1].value);
             }
             currFile = newFile;

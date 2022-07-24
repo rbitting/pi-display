@@ -11,16 +11,8 @@ export default function DisplayStatus({ isProcessing, setIsProcessing }: Process
         // Create WebSocket connection.
         const socket = new WebSocket(`ws://${window.location.hostname}:3000/api/display-status`);
 
-        // Connection opened
-        socket.addEventListener('open', () => {
-            // eslint-disable-next-line no-console
-            console.log('Connection opened.');
-        });
-
         // Print new incoming log messages
         socket.addEventListener('message', (event) => {
-            // eslint-disable-next-line no-console
-            console.log('Message from server ', event.data);
             try {
                 const json = JSON.parse(event.data);
                 setLastRefresh(json.lastRefresh);
