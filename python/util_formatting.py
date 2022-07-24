@@ -1,36 +1,48 @@
+import logging
 import textwrap
+from math import ceil
 
 from PIL import Image
 
-from config import FONT_MD, FONT_SM, ICON_SIZE_SM, ICON_SIZE_XS
+from config import FONT_MD, FONT_MD_SIZE, FONT_SM, ICON_SIZE_SM, ICON_SIZE_XS
 
 
 def get_width_of_text(font, text):
     width, height = font.getsize(text)
     return width
-    
+
+
 def get_height_of_text(font, text):
     width, height = font.getsize(text)
     return height
 
+
 def get_small_icon(path):
     icon = Image.open(path)
     return icon.resize((ICON_SIZE_SM, ICON_SIZE_SM))
-    
+
+
 def get_xsmall_icon(path):
     icon = Image.open(path)
     return icon.resize((ICON_SIZE_XS, ICON_SIZE_XS))
 
-def print_md_text_in_box(draw, x, y, text):
-    lines = textwrap.wrap(text, width=29, max_lines=3, placeholder="...")
+# Prints text starting at x until y then jumps to next line
+def print_md_text_in_coord(draw, x, y, text, max_y):
+    max_lines = ceil((max_y - y) / FONT_MD_SIZE)
+    logging.debug('y: ' + str(y) + ', max_y: ' + str(max_y) +
+                  ', Font size: ' + str(FONT_MD_SIZE) + ', max_lines = ' + str(max_lines))
+    lines = textwrap.wrap(
+        text, width=29, max_lines=max_lines, placeholder="...")
     for line in lines:
         width, height = FONT_MD.getsize(line)
         draw.text((x, y), line, font=FONT_MD, fill=0)
         y += height + 1
     return y
 
+
 def get_sm_text_wrap(text):
     return textwrap.wrap(text, width=44, max_lines=3, placeholder="...")
+
 
 def print_sm_text_in_box(draw, x, y, text):
     lines = get_sm_text_wrap(text)
@@ -38,6 +50,7 @@ def print_sm_text_in_box(draw, x, y, text):
         width, height = FONT_SM.getsize(line)
         draw.text((x, y), line, font=FONT_SM, fill=0)
         y += height
+
 
 def get_height_of_sm_multiline_text(text):
     lines = get_sm_text_wrap(text)
