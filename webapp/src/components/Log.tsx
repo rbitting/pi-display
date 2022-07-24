@@ -33,12 +33,12 @@ export default function Log() {
 
     useEffect(() => {
         // Create WebSocket connection.
-        const socket = new WebSocket(`ws://${window.location.hostname}:3000/logs/python/active`);
+        const socket = new WebSocket(`ws://${window.location.hostname}:3000/api/logs/python/active`);
 
         // Connection opened
         socket.addEventListener('open', () => {
             // Print existing log
-            fetch(`/logs/python/${INITIAL_NUM_OF_LINES}`)
+            fetch(`/api/logs/python/${INITIAL_NUM_OF_LINES}`)
                 .then((data) => data.json())
                 .then((json) => {
                     showLogMessages(json.message.split('\n'));

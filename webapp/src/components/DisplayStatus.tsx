@@ -9,7 +9,7 @@ export default function DisplayStatus({ isProcessing, setIsProcessing }: Process
 
     useEffect(() => {
         // Create WebSocket connection.
-        const socket = new WebSocket(`ws://${window.location.hostname}:3000/display-status`);
+        const socket = new WebSocket(`ws://${window.location.hostname}:3000/api/display-status`);
 
         // Connection opened
         socket.addEventListener('open', () => {

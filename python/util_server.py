@@ -4,7 +4,7 @@ import requests
 
 from util_fetch import fetch
 
-status_endpoint = 'http://localhost:3000/display-status'
+status_endpoint = 'http://localhost:3000/api/display-status'
 
 def send_status(isError, isProcessing, message):
     headers = {
