@@ -1,21 +1,28 @@
 import React, { useCallback, useEffect } from 'react';
 import Headline from './Headline';
 
+const INITIAL_NUM_OF_LINES = 100;
+
 export default function Log() {
     function focusOnBottom() {
         document.getElementById('bottom-of-log-list')?.scrollIntoView({ behavior: 'smooth' });
     }
 
     const showLogMessages = useCallback((messages: Array<string>) => {
+        let className: string;
         messages.forEach((line) => {
             const li = document.createElement('li');
             if (line.length > 6 && line.substring(0, 7) === '[ERROR]') {
-                li.innerHTML = `<span class="has-text-danger">${line}</span>`;
+                className = 'has-text-danger';
             } else if (line.length > 6 && line.substring(0, 6) === '[WARN]') {
-                li.innerHTML = `<span class="has-text-warning">${line}</span>`;
-            } else {
-                li.innerText = line;
+                className = 'has-text-warning';
+            } else if (line.length > 1 && line.substring(0, 1) === '[') {
+                className = '';
             }
+            if (className) {
+                li.classList.add(className);
+            }
+            li.innerHTML = `${!className ? '&#9;' : ''}${line}`;
             const list = document.getElementById('log-list');
             if (list) {
                 list.append(li);
@@ -31,7 +38,7 @@ export default function Log() {
         // Connection opened
         socket.addEventListener('open', () => {
             // Print existing log
-            fetch('/logs/python')
+            fetch(`/logs/python/${INITIAL_NUM_OF_LINES}`)
                 .then((data) => data.json())
                 .then((json) => {
                     showLogMessages(json.message.split('\n'));
