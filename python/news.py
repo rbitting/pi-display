@@ -1,8 +1,8 @@
 import logging
 
-from config import FONT_MD, news, PADDING, PADDING_SM, COL_2_X, COL_2_Y
+from config import FONT_MD, FONT_MD_SIZE, news, PADDING, PADDING_SM, COL_2_X, COL_2_Y, WOTD_START
 from util_fetch import fetch
-from util_formatting import print_md_text_in_box
+from util_formatting import print_md_text_in_coord
 
 
 def get_nytimes_headlines():
@@ -86,10 +86,14 @@ def print_news_data(draw):
 
     if news_data is not None:
         y = COL_2_Y + 98
+        buffer = 2
         
         # Print bulleted list
         for headline in news_data:
+            # Only print items while there's space for text above the WOTD section
+            if (y >= WOTD_START - FONT_MD_SIZE - buffer):
+                break
             draw.text((COL_2_X, y), '•', font=FONT_MD, fill=0)
-            y = print_md_text_in_box(draw, COL_2_X + PADDING, y, headline) + 2
+            y = print_md_text_in_coord(draw, COL_2_X + PADDING, y, headline, WOTD_START) + buffer
     else:
         logging.warn('News data was not retrieved.')

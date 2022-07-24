@@ -51,7 +51,7 @@ news = {
     'enabled': True,
     # 'nytimes' or any source ID from newsapi list: https://newsapi.org/docs/endpoints/sources
     'source': 'the-washington-post',
-    'num': 3,
+    'num': 10,
     'api_key': {
         'nytimes': get_env_var(NYTIMES_ENV_VAR),
         'newsapi': get_env_var(NEWSAPI_ENV_VAR)
@@ -94,12 +94,14 @@ google_cal = {
     'enabled': True,
     'cal_id': get_env_var(GCAL_ENV_VAR)
 }
-
-FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 18)
-FONT_ITALIC = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), 22)
-FONT_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 16)
-FONT_MD = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 22)
-FONT_LG = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), 40)
+FONT_SM_SIZE = 16
+FONT_MD_SIZE = 22
+FONT_LG_SIZE = 40
+FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), FONT_SM_SIZE)
+FONT_ITALIC = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), FONT_MD_SIZE)
+FONT_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_SM_SIZE)
+FONT_MD = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_MD_SIZE)
+FONT_LG = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_LG_SIZE)
 ICON_SIZE_SM = 40
 ICON_SIZE_XS = 22
 PADDING = 10
@@ -109,3 +111,4 @@ COL_2_X = COL_1_W + 20  # Horizontal start of 2nd column
 COL_2_Y = 27    # Vertical start of 2nd column (date info)
 DISPLAY_W = EPD_WIDTH
 DISPLAY_H = EPD_HEIGHT
+WOTD_START = DISPLAY_H - 110
