@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from 'react';
 import Headline from './Headline';
 
-const INITIAL_NUM_OF_LINES = 100;
+const INITIAL_NUM_OF_LINES = 50;
 
 export default function Log() {
     function focusOnBottom() {
@@ -12,17 +12,19 @@ export default function Log() {
         let className: string;
         messages.forEach((line) => {
             const li = document.createElement('li');
+            const isSecondaryLogLine = line.trim().substring(0, 1) !== '[';
             if (line.length > 6 && line.substring(0, 7) === '[ERROR]') {
                 className = 'has-text-danger';
             } else if (line.length > 6 && line.substring(0, 6) === '[WARN]') {
                 className = 'has-text-warning';
-            } else if (line.length > 1 && line.substring(0, 1) === '[') {
+            } else if (line.length > 1 && !isSecondaryLogLine) {
                 className = '';
             }
             if (className) {
                 li.classList.add(className);
             }
-            li.innerHTML = `${!className ? '&#9;' : ''}${line}`;
+            // Indent secondary lines
+            li.innerHTML = `${isSecondaryLogLine ? '  ' : ''}${line}`;
             const list = document.getElementById('log-list');
             if (list) {
                 list.append(li);
@@ -47,8 +49,6 @@ export default function Log() {
 
         // Print new incoming log messages
         socket.addEventListener('message', (event) => {
-            // eslint-disable-next-line no-console
-            console.log('Message from server ', event.data);
             showLogMessages(event.data.replace(/\r/g, '').split('\n'));
         });
 
