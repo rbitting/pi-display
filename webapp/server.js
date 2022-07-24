@@ -83,7 +83,6 @@ app.get('/api/logs/python/:numOfLines', (req, res) => {
     res.setHeader('content-type', 'application/json');
     const val = req.params.numOfLines;
     const int = parseInt(val);
-    console.log({ val, int });
     if (!Number.isInteger(int)) {
         res.status(400);
         res.send(
@@ -183,7 +182,6 @@ app.post('/api/send-image', upload.single('file'), (req, res) => {
 function removeFile(filePath) {
     fs.unlink(filePath, (err) => {
         if (err) throw err;
-        console.log('path/file.txt was deleted');
     });
 }
 
