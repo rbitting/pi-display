@@ -9,29 +9,33 @@ interface ButtonProps {
     readonly icon?: string;
     readonly image?: string;
     readonly title?: string;
+    readonly verifyOnClick?: boolean;
 }
 
-function RefreshButton({ title, isDisabled, handleClick, icon, alt, image, text }: ButtonProps) {
+function RefreshButton({
+    title = '',
+    isDisabled,
+    handleClick,
+    icon = '',
+    alt = '',
+    image = '',
+    text,
+    verifyOnClick = false
+}: ButtonProps) {
     return (
         <Button
             fullwidth
+            color={verifyOnClick ? 'danger' : 'grey-light'}
             title={title}
-            className="p-2 has-background-grey-light is-size-5"
+            className="p-2 is-size-5"
             disabled={isDisabled}
             onClick={handleClick}
         >
-            {icon && <i className={`${icon} has-text-black btn-icon mr-4`} />}
+            {icon && <i className={`${icon} ${verifyOnClick ? 'has-text-white' : 'has-text-black'} btn-icon mr-4`} />}
             {!icon && <img alt={alt} src={image} />}
             {text}
         </Button>
     );
 }
-
-RefreshButton.defaultProps = {
-    title: '',
-    icon: '',
-    alt: '',
-    image: ''
-};
 
 export default RefreshButton;
