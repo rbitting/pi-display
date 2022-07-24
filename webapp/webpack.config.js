@@ -6,7 +6,9 @@ const dotEnv = require('dotenv-webpack');
 module.exports = {
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: './js/bundle.js'
+        filename: 'js/bundle.js',
+        publicPath: '/',
+        clean: true
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.jsx']

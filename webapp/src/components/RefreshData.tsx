@@ -4,8 +4,8 @@ import Headline from './Headline';
 import RefreshButton from './RefreshButton';
 import { ProcessingProps } from '../prop-types';
 
-const REFRESH_ALL_PATH = '/refresh/all';
-const CLEAR_ALL_PATH = '/refresh/clear';
+const REFRESH_ALL_PATH = '/api/refresh/all';
+const CLEAR_ALL_PATH = '/api/refresh/clear';
 
 export default function RefreshData({ isProcessing, setIsProcessing }: ProcessingProps) {
     const [isLoading, setIsLoading] = useState(false);

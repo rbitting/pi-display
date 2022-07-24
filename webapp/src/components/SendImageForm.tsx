@@ -4,7 +4,7 @@ import Headline from './Headline';
 import DisplayTimeOptions from './DisplayTimeOptions';
 import { ProcessingProps } from '../prop-types';
 
-const ENDPOINT = '/send-image';
+const ENDPOINT = '/api/send-image';
 
 const ALLOWED_TIMES = [
     {

@@ -6,7 +6,7 @@ import Headline from './Headline';
 
 const MIN_CHARS = 1;
 const MAX_CHARS = 100;
-const ENDPOINT = '/sendmessage';
+const ENDPOINT = '/api/sendmessage';
 const ALLOWED_TIMES = [
     {
         value: '1',

@@ -56,7 +56,7 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 
 // Update display status
-app.post('/display-status', (req, res) => {
+app.post('/api/display-status', (req, res) => {
     console.log('Request body: ', req.body);
     res.setHeader('content-type', 'application/json');
     if (req.body) {
@@ -79,7 +79,7 @@ app.post('/display-status', (req, res) => {
 });
 
 // Returns requested number of lines of main python log
-app.get('/logs/python/:numOfLines', (req, res) => {
+app.get('/api/logs/python/:numOfLines', (req, res) => {
     res.setHeader('content-type', 'application/json');
     const val = req.params.numOfLines;
     const int = parseInt(val);
@@ -115,7 +115,7 @@ app.get('/logs/python/:numOfLines', (req, res) => {
 });
 
 // Send image to show on display
-app.post('/send-image', upload.single('file'), (req, res) => {
+app.post('/api/send-image', upload.single('file'), (req, res) => {
     if (!req.file) {
         const errorMsg = 'No image received.';
         res.status(500);
@@ -186,7 +186,7 @@ function removeFile(filePath) {
 }
 
 // Send message to show on display
-app.post('/sendmessage', (req, res) => {
+app.post('/api/sendmessage', (req, res) => {
     displayStatus.isWaiting = false; // Override waiting flag if command is sent via api
     console.log(`${getCurrentDateTime()} /sendmessage`);
     res.setHeader('content-type', 'application/json');
@@ -278,14 +278,14 @@ function handleMinToDisplayWait(req, res, min) {
 }
 
 // Refresh data on display
-app.post('/refresh/all', (req, res) => {
+app.post('/api/refresh/all', (req, res) => {
     displayStatus.isWaiting = false;
     dispatchStatusUpdateEvent();
     triggerMainScript(req, res, true, displayStatus);
 });
 
 // Clear display
-app.post('/refresh/clear', (req, res) => {
+app.post('/api/refresh/clear', (req, res) => {
     displayStatus.isWaiting = false;
     dispatchStatusUpdateEvent();
     console.log(`${getCurrentDateTime()} /refresh/clear`);
@@ -298,7 +298,7 @@ const server = app.listen(port, () => console.log(`${getCurrentDateTime()}: List
 app.use(express.static(path.join(__dirname, '/build')));
 
 // Web socket to live tail main python log
-app.ws('/logs/python/active', (ws, req) => {
+app.ws('/api/logs/python/active', (ws, req) => {
     console.log(`${getCurrentDateTime()}: Logs WebSocket was opened`);
 
     watchForLogChanges(ws);
@@ -314,14 +314,14 @@ app.ws('/logs/python/active', (ws, req) => {
 });
 
 // Get current display status
-app.get('/display-status', (req, res) => {
+app.get('/api/display-status', (req, res) => {
     res.setHeader('content-type', 'application/json');
     res.status(200);
     res.send(JSON.stringify(displayStatus));
 });
 
 // Web socket for live status updates
-app.ws('/display-status', (ws, req) => {
+app.ws('/api/display-status', (ws, req) => {
     function sendStatusToClient() {
         ws.send(JSON.stringify(displayStatus));
     }
@@ -343,6 +343,18 @@ app.ws('/display-status', (ws, req) => {
         console.log(`${getCurrentDateTime()}: Status WebSocket was closed`);
         emitter.off(displayStatus.UPDATE_EVENT, sendStatusToClient);
     });
+});
+
+// All other /api routes
+app.get(/^\/api(\/|$)/, (req, res) => {
+    res.setHeader('content-type', 'application/json');
+    res.status(404);
+    res.send(
+        JSON.stringify({
+            code: 404,
+            message: "No api route found."
+        })
+    );
 });
 
 // Serve web app on all other paths
