@@ -56,7 +56,7 @@
     "html-webpack-plugin": "^5.5.0",
     "mini-css-extract-plugin": "^2.4.4",
     "node-sass": "^7.0.1",
-    "nodemon": "^2.0.15",
+    "nodemon": "^2.0.19",
     "prettier": "2.4.1",
     "sass-loader": "^12.3.0",
     "source-map-loader": "^3.0.0",
