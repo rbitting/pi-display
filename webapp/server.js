@@ -78,11 +78,40 @@ app.post('/display-status', (req, res) => {
     }
 });
 
-// Returns last 20 lines of main python log
-app.get('/logs/python', (req, res) => {
+// Returns requested number of lines of main python log
+app.get('/logs/python/:numOfLines', (req, res) => {
     res.setHeader('content-type', 'application/json');
-    res.status(200);
-    sendLog(res);
+    const val = req.params.numOfLines;
+    const int = parseInt(val);
+    console.log({val, int})
+    if (!Number.isInteger(int)) {
+        res.status(400);
+        res.send(
+            JSON.stringify({
+                code: 400,
+                message: 'Invalid call to api. Route param must be valid number.'
+            })
+        );
+    } else if (int <= 0) {
+        res.status(400);
+        res.send(
+            JSON.stringify({
+                code: 400,
+                message: 'Invalid call to api. Route param must be greater than 0.'
+            })
+        );
+    } else if (int > 500) {
+        res.status(400);
+        res.send(
+            JSON.stringify({
+                code: 400,
+                message: 'Invalid call to api. Route param must be equal to or less than 500.'
+            })
+        );
+    } else {
+        res.status(200);
+        sendLog(res, val);
+    }
 });
 
 // Send image to show on display
