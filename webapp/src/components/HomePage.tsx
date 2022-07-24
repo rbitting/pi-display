@@ -7,11 +7,11 @@ import SendMessageForm from './SendMessageForm';
 export default function HomePage() {
     const [isProcessing, setIsProcessing] = useState(false);
     return (
-        <div>
+        <>
             <DisplayStatus isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
             <RefreshData isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
             <SendMessageForm isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
             <SendImageForm isProcessing={isProcessing} setIsProcessing={setIsProcessing} />
-        </div>
+        </>
     );
 }

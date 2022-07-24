@@ -60,10 +60,8 @@ export default function Log() {
     return (
         <section>
             <Headline title="Log" icon="fas fa-file-code" />
-            <div>
-                <ul id="log-list" />
-                <span id="bottom-of-log-list" />
-            </div>
+            <ul id="log-list" />
+            <span id="bottom-of-log-list" />
         </section>
     );
 }
