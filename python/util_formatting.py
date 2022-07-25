@@ -1,6 +1,6 @@
 import logging
 import textwrap
-from math import ceil
+from math import floor
 
 from PIL import Image
 
@@ -29,7 +29,7 @@ def get_xsmall_icon(path):
 # Prints text starting at x until y then jumps to next line
 def print_md_text_in_coord(draw, x, y, text, max_y):
     # For some reason the real line height ends up being 25 instead of 22
-    max_lines = ceil((max_y - y) / (FONT_MD_SIZE + 3))
+    max_lines = floor((max_y - y) / (FONT_MD_SIZE + 3))
     logging.debug('y: ' + str(y) + ', max_y: ' + str(max_y) + ', max_lines = ' + str(max_lines))
     lines = textwrap.wrap(text, width=29, max_lines=max_lines, placeholder="...")
     for line in lines:
