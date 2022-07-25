@@ -10,16 +10,11 @@ from util_gcal import get_gcal_creds
 def get_gcal_data(gcal_id):
     logging.info('Starting gcal fetch...')
     try:
-        """Shows basic usage of the Google Calendar API.
-        Prints the start and name of the next 10 events on the user's calendar.
-        """
         creds = get_gcal_creds()
-
         service = build('calendar', 'v3', credentials=creds)
         
         # Format start and end dates
         timezone_offset = 5 # EST 
-        service = build('calendar', 'v3', credentials=creds)
         rightnow = datetime.utcnow()
         corrected_hour = rightnow.hour + timezone_offset
         if (corrected_hour > 23):
