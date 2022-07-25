@@ -64,43 +64,26 @@ def get_next_buses():
                 logging.error(error)
             else:
                 route_num = route.get('route')
-                min_range = min([len(results.get(route_num)), septa.get('num')])
-                bus_route = results.get(route_num)
-                arrival.route = route_num
-                arrival.clear_arrivals()
-                for i in range(min_range):
-                    bus = BusArrival()
-                    bus.date = bus_route[i].get('DateCalender')
-                    # get_minutes_until_bus(bus_route[i].get('date'))
-                    bus.eta = bus_route[i].get('date') + 'm'
-                    arrival.add_arrival(bus)
-                buses.append(arrival)
+                route_data = results.get(route_num)
+                if (route_data != None):
+                    min_range = min([len(route_data), septa.get('num')])
+                    arrival.route = route_num
+                    arrival.clear_arrivals()
+                    for i in range(min_range):
+                        bus = BusArrival()
+                        bus.date = route_data[i].get('DateCalender')
+                        bus.eta = route_data[i].get('date') + 'm'
+                        arrival.add_arrival(bus)
+                    buses.append(arrival)
+                else:
+                    logging.error('Route number %s not found in %s', route_num, results)
         else:
             logging.warn('Could not fetch bus route: ' + route)
     return buses
 
 def fetch_next_buses(route):
-    return fetch('https://www3.septa.org/hackathon/BusSchedules/?req1=' +
-                 route.get('stop') + '&req2=' + route.get('route'))
-
-def get_minutes_until_bus(bus_time):
-    time = bus_time.replace('a', '').replace('p', '').split(':')  # ['6','30']
-    date = datetime.today()
-    day = date.day
-    hour = int(time[0])
-    is_am = 'a' in bus_time
-    if (is_am and hour == 12):  # Convert 12am to 0 (24-hour time)
-        hour = 0
-    if (date.strftime('%p') == 'PM' and is_am):
-        day = day + 1   # If today is currently PM and bus time is AM, bus arrival is the next day
-    elif (not is_am and hour != 12):
-        hour += 12  # Convert from 12-hour to 24-hour time
-    bus_date = date.replace(hour=hour, minute=int(time[1]), day=day)
-    seconds = abs((bus_date - date).seconds)
-    minutes = seconds / 60
-    if minutes < 60:
-        return str(round(minutes)) + 'm'
-    return get_hours_and_min(minutes)
+    url = 'https://www3.septa.org/hackathon/BusSchedules/?req1=' + route.get('stop') + '&req2=' + route.get('route')
+    return fetch(url)
 
 def get_hours_and_min(minutes):
     hours = math.floor(minutes / 60)
@@ -115,6 +98,7 @@ def print_septa_data(Himage, draw):
     x = 80
     bus_routes = get_next_buses()
     Himage.paste(get_small_icon(get_absolute_path(get_bus_icon())), (20, septa_y+4))
+    y = septa_y
     for bus in bus_routes:
         y = septa_y
         draw.text((x, y), bus.route, font=FONT_MD, fill=0)
