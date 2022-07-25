@@ -1,12 +1,13 @@
 import logging
 
-from config import pihole, FONT_SM, FONT_MD, COL_1_W
+from config import pihole, FONT_SM, FONT_MD, COL_1_W, PADDING
 from util_fetch import fetch
+from util_formatting import get_x_for_centered_text
 
 class PiholeStatus():
     def __init__(self):
         self.status = False
-        self.stats = ""
+        self.stats = ''
 
     @property
     def status(self):
@@ -58,18 +59,29 @@ def fetch_pihole_data():
 def print_pihole_data(draw):
     pihole_data = get_pihole_data()
     y = 220
+    middle_x = 160
+    end = middle_x - PADDING + middle_x
 
     if pihole_data is not None:
         total = pihole_data.ads_blocked
         percent = pihole_data.ads_percentage
         logging.info(pihole_data.status + '. Requests: ' + total + ', % of Requests: ' + percent)
-        draw.text((84, y), pihole_data.status, font=FONT_MD, fill=0)    # "Pihole is [enabled/disabled]"
-        draw.text((70, y + 30), total + '             ' + percent, font=FONT_MD, fill=0)
-        draw.text((72, y + 58), 'requests           of all requests', font=FONT_SM, fill=0)
-        draw.text((74, y + 74), 'blocked                 blocked', font=FONT_SM, fill=0)
 
-        x = 160
-        draw.line((x, y + 40, x, y + 85), fill=0)  # Vertical line break
+        # General status - 'Pihole is [enabled/disabled]'
+        draw.text((get_x_for_centered_text(pihole_data.status, FONT_MD, PADDING, end), y), pihole_data.status, font=FONT_MD, fill=0)    
+        
+        # Draw left side
+        draw.text((get_x_for_centered_text(total, FONT_MD, PADDING, middle_x), y + 30), total, font=FONT_MD, fill=0)
+        draw.text((get_x_for_centered_text('requests', FONT_SM, PADDING, middle_x), y + 58), 'requests', font=FONT_SM, fill=0)
+        draw.text((get_x_for_centered_text('blocked', FONT_SM, PADDING, middle_x), y + 74), 'blocked', font=FONT_SM, fill=0)
+        
+        # Vertical line break
+        draw.line((middle_x, y + 40, middle_x, y + 85), fill=0)  
+
+        # Draw right side
+        draw.text((get_x_for_centered_text(percent, FONT_MD, middle_x, end), y + 30), percent, font=FONT_MD, fill=0)
+        draw.text((get_x_for_centered_text('of all requests', FONT_SM, middle_x, end), y + 58), 'of all requests', font=FONT_SM, fill=0)
+        draw.text((get_x_for_centered_text('blocked', FONT_SM, middle_x, end), y + 74), 'blocked', font=FONT_SM, fill=0)
     else:
         logging.warn('Pi-Hole data was not retrieved.')
 

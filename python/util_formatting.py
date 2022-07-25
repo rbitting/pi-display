@@ -58,3 +58,8 @@ def get_height_of_sm_multiline_text(text):
         width, height = FONT_SM.getsize(line)
         y += height
     return y
+
+
+def get_x_for_centered_text(text, font, x_start, x_end):
+    width, height = font.getsize(text)
+    return round((x_end - x_start)/2) - round(width/2) + x_start
