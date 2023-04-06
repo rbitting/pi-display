@@ -33,7 +33,9 @@ class WordOfTheDay():
     @word_type.setter
     def word_type(self, a):
         # Reduce to abbreviation
-        if (a == "adjective"):
+        if a is None:
+            a = ""
+        elif (a == "adjective"):
             a = "adj."
         elif (a == "noun"):
             a = "n."
