@@ -23,77 +23,77 @@ from network import print_network_speed, print_network_name
 '''
 
 try:
-    settings = get_app_settings()
-    if (not is_display_busy()):
-        send_status(False, True, "Starting display refresh...")
-        try:
-            logging.info('********* Initializing display refresh *********')
+  settings = get_app_settings()
+  if (not is_display_busy()):
+    send_status(False, True, "Starting display refresh...")
+    try:
+      logging.info('********* Initializing display refresh *********')
 
-            # Init display
-            epd = epd5in83_V2.EPD()
-            epd.init()
+      # Init display
+      epd = epd5in83_V2.EPD()
+      epd.init()
 
-            # Init new image to draw
-            Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
-            draw = ImageDraw.Draw(Himage)
+      # Init new image to draw
+      Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
+      draw = ImageDraw.Draw(Himage)
 
-            send_status(False, True, "Getting wifi info...")
-            print_wifi_info(Himage, draw)
+      send_status(False, True, "Getting wifi info...")
+      print_wifi_info(Himage, draw)
 
-            print_todays_date(draw)
+      print_todays_date(draw)
 
-            if (settings.weather.enabled):
-                send_status(False, True, "Fetching weather data...")
-                print_weather(settings.weather, Himage, draw)
+      if (settings.weather.enabled):
+        send_status(False, True, "Fetching weather data...")
+        print_weather(settings.weather, Himage, draw)
 
-            if (settings.pihole.enable):
-                send_status(False, True, "Fetching Pi-Hole status...")
-                print_pihole_data(settings.pihole, draw)
+      if (settings.pihole.enable):
+        send_status(False, True, "Fetching Pi-Hole status...")
+        print_pihole_data(settings.pihole, draw)
 
-            if (settings.septa.enable):
-                send_status(False, True, "Fetching SEPTA bus data...")
-                print_septa_data(settings.septa, Himage, draw)
+      if (settings.septa.enable):
+        send_status(False, True, "Fetching SEPTA bus data...")
+        print_septa_data(settings.septa, Himage, draw)
 
-            if (settings.word_of_the_day.enable):
-                send_status(False, True, "Fetching word of the day...")
-                print_word_of_the_day(settings.word_of_the_day, draw)
+      if (settings.word_of_the_day.enable):
+        send_status(False, True, "Fetching word of the day...")
+        print_word_of_the_day(settings.word_of_the_day, draw)
 
-            if (settings.news.enable):
-                send_status(False, True, "Fetching news...")
-                print_news_data(settings.news, draw)
+      if (settings.news.enable):
+        send_status(False, True, "Fetching news...")
+        print_news_data(settings.news, draw)
 
-            if (settings.google_cal.enable):
-                send_status(False, True, "Fetching Google Calendar events...")
-                print_gcal_event(settings.google_cal, draw)
+      if (settings.google_cal.enable):
+        send_status(False, True, "Fetching Google Calendar events...")
+        print_gcal_event(settings.google_cal, draw)
 
-            last_updated = print_last_updated(draw, DISPLAY_W, DISPLAY_H)
-            logging.debug(last_updated)
+      last_updated = print_last_updated(draw, DISPLAY_W, DISPLAY_H)
+      logging.debug(last_updated)
 
-            send_status(False, True, "Printing to display...")
-            epd.display(epd.getbuffer(Himage))
+      send_status(False, True, "Printing to display...")
+      epd.display(epd.getbuffer(Himage))
 
-            logging.debug('Going to Sleep...')
-            epd.sleep()
+      logging.debug('Going to Sleep...')
+      epd.sleep()
 
-            logging.info('Completed refresh ' + get_current_date_time())
+      logging.info('Completed refresh ' + get_current_date_time())
 
-            send_status(False, False, "Display refresh complete.")
+      send_status(False, False, "Display refresh complete.")
 
-        except IOError as e:
-            logging.exception('IOError')
-            send_status(True, False, "IOError while refreshing display.")
+    except IOError as e:
+      logging.exception('IOError')
+      send_status(True, False, "IOError while refreshing display.")
 
-        except KeyboardInterrupt:
-            logging.warning('ctrl + c:')
-            epd5in83_V2.epdconfig.module_exit()
-            send_status(True, False, "Keyboard interrupt while refreshing display.")
-            exit()
-    else:
-        logging.info('Server is processing or waiting. Can not refresh right now.')
+    except KeyboardInterrupt:
+      logging.warning('ctrl + c:')
+      epd5in83_V2.epdconfig.module_exit()
+      send_status(True, False, "Keyboard interrupt while refreshing display.")
+      exit()
+  else:
+    logging.info('Server is processing or waiting. Can not refresh right now.')
 
 except BaseException as e:
-    logging.exception("Exception while running refresh script")
-    send_status(True, False, str(e))
+  logging.exception("Exception while running refresh script")
+  send_status(True, False, str(e))
 
 '''
 if (network['enabled']):

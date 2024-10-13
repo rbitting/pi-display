@@ -130,10 +130,10 @@ To run the python program to retrieve and print the display data, run the comman
 
 ## Linting
 
-[autopep8](https://pypi.org/project/autopep8/) is used for Python linting.
+[autopep8](https://pypi.org/project/autopep8/) is used for Python linting. Install the `autopep8` VS Code extension for autoformatting in the IDE.
 
 ```
-autopep8 --in-place --aggressive --aggressive --max-line-length 100 --in-place --ignore E302 -v --recursive .
+autopep8 --aggressive --aggressive --indent-size=2 --max-line-length=120 --ignore=E302 --ignore=E121 --in-place -v --recursive .
 ```
 
 ## Icons

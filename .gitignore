@@ -2,7 +2,6 @@ __pycache__
 node_modules/
 build/
 .env
-.vscode/
 image-to-print.*
 credentials.json
 token.pickle

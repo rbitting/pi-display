@@ -1,0 +1,13 @@
+{
+  "editor.tabSize": 2,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "autopep8.args": [
+    "--aggressive",
+    "--ignore=E121",
+    "--ignore=E302",
+    "--indent-size=2",
+    "--max-line-length=120",
+  ]
+}

@@ -5,11 +5,16 @@ from util_os import get_absolute_path
 FONT_SM_SIZE = 16
 FONT_MD_SIZE = 22
 FONT_LG_SIZE = 40
-FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), FONT_SM_SIZE)
-FONT_ITALIC = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Italic.ttf'), FONT_MD_SIZE)
-FONT_SM = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_SM_SIZE)
-FONT_MD = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_MD_SIZE)
-FONT_LG = ImageFont.truetype(get_absolute_path('python/assets/fonts/Roboto-Regular.ttf'), FONT_LG_SIZE)
+FONT_ITALIC_SM = ImageFont.truetype(get_absolute_path(
+    'python/assets/fonts/Roboto-Italic.ttf'), FONT_SM_SIZE)
+FONT_ITALIC = ImageFont.truetype(get_absolute_path(
+    'python/assets/fonts/Roboto-Italic.ttf'), FONT_MD_SIZE)
+FONT_SM = ImageFont.truetype(get_absolute_path(
+    'python/assets/fonts/Roboto-Regular.ttf'), FONT_SM_SIZE)
+FONT_MD = ImageFont.truetype(get_absolute_path(
+    'python/assets/fonts/Roboto-Regular.ttf'), FONT_MD_SIZE)
+FONT_LG = ImageFont.truetype(get_absolute_path(
+    'python/assets/fonts/Roboto-Regular.ttf'), FONT_LG_SIZE)
 ICON_SIZE_SM = 40
 ICON_SIZE_XS = 22
 PADDING = 10
