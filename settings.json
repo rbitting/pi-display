@@ -1,0 +1,43 @@
+{
+  "googleCal": {
+    "enabled": true
+  },
+  "pihole": {
+    "enabled": true
+  },
+  "network": {
+    "enabled": false
+  },
+  "news": {
+    "enabled": true,
+    "num": 10,
+    "source": "the-washington-post"
+  },
+  "septa": {
+    "enabled": true,
+    "num": 4,
+    "routes": [
+      {
+        "route": "33",
+        "stop": "2834" // 20th and Poplar
+      },
+      {
+        "route": "2",
+        "stop": "2709" // 17th and Ridge
+      },
+      {
+        "route": "61",
+        "stop": "18428" // Ridge and Poplar
+      }
+    ]
+  },
+  "weather": {
+    "enabled": true,
+    "lon": "-75.175",
+    "lat": "39.9656",
+    "units": "imperial"
+  },
+  "word_of_the_day": {
+    "enabled": true
+  }
+}

@@ -1,6 +1,7 @@
 import logging
 
-from config import word_of_the_day, COL_2_X, FONT_MD, DISPLAY_W, WOTD_START
+from settings import WordOfTheDaySettings
+from shared import COL_2_X, FONT_MD, DISPLAY_W, WOTD_START
 from util_fetch import fetch
 from util_formatting import print_sm_text_in_box, get_height_of_text, get_height_of_sm_multiline_text
 
@@ -51,8 +52,8 @@ class WordOfTheDay():
             a = "interj."
         self._word_type = '(' + a + ')'
 
-def get_word_of_the_day():
-    results = fetch_word_of_the_day()
+def get_word_of_the_day(settings: WordOfTheDaySettings):
+    results = fetch_word_of_the_day(settings)
     if results is None:
         return None
         
@@ -68,22 +69,16 @@ def get_word_of_the_day():
         return wotd
 
 
-def fetch_word_of_the_day():
-    api_key = word_of_the_day['api_key']
-    if (api_key):
-        return fetch('https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=' + api_key)
-    else:
-        logging.error('Wordnik API key (' + word_of_the_day.get('env_var') +
-              ') is not defined in environment variables.')
-        return None
+def fetch_word_of_the_day(settings: WordOfTheDaySettings):
+    return fetch('https://api.wordnik.com/v4/words.json/wordOfTheDay?api_key=' + settings.api_key)
 
 def capitalize_first_letter(word):
     chars = list(word)
     chars[0] = chars[0].upper()
     return ''.join(chars)
 
-def print_word_of_the_day(draw):
-    wotd = get_word_of_the_day()
+def print_word_of_the_day(settings: WordOfTheDaySettings, draw):
+    wotd = get_word_of_the_day(settings)
     max_height_of_wotd = 92
     
     # Draw horizontal line

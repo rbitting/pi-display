@@ -1,8 +1,8 @@
 import logging
 import math
-from datetime import datetime
 
-from config import COL_1_W, FONT_MD, FONT_SM, PADDING, septa
+from settings import SeptaRoute, SeptaSettings
+from shared import COL_1_W, FONT_MD, FONT_SM
 from util_fetch import fetch
 from util_formatting import get_small_icon
 from util_os import get_absolute_path
@@ -52,8 +52,8 @@ class BusStatus():
     def clear_arrivals(self):
         self.next_arrivals = []
 
-def get_next_buses():
-    routes = septa.get('routes')
+def get_next_buses(settings: SeptaSettings):
+    routes = settings.routes
     buses = []
     for route in routes:
         arrival = BusStatus()
@@ -63,10 +63,10 @@ def get_next_buses():
             if (error):
                 logging.error(error)
             else:
-                route_num = route.get('route')
+                route_num = route.route_number
                 route_data = results.get(route_num)
                 if (route_data != None):
-                    min_range = min([len(route_data), septa.get('num')])
+                    min_range = min([len(route_data), settings.num])
                     arrival.route = route_num
                     arrival.clear_arrivals()
                     for i in range(min_range):
@@ -78,11 +78,11 @@ def get_next_buses():
                 else:
                     logging.error('Route number %s not found in %s', route_num, results)
         else:
-            logging.warn('Could not fetch bus route: ' + route)
+            logging.warning('Could not fetch bus route: ' + route)
     return buses
 
-def fetch_next_buses(route):
-    url = 'https://www3.septa.org/hackathon/BusSchedules/?req1=' + route.get('stop') + '&req2=' + route.get('route')
+def fetch_next_buses(route: SeptaRoute):
+    url = 'https://www3.septa.org/hackathon/BusSchedules/?req1=' + route.stop_id + '&req2=' + route.route_number
     return fetch(url)
 
 def get_hours_and_min(minutes):
@@ -93,10 +93,10 @@ def get_hours_and_min(minutes):
 def get_bus_icon():
     return 'python/assets/icons/septa.png'
 
-def print_septa_data(Himage, draw):
+def print_septa_data(settings: SeptaSettings, Himage, draw):
     septa_y = 335
     x = 80
-    bus_routes = get_next_buses()
+    bus_routes = get_next_buses(settings)
     Himage.paste(get_small_icon(get_absolute_path(get_bus_icon())), (20, septa_y+4))
     y = septa_y
     for bus in bus_routes:

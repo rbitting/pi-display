@@ -5,8 +5,8 @@ import textwrap
 from PIL import Image, ImageDraw, ImageFont
 
 import epd5in83_V2
-from config import DISPLAY_H, DISPLAY_W
 from fonts import NOTO_SANS_MONO, ROBOTO, ROBOTO_ITALIC
+from shared import DISPLAY_H, DISPLAY_W
 from util_dates import print_last_updated
 from util_logging import set_logging_config
 from util_server import send_status
@@ -25,7 +25,6 @@ def print_header(draw):
 
 def print_msg_on_display(draw, msg):
     lines = textwrap.wrap(msg, width=20, max_lines=5, placeholder="...")
-    og_y = 200
     y = 0
     max_x = 0
     centered_text = ''

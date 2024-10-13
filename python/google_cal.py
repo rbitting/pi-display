@@ -3,7 +3,8 @@ import logging
 
 from googleapiclient.discovery import build
 
-from config import COL_2_X, COL_2_Y, FONT_SM, google_cal
+from settings import GoogleCalendarSettings
+from shared import COL_2_X, COL_2_Y, FONT_SM
 from util_gcal import get_gcal_creds
 
 
@@ -15,7 +16,7 @@ def get_gcal_data(gcal_id):
         
         # Format start and end dates
         timezone_offset = 5 # EST 
-        rightnow = datetime.utcnow()
+        rightnow = datetime.now(datetime.timezone.utc)
         corrected_hour = rightnow.hour + timezone_offset
         if (corrected_hour > 23):
             corrected_hour -= 24
@@ -49,16 +50,11 @@ def get_gcal_data(gcal_id):
         logging.exception(str(e))
         return None
 
-def get_gcal_events():
-    cal_id = google_cal['cal_id']
-    if (not cal_id):
-        logging.error('Google calendar id is required.')
-        return None
-    else:
-        return get_gcal_data(cal_id)
+def get_gcal_events(settings: GoogleCalendarSettings):
+    return get_gcal_data(settings.cal_id)
 
-def print_gcal_event(draw):
-    event_name = get_gcal_events()
+def print_gcal_event(settings: GoogleCalendarSettings, draw):
+    event_name = get_gcal_events(settings)
     if event_name is not None:
         logging.info('Google calendar result: ' + event_name)
         y = COL_2_Y + 68

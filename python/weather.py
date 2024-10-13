@@ -1,7 +1,7 @@
 import logging
 from PIL import Image
-
-from config import (COL_1_W, FONT_LG, FONT_MD, FONT_SM, ICON_SIZE_SM, PADDING, PADDING_SM, weather)
+from settings import WeatherSettings
+from shared import (COL_1_W, FONT_LG, FONT_MD, FONT_SM, ICON_SIZE_SM, PADDING, PADDING_SM)
 from util_dates import get_day_of_week_from_ms, get_time_from_ms
 from util_fetch import fetch
 from util_formatting import get_small_icon
@@ -9,8 +9,8 @@ from util_os import get_absolute_path, path_exists
 from weather_data import WeatherData, WeatherDay
 
 
-def get_weather_data():
-    results = fetch_weather_data()
+def get_weather_data(settings: WeatherSettings):
+    results = fetch_weather_data(settings)
     if results is None:
         return None
 
@@ -36,24 +36,13 @@ def get_weather_data():
         get_forecast(results['daily'], weather)
         return weather
 
-def fetch_weather_data():
-    api_key = weather['api_key']
-    if (api_key):
-        return fetch(
-            'https://api.openweathermap.org/data/2.5/onecall?lat=' +
-            weather.get('lat') +
-            '&lon=' +
-            weather.get('lon') +
-            '&units=' +
-            weather.get('units') +
-            '&exclude=minutely,hourly&appid=' +
-            api_key)
-    else:
-        logging.error(
-            'Open Weather Map API key (' +
-            weather.get('env_var') +
-            ') is not defined in environment variables.')
-        return None
+def fetch_weather_data(settings: WeatherSettings):
+    return fetch(
+        'https://api.openweathermap.org/data/2.5/onecall' +
+        '?lat=' + settings.lat +
+        '&lon=' + settings.lon +
+        '&units=' + settings.units +
+        '&exclude=minutely,hourly&appid=' + settings.api_key)
 
 def get_weather_icon(weather_id):
     # ID definitions: https://openweathermap.org/weather-conditions
@@ -108,8 +97,8 @@ def get_forecast(json, weather):
             str(round(day['temp']['min'])) + '°'  # High and low for forecasted day
         weather.add_forecasted_day(data)
 
-def print_weather(Himage, draw):
-    weather_data = get_weather_data()
+def print_weather(settings: WeatherSettings, Himage, draw):
+    weather_data = get_weather_data(settings)
     if weather_data is not None: 
         weather_icon = get_absolute_path(weather_data.current_icon)
         if path_exists(weather_icon):

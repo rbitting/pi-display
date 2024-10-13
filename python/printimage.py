@@ -4,7 +4,7 @@ import sys
 from PIL import Image, ImageDraw
 
 import epd5in83_V2
-from config import DISPLAY_H, DISPLAY_W
+from shared import DISPLAY_H, DISPLAY_W
 from util_logging import set_logging_config
 from util_os import path_exists
 from util_server import send_status

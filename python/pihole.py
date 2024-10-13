@@ -1,6 +1,7 @@
 import logging
 
-from config import pihole, FONT_SM, FONT_MD, COL_1_W, PADDING
+from settings import PiholeSettings
+from shared import FONT_SM, FONT_MD, COL_1_W, PADDING
 from util_fetch import fetch
 from util_formatting import get_x_for_centered_text
 
@@ -33,8 +34,8 @@ class PiholeStatus():
     def ads_percentage(self, a):
         self._ads_percentage = a
 
-def get_pihole_data():
-    results = fetch_pihole_data()
+def get_pihole_data(settings: PiholeSettings):
+    results = fetch_pihole_data(settings)
     if results is None:
         return None
 
@@ -48,16 +49,11 @@ def get_pihole_data():
         logging.error('No results returned from fetch_pihole_data.')
         return None
 
-def fetch_pihole_data():
-    if (pihole['ip']):
-        return fetch('http://' + pihole['ip'] + '/admin/api.php?summary')
-    else:
-        logging.error('Pihole IP adress (' + pihole['env_var'] +
-              ') is not defined in environment variables.')
-        return None
+def fetch_pihole_data(settings: PiholeSettings):
+    return fetch('http://' + settings.ip + '/admin/api.php?summary')
 
-def print_pihole_data(draw):
-    pihole_data = get_pihole_data()
+def print_pihole_data(settings: PiholeSettings, draw):
+    pihole_data = get_pihole_data(settings)
     y = 220
     middle_x = 160
     end = middle_x - PADDING + middle_x

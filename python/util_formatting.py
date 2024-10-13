@@ -4,7 +4,7 @@ from math import floor
 
 from PIL import Image
 
-from config import FONT_MD, FONT_MD_SIZE, FONT_SM, ICON_SIZE_SM, ICON_SIZE_XS
+from shared import FONT_MD, FONT_MD_SIZE, FONT_SM, ICON_SIZE_SM, ICON_SIZE_XS
 
 
 def get_width_of_text(font, text):

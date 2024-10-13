@@ -2,7 +2,7 @@ import logging
 import re
 import subprocess
 
-from config import FONT_SM, ICON_SIZE_XS, PADDING, DISPLAY_W
+from shared import FONT_SM, ICON_SIZE_XS, PADDING, DISPLAY_W
 from util_formatting import get_xsmall_icon, get_width_of_text
 from util_os import get_absolute_path
 

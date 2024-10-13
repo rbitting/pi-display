@@ -3,11 +3,12 @@ import logging
 from PIL import Image, ImageDraw
 
 import epd5in83_V2
-from config import (DISPLAY_H, DISPLAY_W, crypto, google_cal, network, news, pihole, septa, weather, word_of_the_day)
 from google_cal import print_gcal_event
 from network import print_wifi_info
 from news import print_news_data
 from pihole import print_pihole_data
+from settings import get_app_settings
+from shared import DISPLAY_H, DISPLAY_W
 from septa import print_septa_data
 from util_dates import (get_current_date_time, print_last_updated, print_todays_date)
 from util_logging import set_logging_config
@@ -18,11 +19,11 @@ from word_of_the_day import print_word_of_the_day
 set_logging_config()
 
 '''
-from crypto import print_crypto_prices
 from network import print_network_speed, print_network_name
 '''
 
 try:
+    settings = get_app_settings()
     if (not is_display_busy()):
         send_status(False, True, "Starting display refresh...")
         try:
@@ -41,29 +42,29 @@ try:
 
             print_todays_date(draw)
 
-            if (weather['enabled']):
+            if (settings.weather.enabled):
                 send_status(False, True, "Fetching weather data...")
-                print_weather(Himage, draw)
+                print_weather(settings.weather, Himage, draw)
 
-            if (pihole['enabled']):
+            if (settings.pihole.enable):
                 send_status(False, True, "Fetching Pi-Hole status...")
-                print_pihole_data(draw)
+                print_pihole_data(settings.pihole, draw)
 
-            if (septa['enabled']):
+            if (settings.septa.enable):
                 send_status(False, True, "Fetching SEPTA bus data...")
-                print_septa_data(Himage, draw)
+                print_septa_data(settings.septa, Himage, draw)
 
-            if (word_of_the_day['enabled']):
+            if (settings.word_of_the_day.enable):
                 send_status(False, True, "Fetching word of the day...")
-                print_word_of_the_day(draw)
+                print_word_of_the_day(settings.word_of_the_day, draw)
 
-            if (news['enabled']):
+            if (settings.news.enable):
                 send_status(False, True, "Fetching news...")
-                print_news_data(draw)
+                print_news_data(settings.news, draw)
 
-            if (google_cal['enabled']):
+            if (settings.google_cal.enable):
                 send_status(False, True, "Fetching Google Calendar events...")
-                print_gcal_event(draw)
+                print_gcal_event(settings.google_cal, draw)
 
             last_updated = print_last_updated(draw, DISPLAY_W, DISPLAY_H)
             logging.debug(last_updated)
@@ -97,7 +98,4 @@ except BaseException as e:
 '''
 if (network['enabled']):
     print_network_speed()
-
-if (crypto['enabled']):
-    print_crypto_prices()
 '''

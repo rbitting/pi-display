@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 
-from config import FONT_ITALIC_SM, FONT_LG, FONT_MD, COL_2_X, COL_2_Y
+from shared import FONT_ITALIC_SM, FONT_LG, FONT_MD, COL_2_X, COL_2_Y
 
 day_of_week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
