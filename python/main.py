@@ -46,23 +46,23 @@ try:
         send_status(False, True, "Fetching weather data...")
         print_weather(settings.weather, Himage, draw)
 
-      if (settings.pihole.enable):
+      if (settings.pihole.enabled):
         send_status(False, True, "Fetching Pi-Hole status...")
         print_pihole_data(settings.pihole, draw)
 
-      if (settings.septa.enable):
+      if (settings.septa.enabled):
         send_status(False, True, "Fetching SEPTA bus data...")
         print_septa_data(settings.septa, Himage, draw)
 
-      if (settings.word_of_the_day.enable):
+      if (settings.word_of_the_day.enabled):
         send_status(False, True, "Fetching word of the day...")
         print_word_of_the_day(settings.word_of_the_day, draw)
 
-      if (settings.news.enable):
+      if (settings.news.enabled):
         send_status(False, True, "Fetching news...")
         print_news_data(settings.news, draw)
 
-      if (settings.google_cal.enable):
+      if (settings.google_cal.enabled):
         send_status(False, True, "Fetching Google Calendar events...")
         print_gcal_event(settings.google_cal, draw)
 

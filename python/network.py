@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import subprocess
 
@@ -29,14 +30,8 @@ def get_network_speed():
 
 
 def get_network_name():
-  r = subprocess.run(['iwgetid'], stdout=subprocess.PIPE)  # Get network info
-  result = r.stdout.decode('utf-8')
-  # Find network name in returned info
-  regex_result = re.search('ESSID:"(.*)"', result)
-  if (regex_result is None):  # If regex fails, wifi is not connected
-    return ''
-  else:
-    return regex_result.group(1)
+  ssid = os.popen("iwgetid -r")
+  return ssid.read()
 
 
 def get_online_icon():

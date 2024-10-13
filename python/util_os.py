@@ -20,7 +20,7 @@ def path_exists(file_path):
 
 
 def get_env_var_value(var: EnvVariable):
-  return os.environ.get(var)
+  return os.environ.get(var.value)
 
 
 def mkdir(file_path):

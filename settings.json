@@ -18,16 +18,16 @@
     "num": 4,
     "routes": [
       {
-        "route": "33",
-        "stop": "2834" // 20th and Poplar
+        "routeNumber": "33",
+        "stopId": "2834"
       },
       {
-        "route": "2",
-        "stop": "2709" // 17th and Ridge
+        "routeNumber": "2",
+        "stopId": "2709"
       },
       {
-        "route": "61",
-        "stop": "18428" // Ridge and Poplar
+        "routeNumber": "61",
+        "stopId": "18428"
       }
     ]
   },
