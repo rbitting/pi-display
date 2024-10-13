@@ -15,9 +15,23 @@ Review the READMEs in those respective directories to learn more.
 
 This set-up guide assumes you are running Rasberry Pi OS Lite on your Pi and have already set up internet access.
 
-1. Complete the [Waveshare hardware/software set-up instructions](https://www.waveshare.com/wiki/5.83inch_e-Paper_HAT).
+1. Complete the Waveshare instructions under the Working With Raspberry Pi [Hardware Connection and Python](https://www.waveshare.com/wiki/5.83inch_e-Paper_HAT_Manual#Hardware_Connection) sections.
 
-1. Install node on the Pi. Note: if using a Raspberry Pi Zero, see note in troubleshooting section below
+1. Install [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script).
+
+1. Install NodeJS 14 via nvm on the Pi. Note the unofficial build needs to be used to support the proper architecture of the Pi Zero.
+
+   ```
+   
+   NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 14
+   ```
+
+1. Install git
+
+   ```
+   sudo apt update
+   sudo apt install git
+   ```
 
 1. Clone this repo to your Pi. For this example, the repo will be stored under a `repos` directory under the home directory.
 
@@ -30,21 +44,29 @@ This set-up guide assumes you are running Rasberry Pi OS Lite on your Pi and hav
 
 1. Set up a cron job to run the display refresh at regular intervals. Enter the command `crontab -e` to edit the crontab file. Then add the following line (this will run the script every 30 minutes):
 
+   ```*/30 * * * * cd /absolute/path/to/python && python3 main.py```
+
+    Example:
     ```*/30 * * * * cd /home/pi/repos/pi-display/python && python3 main.py```
 
 1. Set up a cron job to run the display refresh on Pi start-up. Enter the command `crontab -e` to edit the crontab file. Then add the following line:
 
+   ```@reboot sleep 30 && cd /absolute/path/to/python && python3 main.py &```
+
+    Example:
     ```@reboot sleep 30 && cd /home/pi/repos/pi-display/python && python3 main.py &```
 
 1. Run `npm install` and `npm run build` from in the `webapp` directory.
 
-1. To launch the web app on Pi start-up, enter the command `crontab -e` to edit the crontab file. Then save the following line in the file (replace the paths with your Pi's paths):
+1. To launch the web app on Pi start-up, enter the command `crontab -e` to edit the crontab file. Then save the following line in the file (be sure to update the `node-version` to what you have installed):
+
+    ```@reboot sleep 30 && cd /absolute/path/to/webapp && /home/pi/.nvm/versions/node/node-version/bin/node server.js >> /absolute/path/to/where/you/want/logs 2>&1 &```
 
     ```@reboot sleep 30 && cd /home/pi/repos/pi-display/webapp && /home/pi/.nvm/versions/node/v14.18.2/bin/node server.js >> /home/pi/logs/server.log 2>&1 &```
 
-1. Set up a [static IP address](https://thepihut.com/blogs/raspberry-pi-tutorials/how-to-give-your-raspberry-pi-a-static-ip-address-update) for your Pi.
+1. Set up a [static IP address](https://www.jeffgeerling.com/blog/2024/set-static-ip-address-nmtui-on-raspberry-pi-os-12-bookworm) for your Pi.
 
-1. Install Apache web server on your pi: `sudo apt-get install -y apache2`
+1. Install Apache web server on your pi: `sudo apt install apache2`
 
 1. Update the Apache configuration file to proxy port 3000 requests. This will allow access to the webapp at the Pi's direct IP. Open the file:
 
@@ -63,18 +85,22 @@ This set-up guide assumes you are running Rasberry Pi OS Lite on your Pi and hav
             ProxyPassReverse https://localhost:3000/
     </Location>
     ```
+    
+1. Enable the Apache proxy:
 
-1. Reboot the Pi for all updates to take effect.
+   ```
+   sudo a2enmod proxy
+   sudo a2enmod proxy_http
+   systemctl restart apache2
+   ```
+
+1. Reboot the Pi for all updates to take effect: `sudo reboot`
 
 ## Notes
 
 * All logs are stored under the `/logs` directory on your Pi
 
 ## Troubleshooting
-
-* If using a Raspberry Pi Zero, you have to use an unofficial build of Node to support the proper architecture:
-
-```NVM_NODEJS_ORG_MIRROR=https://unofficial-builds.nodejs.org/download/release nvm install 14```
 
 * If display is printing incorrect times, you may need to update the timezone of your Pi: `sudo raspi-config` -> `Internationalisation Options` -> `Change Timezone` -> Follow screen directions to change country and time zone
 
