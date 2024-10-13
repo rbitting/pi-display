@@ -1,0 +1,10 @@
+autopep8==2.3.1
+dataclass-wizard==0.23.0
+google-api-core==2.21.0
+google-api-python-client==2.149.0
+google-auth==2.35.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.1
+googleapis-common-protos==1.65.0
+Pillow==9.2.0
+python-dotenv==1.0.1
