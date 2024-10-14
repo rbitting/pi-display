@@ -1,23 +1,20 @@
 {
   "compilerOptions": {
-      "outDir": "./build/",       // path to output directory
-      "sourceMap": true,          // allow sourcemap support
-      "strict": true,
-      "strictNullChecks": true,   // enable strict null checks as a best practice
-      "module": "es6",            // module code generation
-      "jsx": "react",             // use typescript to transpile jsx to js
-      "target": "es5",            // ECMAScript target version
-      "allowJs": false,           // don't allow a partial TypeScript and JavaScript codebase,
-      "allowSyntheticDefaultImports": true,
-      "noImplicitAny": true,
-      "noImplicitReturns": true,
-      "noImplicitThis": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "moduleResolution": "node"
+    "outDir": "./build/", // path to output directory
+    "sourceMap": true, // allow sourcemap support
+    "strict": true,
+    "strictNullChecks": true, // enable strict null checks as a best practice
+    "module": "es6", // module code generation
+    "jsx": "react", // use typescript to transpile jsx to js
+    "target": "es5", // ECMAScript target version
+    "allowJs": false, // don't allow a partial TypeScript and JavaScript codebase,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "moduleResolution": "node"
   },
-  "include": [
-      "./src/",
-      "./custom.d.ts"
-  ]
+  "include": ["./src/", "./custom.d.ts"]
 }

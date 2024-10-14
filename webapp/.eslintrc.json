@@ -1,32 +1,51 @@
 {
-    "extends": ["airbnb-typescript-prettier"],
-    "ignorePatterns": ["/build/", "/node_modules/", "*.js"],
-    "plugins": ["react", "import"],
-    "rules": {
+  "extends": ["airbnb-typescript-prettier"],
+  "ignorePatterns": ["/build/", "/node_modules/", "*.js"],
+  "plugins": ["react", "import"],
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "rules": {
         "space-before-function-paren": 0,
-        "indent": ["error", 4],
+        "indent": ["error", 2],
         "semi-style": ["error", "last"],
         "semi": ["error", "always"],
         "quote-props": 0,
         "prefer-template": 2,
         "spaced-comment": "off",
         "prettier/prettier": [
-            "error",
-            {
-                "endOfLine": "auto",
-                "trailingComma": "none"
-            }
+          "error",
+          {
+            "endOfLine": "auto",
+            "trailingComma": "none"
+          }
         ],
         "comma-dangle": ["error", "never"],
         "no-console": ["error", { "allow": ["error"] }],
-        "react/require-default-props": "off"
+        "react/require-default-props": "off",
+        "jsx-a11y/label-has-associated-control": "off"
+      }
     },
-    "settings": {
-        "import/parsers": {
-            "@typescript-eslint/parser": [".ts", ".tsx"]
-        },
-        "import/resolver": {
-            "typescript": {}
-        }
+    {
+      "files": ["*.json"],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto",
+            "trailingComma": "none"
+          }
+        ],
+        "comma-dangle": ["error", "never"]
+      }
     }
+  ],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }

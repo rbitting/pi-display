@@ -1,4 +1,4 @@
 export interface ProcessingProps {
-    readonly isProcessing: boolean;
-    readonly setIsProcessing: (value: boolean) => void;
+  readonly isProcessing: boolean;
+  readonly setIsProcessing: (value: boolean) => void;
 }
