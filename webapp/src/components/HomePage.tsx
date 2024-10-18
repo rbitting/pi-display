@@ -4,8 +4,12 @@ import RefreshData from './RefreshData';
 import SendImageForm from './SendImageForm';
 import SendMessageForm from './SendMessageForm';
 
-export default function HomePage() {
-  const [isProcessing, setIsProcessing] = useState(false);
+/**
+ * A component for the homepage of the app
+ * @returns The homepage component
+ */
+export default function HomePage(): JSX.Element {
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   return (
     <>
       <DisplayStatus isProcessing={isProcessing} setIsProcessing={setIsProcessing} />

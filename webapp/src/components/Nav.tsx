@@ -3,12 +3,20 @@ import { Container, Navbar } from 'react-bulma-components';
 import { Link } from 'react-router-dom';
 import { hasGoogleCalendarUrl } from '../config';
 
-function Nav() {
-  const [isMobileMenuActive, setIsMobileMenuActive] = useState(false);
+/**
+ * A component for displaying the top navigation
+ * @returns The navigation component
+ */
+function Nav(): JSX.Element {
+  const [isMobileMenuActive, setIsMobileMenuActive] = useState<boolean>(false);
 
-  function toggleMenu() {
+  /**
+   * Toggles the menu visibility on mobile
+   */
+  const toggleMenu = (): void => {
     setIsMobileMenuActive(!isMobileMenuActive);
-  }
+  };
+
   return (
     <Navbar color="black" className="mb-6">
       <Container breakpoint="desktop">

@@ -1,12 +1,12 @@
+/* eslint-disable jsdoc/require-jsdoc */
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bulma-components';
+import DisplayTimeOptions, { TimeOption } from './DisplayTimeOptions';
 import Headline from './Headline';
-import DisplayTimeOptions from './DisplayTimeOptions';
-import { ProcessingProps } from '../prop-types';
+import { ProcessingProps } from './shared.types';
 
-const ENDPOINT = '/api/send-image';
-
-const ALLOWED_TIMES = [
+/** The time options for the form */
+const ALLOWED_TIMES: readonly TimeOption[] = [
   {
     value: '5',
     label: '5 Min'
@@ -25,14 +25,26 @@ const ALLOWED_TIMES = [
   }
 ];
 
-export default function SendImageForm({ isProcessing, setIsProcessing }: ProcessingProps) {
+/** The endpoint path to submit an image to the pi */
+const ENDPOINT: string = '/api/send-image';
+
+/**
+ * A component for allowing a user to send an image to the display
+ * @returns The send image form component
+ */
+export default function SendImageForm({ isProcessing, setIsProcessing }: ProcessingProps): JSX.Element {
   const [image, setImage] = useState<File | null>(null);
   const [isValid, setIsValid] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [formResponse, setFormResponse] = useState('');
   const [minToDisplay, setMinToDisplay] = useState('5');
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  /**
+   * Event handler for a file being uploaded in the client
+   * @param e The change event
+   */
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    // eslint-disable-next-line @typescript-eslint/typedef
     const { files } = e.target;
     if (files && files.length) {
       setImage(files[0]);
@@ -41,12 +53,15 @@ export default function SendImageForm({ isProcessing, setIsProcessing }: Process
       setImage(null);
       setIsValid(false);
     }
-  }
+  };
 
-  function handleSubmit() {
+  /**
+   * An event handler for the form submission
+   */
+  const handleSubmit = (): void => {
     if (image != null) {
       setIsProcessing(true);
-      const payload = new FormData();
+      const payload: FormData = new FormData();
       payload.append('file', image);
       payload.append('minToDisplay', minToDisplay);
 
@@ -57,18 +72,18 @@ export default function SendImageForm({ isProcessing, setIsProcessing }: Process
         referrerPolicy: 'no-referrer',
         body: payload
       })
-        .then((data) => data.json())
-        .then((json) => {
+        .then((data: Response) => data.json())
+        .then((json: { message: string }) => {
           setFormResponse(json.message);
           setIsProcessing(false);
         })
-        .catch((err) => {
+        .catch((err: Error) => {
           setIsSubmitError(true);
           console.error(err);
           setIsProcessing(false);
         });
     }
-  }
+  };
 
   return (
     <section className="mb-6">
@@ -85,7 +100,7 @@ export default function SendImageForm({ isProcessing, setIsProcessing }: Process
             }
             filename={image ? image.name : ''}
             icon={<i className="fas fa-upload" />}
-            onChange={(e) => handleFileChange(e)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleFileChange(e)}
           />
         </Form.Control>
       </Form.Field>

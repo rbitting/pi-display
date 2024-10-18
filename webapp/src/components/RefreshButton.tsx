@@ -1,17 +1,32 @@
 import React, { useState } from 'react';
 import { Button, Columns, Modal } from 'react-bulma-components';
 
+/**
+ * Allowed propertise for the {@link RefreshButton}
+ */
 interface ButtonProps {
-  readonly handleClick: () => void;
-  readonly isDisabled: boolean;
-  readonly text: string;
+  /** Alt text for the button */
   readonly alt?: string;
+  /** A click handler for the button */
+  readonly handleClick: () => void;
+  /** Icon to render in the button @example "fas fa-info-circle" */
   readonly icon?: string;
+  /** The url for an image to display in the button */
   readonly image?: string;
+  /** Whether the button is disabled */
+  readonly isDisabled: boolean;
+  /** Text to display in the button */
+  readonly text: string;
+  /** Title attribute for the button */
   readonly title?: string;
+  /** Whether a verification dialog should be displayed to the user on click */
   readonly verifyOnClick?: boolean;
 }
 
+/**
+ * A component for rendering a reusable button
+ * @returns The button component
+ */
 function RefreshButton({
   title = '',
   isDisabled,
@@ -21,16 +36,21 @@ function RefreshButton({
   image = '',
   text,
   verifyOnClick = false
-}: ButtonProps) {
-  const [showModal, setShowModal] = useState(false);
-  function onClick() {
+}: ButtonProps): JSX.Element {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  /**
+   * Handles click events on the button
+   */
+  const onClick = (): void => {
     if (verifyOnClick && !showModal) {
       setShowModal(true);
     } else {
       setShowModal(false);
       handleClick();
     }
-  }
+  };
+
   return (
     <>
       <Button

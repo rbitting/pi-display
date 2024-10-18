@@ -1,9 +1,13 @@
 import React from 'react';
-import Headline from './Headline';
 import { GOOGLE_CALENDAR_URL } from '../config';
+import Headline from './Headline';
 
-export default function Calendar() {
-  let isValid = true;
+/**
+ * A component for displaying the user's Google calendar
+ * @returns The calendar component
+ */
+export default function Calendar(): JSX.Element {
+  let isValid: boolean = true;
   if (!GOOGLE_CALENDAR_URL?.startsWith('https://calendar.google.com/calendar/embed?')) {
     console.error(`GOOGLE_CALENDAR_URL in .env is invalid: ${GOOGLE_CALENDAR_URL}`);
     isValid = false;

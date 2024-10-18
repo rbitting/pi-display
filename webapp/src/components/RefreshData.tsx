@@ -2,16 +2,29 @@ import React, { useState } from 'react';
 import { Columns } from 'react-bulma-components';
 import Headline from './Headline';
 import RefreshButton from './RefreshButton';
-import { ProcessingProps } from '../prop-types';
+import { ProcessingProps } from './shared.types';
 
-const REFRESH_ALL_PATH = '/api/refresh/all';
-const CLEAR_ALL_PATH = '/api/refresh/clear';
-const REBOOT_PATH = '/api/reboot';
+/** The endpoint path to clear the display */
+const CLEAR_ALL_PATH: string = '/api/refresh/clear';
 
-export default function RefreshData({ isProcessing, setIsProcessing }: ProcessingProps) {
+/** The endpoint path to reboot the display */
+const REBOOT_PATH: string = '/api/reboot';
+
+/** The endpoint path to refresh the display */
+const REFRESH_ALL_PATH: string = '/api/refresh/all';
+
+/**
+ * A component for allowing various display actions
+ * @returns The refresh data component
+ */
+export default function RefreshData({ isProcessing, setIsProcessing }: ProcessingProps): JSX.Element {
   const [isLoading, setIsLoading] = useState(false);
 
-  async function postToEndpoint(path: string) {
+  /**
+   * Sends a POST request to the specified endpoint
+   * @param path The path to the endpoint to call
+   */
+  const postToEndpoint = async (path: string): Promise<void> => {
     setIsProcessing(true);
     setIsLoading(true);
     await fetch(path, {
@@ -27,12 +40,13 @@ export default function RefreshData({ isProcessing, setIsProcessing }: Processin
         setIsProcessing(false);
         setIsLoading(false);
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         console.error(err);
         setIsProcessing(false);
         setIsLoading(false);
       });
-  }
+  };
+
   return (
     <section className="mb-6">
       <Headline title="Display Commands" icon="fas fa-terminal" />

@@ -1,13 +1,23 @@
 import React from 'react';
 import Loading from './Loading';
 
+/**
+ * Allowed propertise for the {@link Headline} component
+ */
 interface HeadlineProps {
+  /** A font awesome icon to display in the heading @example "fas fa-info-circle" */
   readonly icon: string;
+  /** Whether the display is currently processing */
   readonly isProcessing?: boolean;
+  /** The title to render in the headline */
   readonly title: string;
 }
 
-function Headline({ icon, isProcessing, title }: HeadlineProps) {
+/**
+ * A component to render a heading
+ * @returns The headline component
+ */
+function Headline({ icon, isProcessing, title }: HeadlineProps): JSX.Element {
   return (
     <div className="is-flex mb-3">
       {!isProcessing && (

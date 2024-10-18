@@ -1,12 +1,16 @@
 import React from 'react';
 import { Container } from 'react-bulma-components';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Calendar from './Calendar';
 import HomePage from './HomePage';
 import Log from './Log';
 import Nav from './Nav';
 
-function Dashboard() {
+/**
+ * A component for displaying the main dashboard of display controls
+ * @returns The dashboard element
+ */
+function Dashboard(): JSX.Element {
   return (
     <Router>
       <Nav />

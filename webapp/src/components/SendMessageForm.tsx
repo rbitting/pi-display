@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Icon, Button } from 'react-bulma-components';
-import { ProcessingProps } from '../prop-types';
-import DisplayTimeOptions from './DisplayTimeOptions';
+import { Button, Form, Icon } from 'react-bulma-components';
+import DisplayTimeOptions, { TimeOption } from './DisplayTimeOptions';
 import Headline from './Headline';
+import { ProcessingProps } from './shared.types';
 
-const MIN_CHARS = 1;
-const MAX_CHARS = 100;
-const ENDPOINT = '/api/sendmessage';
-const ALLOWED_TIMES = [
+/** The time options for the form */
+const ALLOWED_TIMES: readonly TimeOption[] = [
   {
     value: '1',
     label: '1 Min'
@@ -26,17 +24,45 @@ const ALLOWED_TIMES = [
   }
 ];
 
-export default function SendMessageForm({ isProcessing, setIsProcessing }: ProcessingProps) {
+/** The endpoint path to submit a message to the pi */
+const ENDPOINT: string = '/api/sendmessage';
+
+/** Maximum characters allowed in the message */
+const MAX_CHARS: number = 100;
+
+/** Minimum characters allowed in the message */
+const MIN_CHARS: number = 1;
+
+/**
+ * Represents a request to the send message endpoint
+ */
+interface MessageRequest {
+  /** The message to display */
+  readonly message: string;
+  /** The amount of time in minutes to display the message */
+  readonly minToDisplay: string;
+}
+
+/**
+ * A component for sending a message to show on the display
+ * @returns The send message form component
+ */
+export default function SendMessageForm({ isProcessing, setIsProcessing }: ProcessingProps): JSX.Element {
   const [message, setMessage] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isSubmitError, setIsSubmitError] = useState(false);
   const [formResponse, setFormResponse] = useState('');
   const [minToDisplay, setMinToDisplay] = useState('1');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  /**
+   * An event handler for changes to the input element
+   * @param e The input change event
+   * @returns Whether the submission succeeded or not
+   */
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): boolean => {
     if (e && e.target) {
-      const val = e.target.value;
-      const len = val.length;
+      const val: string = e.target.value;
+      const len: number = val.length;
       if (len > MAX_CHARS) {
         return false;
       }
@@ -49,14 +75,17 @@ export default function SendMessageForm({ isProcessing, setIsProcessing }: Proce
     return false;
   };
 
-  const handleSubmit = async () => {
+  /**
+   * Submits the message to the display
+   */
+  const handleSubmit = async (): Promise<void> => {
     setIsProcessing(true);
     if (isValid) {
-      const payload = {
+      const payload: MessageRequest = {
         message,
         minToDisplay
       };
-      const response = await fetch(ENDPOINT, {
+      const response: Response | null = await fetch(ENDPOINT, {
         method: 'POST',
         credentials: 'same-origin',
         headers: {
@@ -65,15 +94,17 @@ export default function SendMessageForm({ isProcessing, setIsProcessing }: Proce
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
         body: JSON.stringify(payload)
-      }).catch((err) => {
+      }).catch((err: Error) => {
         console.error(err);
         setIsSubmitError(true);
         setFormResponse(`Could not fetch ${ENDPOINT}. ${err}`);
+        return null;
       });
 
       if (response) {
         const { status } = response;
         if (status === 200) {
+          // eslint-disable-next-line @typescript-eslint/typedef
           const json = await response.json();
           setFormResponse(`Message sent: '${json.data}'`);
           setMessage('');
@@ -85,6 +116,7 @@ export default function SendMessageForm({ isProcessing, setIsProcessing }: Proce
             setFormResponse(`404 '${ENDPOINT}' endpoint not found. Please check that the server is running.'`);
           } else {
             try {
+              // eslint-disable-next-line @typescript-eslint/typedef
               const json = await response.json();
               setFormResponse(json.message);
             } catch (e) {
@@ -100,7 +132,7 @@ export default function SendMessageForm({ isProcessing, setIsProcessing }: Proce
     }
   };
 
-  let color = 'success';
+  let color: string = 'success';
   if (!isValid) {
     color = 'text';
   } else if (isSubmitError) {
