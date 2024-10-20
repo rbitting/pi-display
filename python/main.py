@@ -30,8 +30,11 @@ try:
       logging.info('********* Initializing display refresh *********')
 
       # Init display
-      epd = epd5in83_V2.EPD()
-      epd.init()
+      try:
+        epd = epd5in83_V2.EPD()
+        epd.init()
+      except BaseException as e:
+        logging.error(e)
 
       # Init new image to draw
       Himage = Image.new('1', (DISPLAY_W, DISPLAY_H), 255)
@@ -92,7 +95,7 @@ try:
     logging.info('Server is processing or waiting. Can not refresh right now.')
 
 except BaseException as e:
-  logging.exception("Exception while running refresh script")
+  logging.error("Exception while running refresh script")
   send_status(True, False, str(e))
 
 '''

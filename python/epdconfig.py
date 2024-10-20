@@ -46,11 +46,14 @@ class RaspberryPi:
   BUSY_PIN = 24
 
   def __init__(self):
-    import spidev
-    import RPi.GPIO
+    try:
+      import spidev
+      import RPi.GPIO
 
-    self.GPIO = RPi.GPIO
-    self.SPI = spidev.SpiDev()
+      self.GPIO = RPi.GPIO
+      self.SPI = spidev.SpiDev()
+    except BaseException as e:
+      logging.exception(e)
 
   def digital_write(self, pin, value):
     self.GPIO.output(pin, value)

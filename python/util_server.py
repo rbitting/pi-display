@@ -21,13 +21,18 @@ def send_status(isError, isProcessing, message):
     r = requests.post(status_endpoint, data=json.dumps(body), headers=headers)
     # logging.info(json.loads(r.text))
   except requests.exceptions.RequestException as e:
-    logging.exception('Could not send status update: ' + str(e))
+    logging.error('Could not send status update')
+    logging.exception(e)
+  except BaseException as e:
+    logging.exception(e)
 
 
 def get_server_status():
   return fetch(status_endpoint)
 
 
-def is_display_busy():
+def is_display_busy() -> bool:
   server_status = get_server_status()
+  if server_status is None:
+    return False
   return server_status['isProcessing'] or server_status['isWaiting']
