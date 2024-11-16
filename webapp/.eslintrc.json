@@ -1,32 +1,91 @@
 {
-    "extends": ["airbnb-typescript-prettier"],
-    "ignorePatterns": ["/build/", "/node_modules/", "*.js"],
-    "plugins": ["react", "import"],
-    "rules": {
-        "space-before-function-paren": 0,
-        "indent": ["error", 4],
-        "semi-style": ["error", "last"],
-        "semi": ["error", "always"],
-        "quote-props": 0,
-        "prefer-template": 2,
-        "spaced-comment": "off",
-        "prettier/prettier": [
-            "error",
-            {
-                "endOfLine": "auto",
-                "trailingComma": "none"
-            }
+  "ignorePatterns": ["/build/", "/node_modules/", "*.js"],
+  "plugins": ["react", "import", "jsdoc"],
+  "overrides": [
+    {
+      "extends": [
+        "airbnb-typescript-prettier",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jsdoc/recommended-typescript"
+      ],
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/explicit-module-boundary-types": "error",
+        "@typescript-eslint/typedef": [
+          "error",
+          {
+            "arrayDestructuring": false,
+            "arrowParameter": true,
+            "memberVariableDeclaration": true,
+            "objectDestructuring": false,
+            "parameter": true,
+            "propertyDeclaration": true,
+            "variableDeclaration": true,
+            "variableDeclarationIgnoreFunction": true
+          }
         ],
-        "comma-dangle": ["error", "never"],
-        "no-console": ["error", { "allow": ["error"] }],
-        "react/require-default-props": "off"
+        "jsdoc/require-jsdoc": [
+          "error",
+          {
+            "contexts": ["TSInterfaceDeclaration", "TSPropertySignature"],
+            "require": {
+              "ArrowFunctionExpression": true,
+              "ClassDeclaration": true,
+              "ClassExpression": true,
+              "FunctionDeclaration": true,
+              "FunctionExpression": true,
+              "MethodDefinition": true
+            }
+          }
+        ]
+      }
     },
-    "settings": {
-        "import/parsers": {
-            "@typescript-eslint/parser": [".ts", ".tsx"]
-        },
-        "import/resolver": {
-            "typescript": {}
-        }
+    {
+      "files": ["*.js", "*.jsx", "*.ts", "*.tsx"],
+      "rules": {
+        "comma-dangle": ["error", "never"],
+        "indent": ["error", 2],
+        "jsdoc/require-jsdoc": [
+          "error",
+          {
+            "require": {
+              "ArrowFunctionExpression": true,
+              "ClassDeclaration": true,
+              "ClassExpression": true,
+              "FunctionDeclaration": true,
+              "FunctionExpression": true,
+              "MethodDefinition": true
+            }
+          }
+        ],
+        "jsdoc/require-param": ["error", { "checkDestructuredRoots": false, "enableRootFixer": false }],
+        "jsx-a11y/label-has-associated-control": "off",
+        "no-console": ["error", { "allow": ["error"] }],
+        "prefer-const": ["error"],
+        "prefer-template": 2,
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "auto",
+            "trailingComma": "none"
+          }
+        ],
+        "react/require-default-props": "off",
+        "quote-props": 0,
+        "semi": ["error", "always"],
+        "semi-style": ["error", "last"],
+        "space-before-function-paren": 0,
+        "spaced-comment": "off"
+      }
     }
+  ],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }

@@ -1,0 +1,43 @@
+{
+  "googleCal": {
+    "enabled": true
+  },
+  "pihole": {
+    "enabled": true
+  },
+  "network": {
+    "enabled": false
+  },
+  "news": {
+    "enabled": true,
+    "num": 10,
+    "source": "the-washington-post"
+  },
+  "septa": {
+    "enabled": true,
+    "num": 4,
+    "routes": [
+      {
+        "routeNumber": "33",
+        "stopId": "2834"
+      },
+      {
+        "routeNumber": "2",
+        "stopId": "2709"
+      },
+      {
+        "routeNumber": "61",
+        "stopId": "18428"
+      }
+    ]
+  },
+  "weather": {
+    "enabled": true,
+    "lon": "-75.175",
+    "lat": "39.9656",
+    "units": "imperial"
+  },
+  "word_of_the_day": {
+    "enabled": true
+  }
+}

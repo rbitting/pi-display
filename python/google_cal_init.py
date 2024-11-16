@@ -6,4 +6,4 @@ set_logging_config()
 creds = get_gcal_creds()
 
 if is_credential_valid(creds):
-    print('Credentials successfully initialized.')
+  print('Credentials successfully initialized.')
