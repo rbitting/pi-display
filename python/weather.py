@@ -39,7 +39,7 @@ def get_weather_data(settings: WeatherSettings):
 
 def fetch_weather_data(settings: WeatherSettings):
   return fetch(
-      'https://api.openweathermap.org/data/2.5/onecall' +
+      'https://api.openweathermap.org/data/3.0/onecall' +
       '?lat=' + settings.lat +
       '&lon=' + settings.lon +
       '&units=' + settings.units.value +
