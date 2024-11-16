@@ -6,7 +6,7 @@ Displays data on a Waveshare 5.83in e-ink display powered by a Raspberry Pi.
 
 1. [Python 3.7+](https://www.python.org/downloads/)
 1. Create API keys for all the data modules listed below that you want to utilize.
-    * Weather: [OpenWeatherMap API](https://openweathermap.org/api/one-call-api)
+    * Weather: [OpenWeatherMap API](https://openweathermap.org/api/one-call-api) (requires a subscription to One Call API 3.0, first 1000 calls/day are free which is plenty for this application)
     * News: [New York Times API](https://developer.nytimes.com/) and/or [Newsapi.org](https://newsapi.org/)
     * Word of the day: [Wordnik API](https://developer.wordnik.com/)
 1. Get the Google Calendar id for the calendar that contains events you want to display. To find your calendar id:
